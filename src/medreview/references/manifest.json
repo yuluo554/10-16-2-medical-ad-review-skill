@@ -6,10 +6,25 @@
     "b3_reverse_pass_min": 1.0,
     "b4_min_coverage": 1.0
   },
+  "category_exclude_counts": {
+    "device": 6,
+    "drug": 4,
+    "fsmp": 1,
+    "health_food": 2,
+    "medical": 5
+  },
+  "category_rule_count": 5,
+  "category_signal_counts": {
+    "device": 11,
+    "drug": 13,
+    "fsmp": 3,
+    "health_food": 6,
+    "medical": 18
+  },
   "coverage_note": "抽样覆盖、非穷举：真值库按规则形态采样，见 benchmark/manifest 登记",
   "enabled_rule_count": 29,
   "excluded_clause_count": 3,
-  "ruleset_version": "ruleset-f20a805f89",
+  "ruleset_version": "ruleset-8357b64fd1",
   "sources": [
     {
       "basis_date": "2026-10-15",
@@ -38,5 +53,6 @@
     "literal": 16
   },
   "total_rule_count": 32,
+  "variant_rule_count": 2,
   "whitelist_item_count": 8
 }

@@ -87,6 +87,146 @@
       "expect_keys": [
         "grade:BLOCK",
         "category:medical",
+        "category:drug",
+        "category:device",
+        "hit:AL-16-D2"
+      ],
+      "id": "B1-006",
+      "input": "XX市第X医院（虚构）引进医疗器械血压计与药品片剂，国药准字与械字号齐全，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "a5505291c647ddb5edfea6ad73ecd62e4933088b26a42fd45d71216dddf5540c",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED"
+      ],
+      "forbid_keys": [
+        "category:medical",
+        "category:drug",
+        "category:device",
+        "category:health_food",
+        "category:fsmp"
+      ],
+      "id": "B1-007",
+      "input": "XX医美护肤品（虚构）焕亮精华，温和护肤，欢迎购买。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "720ff7c4bc34e43a577a42fd13c1a9526cf5bb1b13daafb0b776c477e0c40879",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED"
+      ],
+      "forbid_keys": [
+        "category:device",
+        "category:medical"
+      ],
+      "id": "B1-008",
+      "input": "健身器械专卖店（虚构）开业，全场五折。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "06dc025d2fb64b19d6412c1303046a7fe5e7cd8d9d802d5d50825070cf29ab3e",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED"
+      ],
+      "forbid_keys": [
+        "category:drug"
+      ],
+      "id": "B1-009",
+      "input": "国家药品监督管理局发布通告。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "91f184a518cb45ab5c7012a6d494e6f784ad4011c30405fd6aa2e98aa7990f7b",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED"
+      ],
+      "forbid_keys": [
+        "category:medical"
+      ],
+      "id": "B1-010",
+      "input": "请寄挂号信至收件处。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "2494c43c5287d59049daa08a7ca0f15116607e046d07411745c4d24a5cf29f89",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED",
+        "advisory:variant_publish_suspect"
+      ],
+      "forbid_keys": [
+        "category:medical",
+        "category:drug",
+        "category:device",
+        "category:health_food",
+        "category:fsmp"
+      ],
+      "id": "B1-011",
+      "input": "分享养生知识，扫码加微信了解详情。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "bdfb3b838578690fd46015a05e895c5fac60035dd665fe78cf3573665a2a999d",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:IAM-8-1",
+        "advisory:variant_publish_suspect"
+      ],
+      "id": "B1-012",
+      "input": "XX中医诊所（虚构）分享养生知识，欢迎致电预约。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "49502f628e869f337a47b5d71382eb6484443f1861b6809a765468f3c253ebf9",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "category:health_food",
+        "category:fsmp",
+        "hit:AL-18-D1"
+      ],
+      "id": "B1-013",
+      "input": "XX市第X医院（虚构）营养科：特殊医学用途配方食品与保健食品推荐，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "21bd9905248738c82f0fc0c2f3809af27e406ad850e335289ce2f904dcbea727",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
         "hit:MAM-7-2"
       ],
       "id": "B2-001",
@@ -812,7 +952,7 @@
   ],
   "generated_by": "tools/gen_cases.py",
   "ledger": {
-    "count": 49,
+    "count": 57,
     "entries": [
       {
         "id": "B1-001",
@@ -833,6 +973,38 @@
       {
         "id": "B1-005",
         "sha256": "cc3acfc4b2c7bf735ccfcc560c8a21870161239441c43b0434d6e8f9ae1de349"
+      },
+      {
+        "id": "B1-006",
+        "sha256": "a5505291c647ddb5edfea6ad73ecd62e4933088b26a42fd45d71216dddf5540c"
+      },
+      {
+        "id": "B1-007",
+        "sha256": "720ff7c4bc34e43a577a42fd13c1a9526cf5bb1b13daafb0b776c477e0c40879"
+      },
+      {
+        "id": "B1-008",
+        "sha256": "06dc025d2fb64b19d6412c1303046a7fe5e7cd8d9d802d5d50825070cf29ab3e"
+      },
+      {
+        "id": "B1-009",
+        "sha256": "91f184a518cb45ab5c7012a6d494e6f784ad4011c30405fd6aa2e98aa7990f7b"
+      },
+      {
+        "id": "B1-010",
+        "sha256": "2494c43c5287d59049daa08a7ca0f15116607e046d07411745c4d24a5cf29f89"
+      },
+      {
+        "id": "B1-011",
+        "sha256": "bdfb3b838578690fd46015a05e895c5fac60035dd665fe78cf3573665a2a999d"
+      },
+      {
+        "id": "B1-012",
+        "sha256": "49502f628e869f337a47b5d71382eb6484443f1861b6809a765468f3c253ebf9"
+      },
+      {
+        "id": "B1-013",
+        "sha256": "21bd9905248738c82f0fc0c2f3809af27e406ad850e335289ce2f904dcbea727"
       },
       {
         "id": "B2-001",

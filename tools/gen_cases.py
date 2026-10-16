@@ -62,6 +62,50 @@ CASES = [
          input="XX市第X医院（虚构）引进新型理疗仪，医疗器械注册证齐全，欢迎体验。",
          expect=["grade:WARN", "category:medical", "category:device",
                  "input_required:IAM-7-1"]),
+    # 多品类并列**三品类**：医疗 + 药品 + 器械同时成立（不二选一、不降维）
+    dict(id="B1-006", suite="b1_category",
+         input="XX市第X医院（虚构）引进医疗器械血压计与药品片剂，国药准字与械字号齐全，欢迎咨询。",
+         expect=["grade:BLOCK", "category:medical", "category:drug",
+                 "category:device", "hit:AL-16-D2"]),
+    # 似是而非边界：含品类**字面**但实为其他行业 → 不得判医疗品类
+    # （"医美护肤"里的"医美"是形容用法，不是医疗机构/医疗服务）
+    dict(id="B1-007", suite="b1_category",
+         input="XX医美护肤品（虚构）焕亮精华，温和护肤，欢迎购买。",
+         expect=["grade:NOT_ASSESSED"],
+         forbid=["category:medical", "category:drug", "category:device",
+                 "category:health_food", "category:fsmp"]),
+    # 似是而非边界：跨行业器械（健身/运动/办公）不得判医疗器械品类
+    dict(id="B1-008", suite="b1_category",
+         input="健身器械专卖店（虚构）开业，全场五折。",
+         expect=["grade:NOT_ASSESSED"],
+         forbid=["category:device", "category:medical"]),
+    # 似是而非边界：监管机关名/法规名含品类字面，但不是品类广告
+    dict(id="B1-009", suite="b1_category",
+         input="国家药品监督管理局发布通告。",
+         expect=["grade:NOT_ASSESSED"],
+         forbid=["category:drug"]),
+    # 似是而非边界：中性词形含品类字面（"挂号信"含"挂号"）不得判医疗品类
+    dict(id="B1-010", suite="b1_category",
+         input="请寄挂号信至收件处。",
+         expect=["grade:NOT_ASSESSED"],
+         forbid=["category:medical"]),
+    # 变相发布疑似：知识形态 + 联系方式共现，但**无任何品类信号** →
+    # 仍判 NOT_ASSESSED（无适用规则），同时出 advisory 提示（**不改结论**）
+    dict(id="B1-011", suite="b1_category",
+         input="分享养生知识，扫码加微信了解详情。",
+         expect=["grade:NOT_ASSESSED", "advisory:variant_publish_suspect"],
+         forbid=["category:medical", "category:drug", "category:device",
+                 "category:health_food", "category:fsmp"]),
+    # 变相发布疑似 + 品类成立：提示与规则判定**并存**（提示不替代规则）
+    dict(id="B1-012", suite="b1_category",
+         input="XX中医诊所（虚构）分享养生知识，欢迎致电预约。",
+         expect=["grade:BLOCK", "category:medical", "hit:IAM-8-1",
+                 "advisory:variant_publish_suspect"]),
+    # 多品类并列 + 三品类（医疗 + 保健食品 + 特医食品）
+    dict(id="B1-013", suite="b1_category",
+         input="XX市第X医院（虚构）营养科：特殊医学用途配方食品与保健食品推荐，欢迎咨询。",
+         expect=["grade:BLOCK", "category:medical", "category:health_food",
+                 "category:fsmp", "hit:AL-18-D1"]),
 
     # ---- B2 禁止情形核查（正例命中） ----
     dict(id="B2-001", suite="b2_prohibited",
@@ -276,7 +320,9 @@ def naive_oracle(case):
       - 有 ``category:`` ⟺ grade ≠ NOT_ASSESSED；
       - 有 ``hit:`` ⟹ grade 为 BLOCK/WARN，且被 forbid 的 hit 不得同时出现在 expect；
       - ``grade:BLOCK`` ⟹ 至少一条 ``hit:``（BLOCK 必有确定性命中）；
-      - ``grade:NOT_ASSESSED`` ⟹ 无 ``category:`` 且无 ``hit:``。
+      - ``grade:NOT_ASSESSED`` ⟹ 无 ``category:`` 且无 ``hit:``；
+      - ``advisory:`` 是**独立于结论的提示**：可与任意 grade 并存（含 NOT_ASSESSED）
+        ——提示不参与分级，故不对 grade 设任何约束（这正是它的语义）。
     """
     expects = set(case.get("expect") or ())
     forbids = set(case.get("forbid") or ())
@@ -302,8 +348,8 @@ def naive_oracle(case):
     if overlap:
         return False, "同一键同时出现在 expect 与 forbid：%s" % overlap
     for key in sorted(forbids):
-        if not key.startswith(("hit:", "grade:", "category:")):
-            return False, "forbid 只支持 hit:/grade:/category: 前缀（实得 %s）" % key
+        if not key.startswith(("hit:", "grade:", "category:", "advisory:")):
+            return False, "forbid 只支持 hit:/grade:/category:/advisory: 前缀（实得 %s）" % key
     return True, ""
 
 

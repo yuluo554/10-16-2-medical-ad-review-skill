@@ -31,7 +31,7 @@ SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 # 不进判定词表扫描面——但 report.py 仍受"渲染层零判定"的 AST 门禁约束；
 # selftest 的探针串在运行时从规则包实算（本文件零词面）。
 JUDGMENT_MODULES = ("constants.py", "model.py", "normalize.py", "ruleset.py",
-                    "categorize.py", "check.py", "grade.py",
+                    "categorize.py", "check.py", "phrase.py", "grade.py",
                     "serialize.py", "paths.py", "pipeline.py")
 
 # 网络能力导入的扫描面 = 全部引擎源码（含展示层，防"展示层偷偷出网"）
@@ -104,6 +104,8 @@ def _ruleset_tokens():
             tokens.add(rule.pattern_id)
     for entry in engine.category_rules:
         tokens.update(t for t in entry.get("terms", []) if t)
+        # 品类的**反例结构**也是政策词面（写进判定模块 docstring 同样算抄词表）
+        tokens.update(t for t in entry.get("exclude_contexts", []) if t)
     for entry in engine.variant_rules:
         tokens.update(t for t in entry.get("knowledge_terms", []) if t)
         tokens.update(t for t in entry.get("commerce_terms", []) if t)

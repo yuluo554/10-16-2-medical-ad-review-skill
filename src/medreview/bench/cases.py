@@ -45,6 +45,11 @@ def observed_keys(report):
     for entry in report.not_enabled:
         keys.add("not_enabled:%s" % entry["rule_id"])
 
+    # advisory 也是**可机读结论**（M2 新增）：变相发布疑似这类提示若不进观测集合，
+    # "提示逻辑写错/消失"就永不红（真值库只能断言它，却无从观测）。
+    for entry in report.advisories:
+        keys.add("advisory:%s" % entry.get("kind", ""))
+
     return keys
 
 
@@ -59,6 +64,7 @@ def expect_keys_of(case):
       ``rule:input_required:`` —— 必须判待补材料（子集断言）
       ``rule:compliant:``  —— 必须判通过（子集断言）
       ``input_required:``  —— 待补材料清单必须含该条
+      ``advisory:``        —— 必须出现该类提示（子集断言；提示也要可观测）
     """
     return set(case.get("expect_keys") or ())
 
@@ -107,7 +113,8 @@ def compare_case(case, report):
                           ("rule:skipped:", "应判不适用而未判"),
                           ("rule:input_required:", "应判待补材料而未判"),
                           ("rule:compliant:", "应判通过而未判"),
-                          ("input_required:", "待补材料清单应含而未含")):
+                          ("input_required:", "待补材料清单应含而未含"),
+                          ("advisory:", "应出提示而未出")):
         for key in sorted(_partition(expected, prefix)):
             if key not in observed:
                 failures.append("%s：%s" % (label, key))

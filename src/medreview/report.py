@@ -174,7 +174,17 @@ def render_markdown(report):
             if not section["items"]:
                 lines.append("（无）")
             for entry in section["items"]:
-                lines.append("- %s" % entry)
+                # advisory 有两种形态：纯提示（hint）与带**实算信号**的疑似项。
+                # 后者必须把命中词与条款锚点一并呈现（提示要可核验，不是散文）。
+                label = entry.get("text", "")
+                signals = entry.get("signals") or []
+                lines.append("- %s" % label)
+                for signal in signals:
+                    lines.append("  - 命中信号：%s（%s）"
+                                 % ("、".join(signal.get("matched_terms") or ()),
+                                    signal.get("anchor", "")))
+                if entry.get("note"):
+                    lines.append("  - 说明：%s" % entry["note"])
             lines.append("")
             continue
         if section["id"] == "sources":

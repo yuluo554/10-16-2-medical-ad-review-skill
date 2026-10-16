@@ -102,10 +102,15 @@ def run_check(engine, item):
             "note": "语境提示，由宿主 agent/人工提供；不参与 BLOCK/WARN/OK 分级计算",
         })
     if cat_result.variant_suspect:
+        # 把品类层实算到的**命中信号 + 条款锚点**一并带进 advisory：提示要可核验，
+        # 不能只是一句散文（否则读者无法判断"疑似"从何而来）。
+        variant_evidence = [e for e in cat_result.evidence
+                            if e.get("signal_id", "").startswith("variant_")]
         advisories.append({
             "kind": "variant_publish_suspect",
             "text": "疑似变相发布（知识形态与商品/服务信息共现）",
-            "note": "提示性结论，最终由对应规则判定（规则锚点见报告来源节）",
+            "signals": variant_evidence,
+            "note": "提示性结论，**不参与分级**；最终由 §8 对应规则判定（锚点见 signals）",
         })
 
     input_required = [

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml)
 
-**状态**：🚧 v0.1.0 开发中（M0 骨架 + M1 数据先行已完成；M2 品类判定器待办）
+**状态**：🚧 v0.1.0 开发中（M0 骨架 + M1 数据先行 + M2 品类判定器已完成；M3 禁止情形核查待办）
 
 ---
 

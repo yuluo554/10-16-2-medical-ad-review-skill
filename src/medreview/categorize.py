@@ -6,11 +6,15 @@
 
 命中多条品类时按固定优先级排序输出（medical > drug > device > health_food >
 fsmp），排序只影响呈现顺序，不影响适用集合。
+
+命中判据与规则核查**共用同一份词面匹配原语**（``phrase`` 模块）：品类信号词
+同样受否定辖域与排除语境约束——否则品类判定会自成第二套口径（如把中性词形
+或跨行业词形误判成本品类），且"同一份判定在几处各写一份"正是漂移源。
 """
 
 from __future__ import annotations
 
-from . import constants
+from . import constants, phrase
 
 # 呈现优先级（结构常量，非政策词面）
 _CATEGORY_RANK = {
@@ -40,11 +44,17 @@ class CategoryResult(object):
         }
 
 
+def _live_terms(text, terms, contexts=None):
+    """本模块内的词面命中（委托共用原语；保持"词表来自规则包"的边界）。"""
+    return phrase.any_of(text, terms, contexts)
+
+
 def categorize(item, category_rules, variant_rules=None):
     """按规则包的品类信号词表判定品类。
 
     ``category_rules``：``[{"category": ..., "signal_id": ..., "terms": [...],
-    "anchor": ..., "quote": ...}]``——词表来自冻结规则包，**不在此处硬编码**。
+    "exclude_contexts": [...], "anchor": ..., "quote": ...}]``——词表来自冻结
+    规则包，**不在此处硬编码**。
 
     判定为"非涉医内容"（无任何品类信号）时返回空 categories —— 这是
     ``NOT_ASSESSED`` 的触发条件（"没查出问题"与"没检查过"必须可区分）。
@@ -55,7 +65,8 @@ def categorize(item, category_rules, variant_rules=None):
 
     for entry in category_rules or ():
         terms = entry.get("terms") or ()
-        matched = [term for term in terms if term and term in text]
+        contexts = entry.get("exclude_contexts") or ()
+        matched = _live_terms(text, terms, contexts)
         if matched:
             hits.add(entry["category"])
             evidence.append({
@@ -70,11 +81,12 @@ def categorize(item, category_rules, variant_rules=None):
 
     variant_suspect = False
     for entry in variant_rules or ():
-        # 变相发布：知识形态 + 商品/服务信息共现（**不直接定品类**）
+        # 变相发布疑似：知识形态 + 商品/服务信息共现（**不直接定品类、不改结论**；
+        # 确定性判定由 §8 的 variant_publish 规则承担）。
         if not entry:
             continue
-        knowledge_terms = [t for t in (entry.get("knowledge_terms") or ()) if t and t in text]
-        commerce_terms = [t for t in (entry.get("commerce_terms") or ()) if t and t in text]
+        knowledge_terms = _live_terms(text, entry.get("knowledge_terms") or ())
+        commerce_terms = _live_terms(text, entry.get("commerce_terms") or ())
         if knowledge_terms and commerce_terms:
             variant_suspect = True
             evidence.append({

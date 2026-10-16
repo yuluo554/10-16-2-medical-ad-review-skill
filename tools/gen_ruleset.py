@@ -451,39 +451,80 @@ EXCLUDED_CLAUSES = [
 ]
 
 # 品类判定词表（**只存在于规则包**，引擎源码零词面）
+#
+# 每个品类条目三件套：① `terms` 正向信号词；② `exclude_contexts` **反例结构**
+# （词面落在这些更大词形内部即不算命中）；③ `anchor` + `quote` 溯源（定义位原文）。
+#
+# 为什么每类必须有 `exclude_contexts`：只有正向词表时，"信号词表写错"**永不红**——
+# 漏词只是少判，多词则把中性/跨行业词形误判成该品类。实测反例（M2 当轮）：
+#   「宠物医院」被裸「医院」判医疗品类；「挂号信」被裸「挂号」判医疗品类；
+#   「健身器械/办公器械/运动器械」被裸「器械」判器械品类；
+#   「国家药品监督管理局/药品监管」被裸「药品」判药品品类；
+#   「医美护肤品/医美级」被裸「医美」判医疗品类。
+# 故每类登记 ≥1 条反例结构，并由门禁断言"排除语境确实包住本类某个正向词"
+# （防装饰性排除：写了一条与词表无关的排除词也满足"非空"）。
 CATEGORY_RULES = [
     {"category": "medical", "signal_id": "cat_medical",
      "anchor": "《医疗广告管理办法》§2",
      "quote": "本办法所称医疗广告，是指利用各种媒介或者形式直接或间接介绍医疗机构或医疗服务的广告。",
-     "terms": ["门诊部", "医院", "诊所", "医疗美容", "医美", "整形", "诊疗", "科室", "挂号"]},
+     # 机构形态 + 诊疗科目形态（原文定义位即"医疗机构或医疗服务"）。
+     "terms": ["医疗机构", "医疗服务", "医院", "门诊部", "诊所", "门诊",
+               "医疗美容", "医美", "整形", "诊疗", "科室", "挂号",
+               "中医", "口腔科", "眼科", "骨科", "皮肤科", "体检"],
+     "exclude_contexts": ["宠物医院", "动物医院", "挂号信", "医美护肤", "医美级"]},
     {"category": "drug", "signal_id": "cat_drug",
      "anchor": "《广告法》§16",
      "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
      # 「说明书」「适应症」刻意移出：实测反例——器械广告里的「请仔细阅读产品
      # 说明书」会把器械内容误判成药品品类（说明书是通用词，不是药品专属信号）。
      # 处方药/非处方药补入：它们是药品的**强信号**，原文亦以之区分义务主体。
-     "terms": ["药品", "片剂", "胶囊", "口服液", "国药准字",
-               "处方药", "非处方药", "中成药", "药片"]},
+     # 剂型/批准文号形态补入（M2）：原文以"药品"为主体，剂型是药品的形态信号。
+     "terms": ["药品", "片剂", "胶囊", "口服液", "注射液", "颗粒剂", "滴眼液",
+               "软膏", "国药准字", "处方药", "非处方药", "中成药", "药片"],
+     "exclude_contexts": ["药品监督管理局", "药品监管", "药品广告审查办法",
+                          "药品管理法"]},
     {"category": "device", "signal_id": "cat_device",
      "anchor": "《广告法》§16",
      "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
-     "terms": ["医疗器械", "器械", "注册证", "械字号", "理疗仪", "血压计"]},
+     # 器械名 + 注册证形态补入（M2）；裸「器械」须排除健身/运动/办公等跨行业词形。
+     "terms": ["医疗器械", "器械", "注册证", "械字号", "理疗仪", "血压计",
+               "血糖仪", "助听器", "隐形眼镜", "呼吸机", "假肢"],
+     "exclude_contexts": ["健身器械", "运动器械", "办公器械", "体育器械",
+                          "厨房器械", "器械健身"]},
     {"category": "health_food", "signal_id": "cat_health_food",
      "anchor": "《广告法》§18",
      "quote": "保健食品广告不得含有下列内容：",
-     "terms": ["保健食品", "保健品", "蓝帽子", "保健功能", "膳食补充"]},
+     "terms": ["保健食品", "保健品", "蓝帽子", "保健功能", "膳食补充",
+               "营养素补充剂"],
+     "exclude_contexts": ["保健食品广告审查", "保健品监管"]},
     {"category": "fsmp", "signal_id": "cat_fsmp",
      "anchor": "《互联网广告管理办法》§7",
      "quote": "发布医疗、药品、医疗器械、农药、兽药、保健食品、特殊医学用途配方食品广告等法律、行政法规规定应当进行审查的广告",
-     "terms": ["特殊医学用途配方食品", "特医食品"]},
+     "terms": ["特殊医学用途配方食品", "特殊医学用途", "特医食品"],
+     "exclude_contexts": ["特殊医学用途配方食品广告审查"]},
 ]
 
+# 品类层的**变相发布疑似信号**（只进报告 advisory，**不直接定品类、不改结论**；
+# 确定性判定由 §8 的两条 variant_publish 规则承担）。
+#
+# 按 §8 两款各建一条 suspect：款 1 = 知识形态 + 商品/服务信息；款 2 = 知识形态 +
+# 联系方式/购物链接（两款原文见下方 quote）。信号词比规则层**更宽**是有意的：
+# suspect 是"提请人工复核"的提示，宁可宽；判定由规则层负责精确。
 VARIANT_RULES = [
-    {"signal_id": "variant_health_knowledge",
+    {"signal_id": "variant_health_knowledge_commerce",
      "anchor": "《互联网广告管理办法》§8",
      "quote": "禁止以介绍健康、养生知识等形式，变相发布医疗、药品、医疗器械、保健食品、特殊医学用途配方食品广告。",
-     "knowledge_terms": ["养生", "健康知识", "科普", "调理", "保养"],
-     "commerce_terms": ["门诊部", "医院", "诊所", "购买", "预约", "联系方式", "购物链接", "扫码", "加微信"]},
+     "knowledge_terms": ["养生知识", "健康知识", "科普", "养生", "调理",
+                         "保养", "健康科普"],
+     "commerce_terms": ["门诊部", "医院", "诊所", "购买", "预约", "就诊",
+                        "挂号", "订购", "门店"]},
+    {"signal_id": "variant_health_knowledge_contact",
+     "anchor": "《互联网广告管理办法》§8",
+     "quote": "介绍健康、养生知识的，不得在同一页面或者同时出现相关医疗、药品、医疗器械、保健食品、特殊医学用途配方食品的商品经营者或者服务提供者地址、联系方式、购物链接等内容。",
+     "knowledge_terms": ["养生知识", "健康知识", "科普", "养生", "调理",
+                         "保养", "健康科普"],
+     "commerce_terms": ["联系方式", "购物链接", "扫码", "加微信", "电话",
+                        "微信", "二维码", "地址"]},
 ]
 
 # --------------------------------------------------------------------------
@@ -669,9 +710,12 @@ def build():
     literal_count = sum(1 for r in rules if r["terms_basis"] == "literal")
     interpretive_count = sum(1 for r in rules if r["terms_basis"] == "interpretive")
 
+    # 版本号必须**指纹到全部判定数据**：漏掉品类/变相发布词表，则只改词表
+    # （不改规则）时版本号不动——"版本化冻结"就成了假门（K8 的实质要求）。
     content_for_version = json.dumps(
         {"rules": [{k: v for k, v in r.items() if k not in ("official_url", "basis_date")}
-                   for r in rules], "excluded": excluded, "whitelist": whitelist},
+                   for r in rules], "excluded": excluded, "whitelist": whitelist,
+         "category_rules": CATEGORY_RULES, "variant_rules": VARIANT_RULES},
         sort_keys=True, ensure_ascii=False)
     version = "ruleset-" + hashlib.sha256(content_for_version.encode("utf-8")).hexdigest()[:10]
 
@@ -694,6 +738,14 @@ def build():
         "excluded_clause_count": len(excluded),
         "whitelist_item_count": len(whitelist),
         "terms_basis_counts": {"literal": literal_count, "interpretive": interpretive_count},
+        # 品类判定表的计数也进 manifest（**当轮实算**）：否则"词表被删空"不会红
+        # （判定仍会跑，只是永远判不出品类 → 全量 NOT_ASSESSED 的静默失效）。
+        "category_rule_count": len(CATEGORY_RULES),
+        "category_signal_counts": {entry["category"]: len(entry.get("terms") or ())
+                                   for entry in CATEGORY_RULES},
+        "category_exclude_counts": {entry["category"]: len(entry.get("exclude_contexts") or ())
+                                    for entry in CATEGORY_RULES},
+        "variant_rule_count": len(VARIANT_RULES),
         "sources": [{"id": s["id"], "title": s["title"], "url": s["url"],
                      "snapshot": s["snapshot"], "basis_date": BASIS_DATE} for s in SOURCES],
         "benchmark_thresholds": {
