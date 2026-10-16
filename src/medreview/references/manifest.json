@@ -1,0 +1,41 @@
+{
+  "basis_date": "2026-10-15",
+  "benchmark_thresholds": {
+    "b1_min_accuracy": 1.0,
+    "b2_false_block_max": 0,
+    "b3_reverse_pass_min": 1.0,
+    "b4_min_coverage": 1.0
+  },
+  "coverage_note": "抽样覆盖、非穷举：真值库按规则形态采样，见 benchmark/manifest 登记",
+  "enabled_rule_count": 25,
+  "excluded_clause_count": 3,
+  "ruleset_version": "ruleset-fd5aa96c23",
+  "sources": [
+    {
+      "basis_date": "2026-10-15",
+      "id": "advertising_law",
+      "snapshot": "advertising_law.txt",
+      "title": "《中华人民共和国广告法》",
+      "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html"
+    },
+    {
+      "basis_date": "2026-10-15",
+      "id": "internet_ad_measures",
+      "snapshot": "internet_ad_measures.txt",
+      "title": "《互联网广告管理办法》",
+      "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_d93a579afd45413e8576e4623fab348f.html"
+    },
+    {
+      "basis_date": "2026-10-15",
+      "id": "medical_ad_measures",
+      "snapshot": "medical_ad_measures.txt",
+      "title": "《医疗广告管理办法》",
+      "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html"
+    }
+  ],
+  "terms_basis_counts": {
+    "interpretive": 13,
+    "literal": 12
+  },
+  "total_rule_count": 28
+}

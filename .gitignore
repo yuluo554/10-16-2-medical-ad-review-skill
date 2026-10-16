@@ -64,3 +64,7 @@ dmypy.json
 Thumbs.db
 .idea/
 .vscode/
+# 本地验证用临时 venv / 临时产物（验证产物不放仓库树内）
+.venv-test/
+.tmp/
+*.tmp

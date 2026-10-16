@@ -1,0 +1,200 @@
+"""分级报告（模块 4）。
+
+**渲染层零判定**（既定口径 D12）：本模块只消费 ``Report`` 既有结论，
+不重算任何判定、不新增结论。判别：把报告单独发给一个没有引擎的人，
+他看不出这份报告是"渲染"的还是"计算"的。
+
+**单一渲染源**：``report_sections()`` 产出结构化章节，Markdown 渲染器与 JSON
+渲染器各自读它——"两格式内容一致"于是是**结构性质**，不是人工比对。
+
+**无外链**：报告正文不得含 URL（断网可开、可归档）；规则的官方 URL 只出现在
+机读产物的 ``rule_sources`` 字段里（供核证，非链接）。报告出口即断言
+``assert_no_external_links``（常驻断言，不是"记得跑那条测试"）。
+"""
+
+from __future__ import annotations
+
+import re
+
+from . import constants
+
+DISCLAIMER = (
+    "**免责声明**：本报告为发布前**辅助自查**参考，不构成法律意见，"
+    "不替代广告审查机关的官方审查。判定结果依赖本工具内置的冻结规则包"
+    "（基准日见报告头部），法规更新后须重新核对。发布前请以官方审查结论为准。"
+)
+
+_HTTP_RE = re.compile(r"https?://", re.IGNORECASE)
+
+
+class RenderError(ValueError):
+    """渲染出口断言失败（属输入/配置类，CLI 捕获为退出码 2）。"""
+
+
+def assert_no_external_links(text):
+    """渲染出口常驻硬断言：报告正文无 http(s) 外链（断网可开）。"""
+    found = _HTTP_RE.findall(text)
+    if found:
+        raise RenderError("报告正文含外链（断网不可开）: %s" % found[:3])
+    return True
+
+
+def report_sections(report):
+    """结构化章节（**单一渲染源**，两种格式共用）。"""
+    sections = []
+
+    sections.append({
+        "id": "input_facts",
+        "title": "一、输入事实",
+        "rows": [
+            ("内容 ID", report.item.id),
+            ("发布渠道", report.item.channel or "未提供"),
+            ("主体类型", report.item.subject or "未提供"),
+            ("审查证明", report.item.proof or "未提供"),
+            ("原文", report.item.text),
+        ],
+    })
+
+    coverage_rows = [
+        ("规则包版本", report.ruleset_version or "未派生"),
+        ("规则包基准日", report.ruleset_basis_date or "未提供"),
+        ("本次适用规则数", str(report.applied_rule_count)),
+        ("规则包总条目数", str(report.total_rule_count)),
+    ]
+    sections.append({
+        "id": "coverage",
+        "title": "二、本次评估覆盖",
+        "rows": coverage_rows,
+        "not_enabled": list(report.not_enabled),
+    })
+
+    sections.append({
+        "id": "grade",
+        "title": "三、分级结论",
+        "grade": report.grade,
+        "categories": list(report.categories),
+    })
+
+    findings = report.findings
+    sections.append({
+        "id": "findings",
+        "title": "四、逐条命中明细",
+        "findings": [f.to_dict() for f in findings],
+    })
+
+    sections.append({
+        "id": "input_required",
+        "title": "五、待补材料清单",
+        "items": list(report.input_required),
+    })
+
+    sections.append({
+        "id": "advisory",
+        "title": "六、语境提示（advisory，不参与分级）",
+        "items": list(report.advisories),
+    })
+
+    sections.append({
+        "id": "sources",
+        "title": "七、规则来源",
+        "items": list(report.rule_sources),
+    })
+
+    sections.append({
+        "id": "disclaimer",
+        "title": "八、免责声明",
+        "text": DISCLAIMER,
+    })
+
+    return sections
+
+
+def _fmt_rows(rows):
+    if not rows:
+        return "（无）"
+    return "\n".join("- **%s**：%s" % (key, value) for key, value in rows)
+
+
+def render_markdown(report):
+    """人读 Markdown 渲染器（只读 ``report_sections``）。"""
+    sections = report_sections(report)
+    lines = []
+    lines.append("# 医疗广告合规预审报告")
+    lines.append("")
+    lines.append("- 内容 ID：`%s`" % report.item.id)
+    lines.append("- 结论：**%s**" % report.grade)
+    lines.append("")
+
+    for section in sections:
+        lines.append("## %s" % section["title"])
+        lines.append("")
+        if section["id"] == "grade":
+            cats = section["categories"]
+            lines.append("- 判定品类：%s" % ("、".join(cats) if cats else "非涉医内容（未评估）"))
+            lines.append("")
+            continue
+        if section["id"] == "findings":
+            if not section["findings"]:
+                lines.append("（无命中）")
+            for finding in section["findings"]:
+                lines.append("- **[%s]** `%s`" % (finding["severity"], finding["rule_id"]))
+                lines.append("  - 条款锚点：%s" % finding["clause_anchor"])
+                lines.append("  - 法条原文：%s" % finding["quote"])
+                lines.append("  - 命中证据：%s" % finding["evidence"])
+            lines.append("")
+            continue
+        if section["id"] == "coverage":
+            lines.append(_fmt_rows(section["rows"]))
+            lines.append("")
+            if section["not_enabled"]:
+                lines.append("**未启用清单**（不参与本次判定）：")
+                for entry in section["not_enabled"]:
+                    lines.append("- `%s`：%s" % (entry["rule_id"], entry["reason"]))
+            else:
+                lines.append("未启用清单：（空）")
+            lines.append("")
+            continue
+        if section["id"] == "input_required":
+            if not section["items"]:
+                lines.append("（无）")
+            for entry in section["items"]:
+                lines.append("- `%s`：%s" % (entry["rule_id"], entry["reason"]))
+            lines.append("")
+            continue
+        if section["id"] == "advisory":
+            if not section["items"]:
+                lines.append("（无）")
+            for entry in section["items"]:
+                lines.append("- %s" % entry)
+            lines.append("")
+            continue
+        if section["id"] == "sources":
+            if not section["items"]:
+                lines.append("（无）")
+            for entry in section["items"]:
+                # **人读报告零外链**（断网可开）：URL 只出现在机读产物字段里
+                lines.append("- `%s`｜%s｜%s｜基准日 %s"
+                             % (entry["rule_id"], entry["source_title"],
+                                entry["anchor"], entry["basis_date"] or "未提供"))
+            lines.append("")
+            continue
+        if section["id"] == "disclaimer":
+            lines.append(section["text"])
+            lines.append("")
+            continue
+        lines.append(_fmt_rows(section.get("rows") or []))
+        lines.append("")
+
+    text = "\n".join(lines).rstrip("\n") + "\n"
+    assert_no_external_links(text)
+    return text
+
+
+def render_json(report):
+    """机读 JSON 载荷（与 Markdown **同一渲染源**；由 serialize 单点落盘）。"""
+    payload = report.to_dict()
+    payload["sections"] = [
+        {k: v for k, v in section.items()} for section in report_sections(report)
+    ]
+    payload["disclaimer"] = DISCLAIMER
+    return payload

@@ -1,0 +1,4 @@
+asset_id,path,sha256,source_url,captured_date,notes
+advertising_law,data/knowledge/raw/advertising_law.txt,50933ea19acc50068c30686946cfc94c0fbb799fc12a68a211c8d127d75784d6,https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html,2026-10-15,官方全文快照（-text 冻结）
+internet_ad_measures,data/knowledge/raw/internet_ad_measures.txt,8f64c5737311a7781560a328fda81e36e569420a4dba7746530a51f7ba8cbd9a,https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_d93a579afd45413e8576e4623fab348f.html,2026-10-15,官方全文快照（-text 冻结）
+medical_ad_measures,data/knowledge/raw/medical_ad_measures.txt,32b2d854b8adb8fc8ce33597a943caa4fbb5c9aa7654304666e9bd44baa48a77,https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html,2026-10-15,官方全文快照（-text 冻结）

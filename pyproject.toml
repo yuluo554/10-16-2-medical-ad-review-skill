@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medreview"
+# 打包元数据占位：运行时对外报告的版本一律由 references/manifest.json 派生（既定口径 K8），
+# 代码内零版本字面量。此处仅满足打包工具对 version 字段的格式要求。
+version = "0.0.0"
+description = "医疗/医美/药品/器械/保健食品广告合规预审体检工具（确定性规则引擎，纯本地）"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "yuluo554" }]
+keywords = ["medical-advertising", "compliance", "pre-review", "cli", "deterministic"]
+classifiers = [
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Office/Business",
+  "Environment :: Console",
+]
+# 运行时零第三方依赖：结论 100% 可复现、基准可离线跑、"纯本地不上传文案"为产物级可核验事实。
+dependencies = []
+
+[project.optional-dependencies]
+# dev 只放测试期真 import 的库；extras 永不进入运行时必需面。
+dev = ["pytest>=7,<9", "pyyaml>=6"]
+
+[project.scripts]
+medreview = "medreview.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+medreview = ["references/*.json"]

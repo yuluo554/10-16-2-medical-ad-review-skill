@@ -1,0 +1,770 @@
+{
+  "basis_date": "2026-10-15",
+  "cases": [
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B1-001",
+      "input": "XX医疗美容门诊部（虚构）开展双眼皮手术，欢迎预约面诊。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "42e2e86f4d23b89d1596f09d821e7bcf1160aa5295b50987d19f7b2f959a78a4",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-D1"
+      ],
+      "id": "B1-002",
+      "input": "本品为保健食品，蓝帽子认证，每日一粒。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "5fc4fe494c9c797f6db4ab5e3dc1d771f1093750a7469e3aadf10b2717b7c5ec",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:fsmp",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B1-003",
+      "input": "特殊医学用途配方食品，适用于术后营养支持。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "cf1fbdf2a753dfa470e90cd84c053dc596a69f5394edbb80a5a0b0daf55c79be",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED"
+      ],
+      "forbid_keys": [
+        "category:medical",
+        "category:drug",
+        "category:device",
+        "category:health_food",
+        "category:fsmp"
+      ],
+      "id": "B1-004",
+      "input": "今天天气不错，适合出门散步。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "d9bc881de4aa9ad051d700c76150409d666fec6e239f862c7f684d1e321c182c",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "category:device",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B1-005",
+      "input": "XX市第X医院（虚构）引进新型理疗仪，医疗器械注册证齐全，欢迎体验。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "cc3acfc4b2c7bf735ccfcc560c8a21870161239441c43b0434d6e8f9ae1de349",
+      "subject": null,
+      "suite": "b1_category"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-2"
+      ],
+      "id": "B2-001",
+      "input": "XX医疗美容门诊部（虚构）双眼皮手术，保证治愈，无效退款。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "b0864bf9fffa51597c49fdd7c887212fb6bc48d79803b202bab32db94eb027cf",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-3"
+      ],
+      "id": "B2-002",
+      "input": "XX市第X医院（虚构）肿瘤科，本院治疗有效率达到98%，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "5c987b1934e52d72a77b7aee14f76dd7cf2003f800223310139d8ff9934da4c7",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:AL-16-4"
+      ],
+      "id": "B2-003",
+      "input": "XX医疗美容门诊部（虚构）由某知名代言人倾情推荐，效果显著。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "ff2182f621cb7b3b9ef5c9f46306d8a7abfdeef47d77a3cb824f3d552079b45e",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-2"
+      ],
+      "id": "B2-004",
+      "input": "本品保健食品可有效降血糖、降血压，是糖尿病患者的必需之选。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "923b07c48f9910f997ad48d688d89442883f8e6602b71d83695fce6409a970ba",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-7"
+      ],
+      "id": "B2-005",
+      "input": "XX中医诊所（虚构）使用解放军专家团队技术，专治疑难杂症。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "2ce69e5fae291fa7efd8380d7724cdc32b4224b2914668039f533d5127b54f2b",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "hit:MAM-6-W"
+      ],
+      "forbid_keys": [
+        "grade:BLOCK",
+        "hit:MAM-7-1",
+        "hit:MAM-7-2",
+        "hit:MAM-7-3"
+      ],
+      "id": "B2-006",
+      "input": "XX医疗美容门诊部（虚构）无痛双眼皮手术，专家坐诊，技术领先。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "4ea645f096f081b7501b5ef22f64f4bb5942bb3728ef2a8693e78a7e1980b7ad",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:health_food",
+        "rule:compliant:AL-18-D1",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B2-007",
+      "input": "本品为保健食品，本品不能代替药物，每日一粒。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "10b5bf813805990e50dcc109f8ff5477f1f8298788436509acd82b98249cc369",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:drug",
+        "rule:compliant:AL-16-D2"
+      ],
+      "id": "B2-008",
+      "input": "本品为药品片剂，禁忌、不良反应详见说明书。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "a5a204d788f8991a5d6185e8bb9ee81edf9e6448d8aa8542b12cd3f02302d0d7",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-2",
+        "hit:AL-18-D1"
+      ],
+      "id": "B2-009",
+      "input": "本品保健食品可预防疾病、治疗慢性病，抗肿瘤。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "22a2a98676913cdd754caaad5cc2b3b64aaba948462d5b884151e46c26ecc684",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-1"
+      ],
+      "id": "B2-010",
+      "input": "XX医疗美容门诊部（虚构）专治各类疾病名称所指病症，配合药物治疗。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "56ed7aa354f212d668f5ec7d824232bc576c535b6743745659e638b5d5c9e092",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:device",
+        "hit:AL-16-1",
+        "hit:AL-16-3"
+      ],
+      "id": "B2-011",
+      "input": "本医疗器械保证有效，绝对安全，效果优于其他医疗器械。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "2942854a4b4c086c0532a168558dc8427d7b20b3aaca20576c4f193bb361314a",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "category:health_food",
+        "grade:BLOCK",
+        "rule:skipped:AL-16-1",
+        "rule:skipped:AL-16-2",
+        "rule:skipped:AL-16-3",
+        "rule:skipped:AL-16-4",
+        "hit:AL-18-1"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-1",
+        "hit:AL-16-2",
+        "hit:AL-16-3",
+        "hit:AL-16-4"
+      ],
+      "id": "B3-001",
+      "input": "本品保健食品保证有效，绝对安全，无副作用。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "941141636ab1e3e75ec3b5933032f462197f0e317416b5bf992387912fdca459",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "category:medical",
+        "grade:BLOCK",
+        "rule:skipped:AL-18-1",
+        "rule:skipped:AL-18-2",
+        "rule:skipped:AL-18-3",
+        "rule:skipped:AL-18-4",
+        "rule:skipped:AL-18-5",
+        "hit:MAM-7-3"
+      ],
+      "forbid_keys": [
+        "hit:AL-18-1",
+        "hit:AL-18-2",
+        "hit:AL-18-3",
+        "hit:AL-18-4",
+        "hit:AL-18-5"
+      ],
+      "id": "B3-002",
+      "input": "XX医疗美容门诊部（虚构）宣传治愈率与有效率。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "bdbe986bc517a1872e9932f985328d54493b5693f14569ff80c703f5e59ce6aa",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:NOT_ASSESSED"
+      ],
+      "forbid_keys": [
+        "hit:MAM-7-1",
+        "hit:MAM-7-2",
+        "hit:MAM-7-3",
+        "hit:AL-16-1",
+        "hit:AL-18-1",
+        "hit:IAM-8-1"
+      ],
+      "id": "B3-003",
+      "input": "这家餐厅的招牌菜味道很好。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "db1cb0b46252f4b7f64fa89a11c5cfa9799d19786c63860f4d9de775a387b26a",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "rule:skipped:IAM-7-2",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B3-004",
+      "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "4f061086b55ed36a29a90631930b84c1501d73c106006a1dd443595440bd3e36",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-4"
+      ],
+      "id": "B4-001",
+      "input": "XX医疗美容门诊部（虚构）内容淫秽、迷信、荒诞。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "3bbb3b3c6a4a3db2feccb2d7cb8ad90ed3bf0f88094713da7205e74d43d9a0cf",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-5"
+      ],
+      "id": "B4-002",
+      "input": "XX医疗美容门诊部（虚构）贬低他人的技术水平。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "0fda2f000813051efb05527b7eedc4ffb87128731588ffc3e2576e69ade8c41c",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-6"
+      ],
+      "id": "B4-003",
+      "input": "XX医疗美容门诊部（虚构）由患者现身说法，卫生技术人员作证明。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "b5550864e2e74aff3eb18ae421004fe825ae624102241289a57cf4dc1e634efa",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-3",
+        "hit:AL-18-4"
+      ],
+      "id": "B4-004",
+      "input": "本品保健食品优于其他保健食品，人人必备，为保障健康所必需。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "9d8e638b5c35545e8386376592bb653e8cd4b0c786e275cd9a3ae1b048be4334",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-5"
+      ],
+      "id": "B4-005",
+      "input": "本品保健食品由形象大使推荐，明星推荐值得信赖。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "b1761f99273e022f781bb56d2846de25047ff6898660f22f3a7e2c52399dcd20",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:drug",
+        "hit:AL-16-D2",
+        "input_required:AL-16-D1"
+      ],
+      "id": "B4-006",
+      "input": "药品片剂，请按说明书服用，适应症详见说明。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "d2eb0aa418a92980a82fce719a34236e563ac38a3d1e6e5f53646e4030e578c4",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "input_required:MAM-6-LIC"
+      ],
+      "id": "B4-007",
+      "input": "XX医疗美容门诊部（虚构）执业许可证齐全，诊疗科目详见许可证。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "c344f06604a35a3b56ea713dcce2ff6fc68f726d05facda0adaf8d62e78f5e05",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:IAM-8-1",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B4-008",
+      "input": "XX医疗美容门诊部（虚构）养生知识科普：双眼皮术后如何保养，欢迎预约面诊。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "25ca7f61607073e0b83452304423f0bc014ca50c74d5b4a971e4bdc2e16f5bad",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:IAM-8-2",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B4-009",
+      "input": "XX中医诊所（虚构）健康知识科普，加微信咨询，或扫码了解详情。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "6d4aa83714ce0517fc12d9a281e12ddc95ca647678c204133e70933b50b1bde0",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "input_required:IAM-7-1",
+        "input_required:IAM-7-2"
+      ],
+      "id": "B4-010",
+      "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
+      "proof": null,
+      "scenario": "published",
+      "sha256": "4852fa07cb723d9ffc97cc932f52b5ce47c67f14b20106898b4f1ee88333cff3",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:IAM-7-1"
+      ],
+      "id": "B4-011",
+      "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
+      "proof": "no",
+      "scenario": null,
+      "sha256": "275c9661dc1458a23cf76a67862b7709633956a82a94729dce59aed4b6e7f76a",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "rule:compliant:IAM-7-1"
+      ],
+      "id": "B4-012",
+      "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
+      "proof": "yes",
+      "scenario": null,
+      "sha256": "5ec0af143b041f398da13dfbe05e67f64b639caf4a58e8cd3b199e9cdd108e1b",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:device",
+        "hit:AL-16-2"
+      ],
+      "id": "B4-013",
+      "input": "本医疗器械有效率达到95%，注册证齐全。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "5a1a2399831025606c6c35f76ab39f5380f7dcb4091ac9138ce00bd706d5fece",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:drug",
+        "hit:AL-16-1"
+      ],
+      "id": "B4-014",
+      "input": "本品药品片剂，保证有效，绝对安全。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "30b571a57f087d6274bb4e8abecc5fde1c4349d4d8f24ff14baf361d638a73f0",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-3"
+      ],
+      "id": "B4-015",
+      "input": "本品保健食品是人人必备的保健品，本品不能代替药物。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "a6ac50f105b7a2f5ba2f9a841cc93db37df54a4a5716c3f0321632e9f3d58c6c",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:health_food",
+        "hit:AL-18-1"
+      ],
+      "id": "B4-016",
+      "input": "本品保健食品保证有效，绝对安全，无副作用，本品不能代替药物。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "74b2f978b91ad643234292390e54821b981eb0c10f4c803af5b24cda0cd81218",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:IAM-8-2",
+        "input_required:IAM-7-1"
+      ],
+      "id": "B4-017",
+      "input": "XX中医诊所（虚构）分享养生知识，欢迎致电预约，联系电话见文末。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "ac5a4a6f0c5815061b7265e7919df7a84b4908dc471879ec562c98e1205c9d7d",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    }
+  ],
+  "coverage_note": "抽样覆盖、非穷举：按规则形态采样，非逐条穷举",
+  "fake_org_whitelist": [
+    "XX医疗美容门诊部（虚构）",
+    "XX市第X医院（虚构）",
+    "XX中医诊所（虚构）"
+  ],
+  "generated_by": "tools/gen_cases.py",
+  "ledger": {
+    "count": 37,
+    "entries": [
+      {
+        "id": "B1-001",
+        "sha256": "42e2e86f4d23b89d1596f09d821e7bcf1160aa5295b50987d19f7b2f959a78a4"
+      },
+      {
+        "id": "B1-002",
+        "sha256": "5fc4fe494c9c797f6db4ab5e3dc1d771f1093750a7469e3aadf10b2717b7c5ec"
+      },
+      {
+        "id": "B1-003",
+        "sha256": "cf1fbdf2a753dfa470e90cd84c053dc596a69f5394edbb80a5a0b0daf55c79be"
+      },
+      {
+        "id": "B1-004",
+        "sha256": "d9bc881de4aa9ad051d700c76150409d666fec6e239f862c7f684d1e321c182c"
+      },
+      {
+        "id": "B1-005",
+        "sha256": "cc3acfc4b2c7bf735ccfcc560c8a21870161239441c43b0434d6e8f9ae1de349"
+      },
+      {
+        "id": "B2-001",
+        "sha256": "b0864bf9fffa51597c49fdd7c887212fb6bc48d79803b202bab32db94eb027cf"
+      },
+      {
+        "id": "B2-002",
+        "sha256": "5c987b1934e52d72a77b7aee14f76dd7cf2003f800223310139d8ff9934da4c7"
+      },
+      {
+        "id": "B2-003",
+        "sha256": "ff2182f621cb7b3b9ef5c9f46306d8a7abfdeef47d77a3cb824f3d552079b45e"
+      },
+      {
+        "id": "B2-004",
+        "sha256": "923b07c48f9910f997ad48d688d89442883f8e6602b71d83695fce6409a970ba"
+      },
+      {
+        "id": "B2-005",
+        "sha256": "2ce69e5fae291fa7efd8380d7724cdc32b4224b2914668039f533d5127b54f2b"
+      },
+      {
+        "id": "B2-006",
+        "sha256": "4ea645f096f081b7501b5ef22f64f4bb5942bb3728ef2a8693e78a7e1980b7ad"
+      },
+      {
+        "id": "B2-007",
+        "sha256": "10b5bf813805990e50dcc109f8ff5477f1f8298788436509acd82b98249cc369"
+      },
+      {
+        "id": "B2-008",
+        "sha256": "a5a204d788f8991a5d6185e8bb9ee81edf9e6448d8aa8542b12cd3f02302d0d7"
+      },
+      {
+        "id": "B2-009",
+        "sha256": "22a2a98676913cdd754caaad5cc2b3b64aaba948462d5b884151e46c26ecc684"
+      },
+      {
+        "id": "B2-010",
+        "sha256": "56ed7aa354f212d668f5ec7d824232bc576c535b6743745659e638b5d5c9e092"
+      },
+      {
+        "id": "B2-011",
+        "sha256": "2942854a4b4c086c0532a168558dc8427d7b20b3aaca20576c4f193bb361314a"
+      },
+      {
+        "id": "B3-001",
+        "sha256": "941141636ab1e3e75ec3b5933032f462197f0e317416b5bf992387912fdca459"
+      },
+      {
+        "id": "B3-002",
+        "sha256": "bdbe986bc517a1872e9932f985328d54493b5693f14569ff80c703f5e59ce6aa"
+      },
+      {
+        "id": "B3-003",
+        "sha256": "db1cb0b46252f4b7f64fa89a11c5cfa9799d19786c63860f4d9de775a387b26a"
+      },
+      {
+        "id": "B3-004",
+        "sha256": "4f061086b55ed36a29a90631930b84c1501d73c106006a1dd443595440bd3e36"
+      },
+      {
+        "id": "B4-001",
+        "sha256": "3bbb3b3c6a4a3db2feccb2d7cb8ad90ed3bf0f88094713da7205e74d43d9a0cf"
+      },
+      {
+        "id": "B4-002",
+        "sha256": "0fda2f000813051efb05527b7eedc4ffb87128731588ffc3e2576e69ade8c41c"
+      },
+      {
+        "id": "B4-003",
+        "sha256": "b5550864e2e74aff3eb18ae421004fe825ae624102241289a57cf4dc1e634efa"
+      },
+      {
+        "id": "B4-004",
+        "sha256": "9d8e638b5c35545e8386376592bb653e8cd4b0c786e275cd9a3ae1b048be4334"
+      },
+      {
+        "id": "B4-005",
+        "sha256": "b1761f99273e022f781bb56d2846de25047ff6898660f22f3a7e2c52399dcd20"
+      },
+      {
+        "id": "B4-006",
+        "sha256": "d2eb0aa418a92980a82fce719a34236e563ac38a3d1e6e5f53646e4030e578c4"
+      },
+      {
+        "id": "B4-007",
+        "sha256": "c344f06604a35a3b56ea713dcce2ff6fc68f726d05facda0adaf8d62e78f5e05"
+      },
+      {
+        "id": "B4-008",
+        "sha256": "25ca7f61607073e0b83452304423f0bc014ca50c74d5b4a971e4bdc2e16f5bad"
+      },
+      {
+        "id": "B4-009",
+        "sha256": "6d4aa83714ce0517fc12d9a281e12ddc95ca647678c204133e70933b50b1bde0"
+      },
+      {
+        "id": "B4-010",
+        "sha256": "4852fa07cb723d9ffc97cc932f52b5ce47c67f14b20106898b4f1ee88333cff3"
+      },
+      {
+        "id": "B4-011",
+        "sha256": "275c9661dc1458a23cf76a67862b7709633956a82a94729dce59aed4b6e7f76a"
+      },
+      {
+        "id": "B4-012",
+        "sha256": "5ec0af143b041f398da13dfbe05e67f64b639caf4a58e8cd3b199e9cdd108e1b"
+      },
+      {
+        "id": "B4-013",
+        "sha256": "5a1a2399831025606c6c35f76ab39f5380f7dcb4091ac9138ce00bd706d5fece"
+      },
+      {
+        "id": "B4-014",
+        "sha256": "30b571a57f087d6274bb4e8abecc5fde1c4349d4d8f24ff14baf361d638a73f0"
+      },
+      {
+        "id": "B4-015",
+        "sha256": "a6ac50f105b7a2f5ba2f9a841cc93db37df54a4a5716c3f0321632e9f3d58c6c"
+      },
+      {
+        "id": "B4-016",
+        "sha256": "74b2f978b91ad643234292390e54821b981eb0c10f4c803af5b24cda0cd81218"
+      },
+      {
+        "id": "B4-017",
+        "sha256": "ac5a4a6f0c5815061b7265e7919df7a84b4908dc471879ec562c98e1205c9d7d"
+      }
+    ]
+  }
+}

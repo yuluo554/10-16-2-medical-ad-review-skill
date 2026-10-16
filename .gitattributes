@@ -1,0 +1,12 @@
+# 源码行尾归一（防跨平台 CRLF 漂移）
+* text=auto eol=lf
+
+# 冻结快照：字节必须原样保存，禁止 EOL 归一化（否则 sha256 台账失配）
+data/knowledge/raw/** -text
+data/knowledge/raw/* -text
+
+# 二进制
+*.pdf binary
+*.zip binary
+*.png binary
+*.gif binary

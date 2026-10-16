@@ -1,0 +1,928 @@
+{
+  "basis_date": "2026-10-15",
+  "category_rules": [
+    {
+      "anchor": "《医疗广告管理办法》§2",
+      "category": "medical",
+      "quote": "本办法所称医疗广告，是指利用各种媒介或者形式直接或间接介绍医疗机构或医疗服务的广告。",
+      "signal_id": "cat_medical",
+      "terms": [
+        "门诊部",
+        "医院",
+        "诊所",
+        "医疗美容",
+        "医美",
+        "整形",
+        "诊疗",
+        "科室",
+        "挂号"
+      ]
+    },
+    {
+      "anchor": "《广告法》§16",
+      "category": "drug",
+      "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
+      "signal_id": "cat_drug",
+      "terms": [
+        "药品",
+        "片剂",
+        "胶囊",
+        "口服液",
+        "国药准字",
+        "说明书",
+        "适应症"
+      ]
+    },
+    {
+      "anchor": "《广告法》§16",
+      "category": "device",
+      "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
+      "signal_id": "cat_device",
+      "terms": [
+        "医疗器械",
+        "器械",
+        "注册证",
+        "械字号",
+        "理疗仪",
+        "血压计"
+      ]
+    },
+    {
+      "anchor": "《广告法》§18",
+      "category": "health_food",
+      "quote": "保健食品广告不得含有下列内容：",
+      "signal_id": "cat_health_food",
+      "terms": [
+        "保健食品",
+        "保健品",
+        "蓝帽子",
+        "保健功能",
+        "膳食补充"
+      ]
+    },
+    {
+      "anchor": "《互联网广告管理办法》§7",
+      "category": "fsmp",
+      "quote": "发布医疗、药品、医疗器械、农药、兽药、保健食品、特殊医学用途配方食品广告等法律、行政法规规定应当进行审查的广告",
+      "signal_id": "cat_fsmp",
+      "terms": [
+        "特殊医学用途配方食品",
+        "特医食品"
+      ]
+    }
+  ],
+  "excluded_clauses": [
+    {
+      "clause": "7",
+      "code": "catch_all_clause",
+      "item": "8",
+      "quote": {
+        "numeral": "八",
+        "text": "（八）法律、行政法规规定禁止的其他情形。"
+      },
+      "reason": "兜底条款「法律、行政法规规定禁止的其他情形」，无可机读判定要素，不建规则",
+      "rule_id": "medical_ad_measures-7-8",
+      "source": "medical_ad_measures"
+    },
+    {
+      "clause": "16",
+      "code": "catch_all_clause",
+      "item": "5",
+      "quote": {
+        "numeral": "五",
+        "text": "（五）法律、行政法规规定禁止的其他内容。"
+      },
+      "reason": "兜底条款「法律、行政法规规定禁止的其他内容」，无可机读判定要素，不建规则",
+      "rule_id": "advertising_law-16-5",
+      "source": "advertising_law"
+    },
+    {
+      "clause": "18",
+      "code": "catch_all_clause",
+      "item": "6",
+      "quote": {
+        "numeral": "六",
+        "text": "（六）法律、行政法规规定禁止的其他内容。"
+      },
+      "reason": "兜底条款「法律、行政法规规定禁止的其他内容」，无可机读判定要素，不建规则",
+      "rule_id": "advertising_law-18-6",
+      "source": "advertising_law"
+    }
+  ],
+  "generated_by": "tools/gen_ruleset.py",
+  "rules": [
+    {
+      "anchor": "《中华人民共和国广告法》§16",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "drug"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-D1",
+      "item": null,
+      "kind": "input_required",
+      "match": {
+        "required_input": "国务院药品监督管理部门批准的药品说明书（核对内容一致性）"
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "quote": "药品广告的内容不得与国务院药品监督管理部门批准的说明书不一致，并应当显著标明禁忌、不良反应。处方药广告应当显著标明",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "drug"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-D2",
+      "item": null,
+      "kind": "mandatory_disclosure",
+      "match": {
+        "require_all_of": [
+          [
+            "禁忌",
+            "不良反应"
+          ]
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "drug_must_mark_contraindication",
+      "quote": "药品广告的内容不得与国务院药品监督管理部门批准的说明书不一致，并应当显著标明禁忌、不良反应。处方药广告应当显著标明",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16第（一）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-1",
+      "item": "1",
+      "kind": "prohibited_pattern",
+      "match": {
+        "any_of": [
+          "包治",
+          "根治",
+          "治愈",
+          "安全无副作用",
+          "绝对安全",
+          "保证有效",
+          "100%有效"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "efficacy_safety_assertion",
+      "quote": "（一）表示功效、安全性的断言或者保证；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16第（二）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-2",
+      "item": "2",
+      "kind": "prohibited_pattern",
+      "match": {
+        "any_of": [
+          "治愈率",
+          "有效率"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "cure_or_response_rate",
+      "quote": "（二）说明治愈率或者有效率；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16第（三）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-3",
+      "item": "3",
+      "kind": "prohibited_pattern",
+      "match": {
+        "any_of": [
+          "优于",
+          "好于",
+          "第一",
+          "最先进",
+          "其他医院"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "comparison_with_others",
+      "quote": "（三）与其他药品、医疗器械的功效和安全性或者其他医疗机构比较；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16第（四）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-4",
+      "item": "4",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "代言人",
+          "形象大使",
+          "明星推荐",
+          "倾情推荐"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "ad_endorser",
+      "quote": "（四）利用广告代言人作推荐、证明；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§18",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "health_food"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "18",
+      "id": "AL-18-D1",
+      "item": null,
+      "kind": "mandatory_disclosure",
+      "match": {
+        "require_all_of": [
+          [
+            "不能代替药物"
+          ]
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "health_food_must_mark_not_drug",
+      "quote": "“本品不能代替药物”。",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§18第（一）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "health_food"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "18",
+      "id": "AL-18-1",
+      "item": "1",
+      "kind": "prohibited_pattern",
+      "match": {
+        "any_of": [
+          "包治",
+          "根治",
+          "绝对安全",
+          "保证有效",
+          "无副作用"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "health_food_efficacy_assertion",
+      "quote": "（一）表示功效、安全性的断言或者保证；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§18第（二）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "health_food"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "18",
+      "id": "AL-18-2",
+      "item": "2",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "预防",
+          "治疗",
+          "抗肿瘤",
+          "降血压",
+          "降血糖"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "disease_prevention_treatment",
+      "quote": "（二）涉及疾病预防、治疗功能；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§18第（三）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "health_food"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "18",
+      "id": "AL-18-3",
+      "item": "3",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "必需",
+          "必不可少",
+          "人人必备"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "claim_indispensable",
+      "quote": "（三）声称或者暗示广告商品为保障健康所必需；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§18第（四）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "health_food"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "18",
+      "id": "AL-18-4",
+      "item": "4",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "优于",
+          "好于",
+          "其他保健食品"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "health_food_comparison",
+      "quote": "（四）与药品、其他保健食品进行比较；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§18第（五）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "health_food"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "18",
+      "id": "AL-18-5",
+      "item": "5",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "代言人",
+          "形象大使",
+          "明星推荐"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "health_food_endorser",
+      "quote": "（五）利用广告代言人作推荐、证明；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《互联网广告管理办法》§7",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device",
+          "health_food",
+          "fsmp"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "IAM-7-1",
+      "item": null,
+      "kind": "review_proof",
+      "match": {
+        "required_input": "广告审查机关出具的广告审查证明（未审查不得发布）"
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_d93a579afd45413e8576e4623fab348f.html",
+      "quote": "发布医疗、药品、医疗器械、农药、兽药、保健食品、特殊医学用途配方食品广告等法律、行政法规规定应当进行审查的广告，应当在发布前由广告审查机关对广告内容进行审查；未经审查，不得发布。",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "internet_ad_measures",
+      "source_title": "《互联网广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《互联网广告管理办法》§7",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device",
+          "health_food",
+          "fsmp"
+        ],
+        "scenario": [
+          "published"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "IAM-7-2",
+      "item": null,
+      "kind": "input_required",
+      "match": {
+        "required_input": "审查通过的广告内容原文（核对是否被剪辑、拼接、修改）"
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_d93a579afd45413e8576e4623fab348f.html",
+      "quote": "对须经审查的互联网广告，应当严格按照审查通过的内容发布，不得剪辑、拼接、修改。已经审查通过的广告内容需要改动的，应当重新申请广告审查。",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "internet_ad_measures",
+      "source_title": "《互联网广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《互联网广告管理办法》§8",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device",
+          "health_food",
+          "fsmp"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "8",
+      "id": "IAM-8-1",
+      "item": null,
+      "kind": "variant_publish",
+      "match": {
+        "commerce_terms": [
+          "门诊部",
+          "医院",
+          "诊所",
+          "购买",
+          "预约"
+        ],
+        "knowledge_terms": [
+          "养生知识",
+          "健康知识",
+          "科普"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_d93a579afd45413e8576e4623fab348f.html",
+      "pattern_id": "variant_publish_health_knowledge",
+      "quote": "禁止以介绍健康、养生知识等形式，变相发布医疗、药品、医疗器械、保健食品、特殊医学用途配方食品广告。",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "internet_ad_measures",
+      "source_title": "《互联网广告管理办法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《互联网广告管理办法》§8",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical",
+          "drug",
+          "device",
+          "health_food",
+          "fsmp"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "8",
+      "id": "IAM-8-2",
+      "item": null,
+      "kind": "variant_publish",
+      "match": {
+        "commerce_terms": [
+          "联系方式",
+          "购物链接",
+          "扫码",
+          "加微信",
+          "电话"
+        ],
+        "knowledge_terms": [
+          "养生知识",
+          "健康知识",
+          "科普"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_d93a579afd45413e8576e4623fab348f.html",
+      "pattern_id": "variant_publish_commerce_info",
+      "quote": "介绍健康、养生知识的，不得在同一页面或者同时出现相关医疗、药品、医疗器械、保健食品、特殊医学用途配方食品的商品经营者或者服务提供者地址、联系方式、购物链接等内容。",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "internet_ad_measures",
+      "source_title": "《互联网广告管理办法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§6",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "6",
+      "id": "MAM-6-W",
+      "item": null,
+      "kind": "whitelist_scope",
+      "match": {
+        "any_of": [
+          "疗效",
+          "无痛",
+          "专家坐诊",
+          "设备先进",
+          "技术领先",
+          "成功率"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "beyond_whitelist",
+      "quote": "医疗广告内容仅限于以下项目：",
+      "quote_status": "verified",
+      "severity": "warn",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§6",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "6",
+      "id": "MAM-6-LIC",
+      "item": null,
+      "kind": "input_required",
+      "match": {
+        "required_input": "《医疗机构执业许可证》或其副本（核对第（一）至（六）项内容一致性）"
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "quote": "（一）至（六）项发布的内容必须与卫生行政部门、中医药管理部门核发的《医疗机构执业许可证》或其副本载明的内容一致。",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（一）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-1",
+      "item": "1",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "医疗技术",
+          "诊疗方法",
+          "疾病名称",
+          "药物"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "involves_tech_disease_drug",
+      "quote": "（一）涉及医疗技术、诊疗方法、疾病名称、药物的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（二）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-2",
+      "item": "2",
+      "kind": "prohibited_pattern",
+      "match": {
+        "any_of": [
+          "保证治愈",
+          "彻底治愈",
+          "根治",
+          "包治",
+          "无效退款",
+          "永不复发"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "guaranteed_cure",
+      "quote": "（二）保证治愈或者隐含保证治愈的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（三）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-3",
+      "item": "3",
+      "kind": "prohibited_pattern",
+      "match": {
+        "any_of": [
+          "治愈率",
+          "有效率",
+          "诊疗效果"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "cure_rate_claim",
+      "quote": "（三）宣传治愈率、有效率等诊疗效果的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（四）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-4",
+      "item": "4",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "淫秽",
+          "迷信",
+          "荒诞"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "obscene_superstitious",
+      "quote": "（四）淫秽、迷信、荒诞的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（五）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-5",
+      "item": "5",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "贬低"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "disparage_others",
+      "quote": "（五）贬低他人的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（六）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-6",
+      "item": "6",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "患者",
+          "卫生技术人员",
+          "医学教育科研机构",
+          "社会社团"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "endorsement_by_patient_or_org",
+      "quote": "（六）利用患者、卫生技术人员、医学教育科研机构及人员以及其他社会社团、组织的名义、形象作证明的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "interpretive"
+    },
+    {
+      "anchor": "《医疗广告管理办法》§7第（七）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-7",
+      "item": "7",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "解放军",
+          "武警部队"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "military_name",
+      "quote": "（七）使用解放军和武警部队名义的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "literal"
+    }
+  ],
+  "ruleset_version": "ruleset-fd5aa96c23",
+  "variant_rules": [
+    {
+      "anchor": "《互联网广告管理办法》§8",
+      "commerce_terms": [
+        "门诊部",
+        "医院",
+        "诊所",
+        "购买",
+        "预约",
+        "联系方式",
+        "购物链接",
+        "扫码",
+        "加微信"
+      ],
+      "knowledge_terms": [
+        "养生",
+        "健康知识",
+        "科普",
+        "调理",
+        "保养"
+      ],
+      "quote": "禁止以介绍健康、养生知识等形式，变相发布医疗、药品、医疗器械、保健食品、特殊医学用途配方食品广告。",
+      "signal_id": "variant_health_knowledge"
+    }
+  ]
+}
