@@ -38,6 +38,8 @@
 | 冻结产物位级一致 | ✅ `gen_ruleset.py --check` + `gen_cases.py --check` → FROZEN_TRUTH_OK |
 | 干净 venv 安装 + 裸 console script 冒烟 | ✅（安装面三通路均通） |
 | 变异验证（守门非假门） | ✅ 4 组变异全部使门变红 |
+| CI 检出形态本地复现 | ✅ 浅克隆内 65 项全绿 + 快照 sha256 全对 + 冻结产物位级一致 |
+| GitHub 建仓 | ⬜ **未执行**（对外动作；用户要求"不着急直接开始"）——见 `plan/06` P1/P2 |
 | 待定决策表拍板 | ⬜ P1–P8 按**推荐默认**执行（用户未逐项答复，如实留档，**不写"已确认"**） |
 | M1 起 | ⬜ 见 [`plan/HANDOFF-M1.md`](./HANDOFF-M1.md) |
 

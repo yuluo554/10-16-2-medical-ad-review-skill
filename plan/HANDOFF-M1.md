@@ -112,6 +112,8 @@ M1 的骨架**已经预置完毕**（快照、生成器、规则包、台账都�
 | 0-11 | 干净 venv 安装 + 裸 console script 冒烟 | `.venv-test` 内 `pip install -e ".[dev]"` → `medreview.exe selftest` OK、65 项测试绿、`bench` exit 0、非仓库根 CWD 跑 `python -m medreview.cli` OK | ✅ |
 | 0-12 | CI workflow 结构守门 | `tests/check_workflows.py` → WORKFLOW_LINT_OK | ✅ |
 | 0-13 | **本地等价校验（未接远端，CI 待首推验证）** | 上列全部本机通路；**不可本机实跑的 ubuntu 矩阵与 cp1252 环境差异显式标注"待首推验证"** | ✅（等价） |
+| 0-13b | **CI 检出形态本地复现**（`git clone --depth 1 --no-tags file:///<abs>`） | 浅克隆内：65 项 pytest 全绿；快照 sha256 与台账逐份一致（`ALL_MATCH`）；`gen_ruleset/gen_cases --check` 均 FROZEN_TRUTH_OK；干净 venv `pip install -e ".[dev]"` + 裸 `medreview bench` exit 0 | ✅ |
+| 0-13c | **未建仓的补偿留档** | `plan/06` P1/P2 已如实标注"推荐默认；本对话未执行"（建仓属对外动作，用户要求"不着急直接开始"） | ✅ |
 | 0-14 | 变异验证（守门不是假门） | 4 组变异全部使门变红：① 关掉锚点硬门 → `test_rule_with_unresolvable_quote_is_refused` 红；② `input_required` 判 OK → `test_input_required_never_grades_ok` 红；③ 改 SKILL.md 契约块 → 2 项契约测试红；④ 篡改用例 → 冻结台账报红 | ✅ |
 | 0-15 | `plan/HANDOFF-M1.md` 已落盘 | 本文件 | ✅ |
 | 0-16 | 首提交、工作树干净 | `git log` + `git status` | ✅ |
