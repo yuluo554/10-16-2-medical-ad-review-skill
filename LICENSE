@@ -1,0 +1,36 @@
+MIT License
+
+Copyright (c) 2026 yuluo554
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## 数据说明（Data Notice）
+
+`data/knowledge/raw/` 下的三份文本快照为**中华人民共和国法律法规的官方公布文本**
+（来源：国家市场监督管理总局官网，URL 见 `data/README.md` 与 `data/ledger.csv`）。
+法律法规文本属公开发布、不适用著作权保护的官方文件，此处仅作**规则溯源与逐字核验**
+之用，不构成对原文的再创作或再发布主张。
+
+本仓库的**软件部分**（`src/`、`tools/`、`tests/`、`SKILL.md`、`README.md`、`plan/`）
+适用上述 MIT 许可。
+
+**免责声明**：本项目输出为发布前**辅助自查**参考，**不构成法律意见，不替代广告审查
+机关的官方审查**。使用者须自行确认所引用法规文本的现行有效性与最新版本。

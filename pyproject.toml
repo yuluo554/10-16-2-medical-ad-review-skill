@@ -10,7 +10,7 @@ version = "0.0.0"
 description = "医疗/医美/药品/器械/保健食品广告合规预审体检工具（确定性规则引擎，纯本地）"
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 authors = [{ name = "yuluo554" }]
 keywords = ["medical-advertising", "compliance", "pre-review", "cli", "deterministic"]
 classifiers = [

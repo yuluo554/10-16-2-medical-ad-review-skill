@@ -126,6 +126,11 @@ python tests/check_workflows.py        # CI workflow 结构守门
 - **Windows 用 `python -m pip`**：`py` 启动器会绕过 venv 装进系统 Python；
 - **规则包是生成物**：请勿手改 `src/medreview/references/*.json`，改需求走 `tools/gen_ruleset.py` 整目录重生成。
 
+## 许可
+
+软件部分 MIT（见 [`LICENSE`](LICENSE)）。`data/knowledge/raw/` 下为法律法规官方公布文本，
+仅作规则溯源与逐字核验之用（说明见 LICENSE 的 Data Notice 节）。
+
 ## 计划与里程碑
 
 见 [`plan/00-README总览.md`](plan/00-README总览.md)（文档索引、决策记录、承诺-证据台账、里程碑状态）。
