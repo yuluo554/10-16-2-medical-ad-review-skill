@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml)
 
-**状态**：🚧 v0.1.0 开发中（M0 骨架已就位，M1 数据先行待办）
+**状态**：🚧 v0.1.0 开发中（M0 骨架 + M1 数据先行已完成；M2 品类判定器待办）
 
 ---
 
@@ -44,6 +44,9 @@ medreview check --text "XX医疗美容门诊部（虚构）双眼皮手术，保
 
 # 机读 JSON 报告（含规则来源 URL，供核证）
 medreview check --format json --text "本品保健食品可有效降血糖、降血压。"
+
+# 补材料后重跑（报告"待补材料清单"节索要的材料，用它回传；只记摘要不落路径）
+medreview check --text "XX医疗美容门诊部（虚构）双眼皮手术。" --proof yes --proof-file ./审查证明.pdf
 
 # 批量审查一个目录下的全部 .txt 文案（失败件单列，不中断整批）
 medreview scan --dir ./samples
@@ -93,7 +96,10 @@ medreview selftest
 |---|---|
 | 《中华人民共和国广告法》 | §16、§18、§46 |
 | 《互联网广告管理办法》 | §7、§8 |
-| 《医疗广告管理办法》 | §6、§7 |
+| 《医疗广告管理办法》 | §6（白名单 **8 项**，实测勘误见下）、§7 |
+
+> **实测勘误**：《医疗广告管理办法》§6 白名单官方原文为 **8 项**（题面写 7 项，含（八）联系电话）。
+> 规则包按实测 8 项建，并作为可校验资产登记（`ruleset.json` 的 `whitelist_items` + 门禁断言"8 项且逐字在原文中"）。
 
 来源 URL、抓取记录与 sha256 台账见 [`data/README.md`](data/README.md) 与 [`data/ledger.csv`](data/ledger.csv)。
 
