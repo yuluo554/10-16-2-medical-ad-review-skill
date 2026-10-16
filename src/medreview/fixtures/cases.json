@@ -259,6 +259,55 @@
     {
       "channel": null,
       "expect_keys": [
+        "grade:WARN",
+        "category:drug",
+        "rule:compliant:AL-16-D3"
+      ],
+      "id": "B2-012",
+      "input": "本品为处方药，片剂，禁忌、不良反应详见说明书，本广告仅供医学药学专业人士阅读。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "c307157f085aa28cc7c9f1f51476a7a139bcc5d5a30000c3ba3e38458dd428e3",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:device",
+        "rule:compliant:AL-16-D5"
+      ],
+      "id": "B2-013",
+      "input": "本医疗器械推荐给个人自用，请仔细阅读产品说明书或者在医务人员的指导下购买和使用。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "cee57e41dbdc462699a40dfb3dcdf678eb8559bbb0f2574302ce4bbddba7abad",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:health_food",
+        "rule:compliant:AL-18-D1"
+      ],
+      "forbid_keys": [
+        "hit:AL-18-2",
+        "hit:AL-18-D1"
+      ],
+      "id": "B2-014",
+      "input": "本品为保健食品，不能代替药物治疗，每日一粒。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "f620dc839c9d717fac3dc35fe554dddddf681212a7096ef6ac6bb8451c08d42b",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
         "category:health_food",
         "grade:BLOCK",
         "rule:skipped:AL-16-1",
@@ -342,6 +391,79 @@
       "proof": null,
       "scenario": null,
       "sha256": "4f061086b55ed36a29a90631930b84c1501d73c106006a1dd443595440bd3e36",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:drug",
+        "rule:skipped:AL-16-D3",
+        "rule:compliant:AL-16-D4"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-D3"
+      ],
+      "id": "B3-005",
+      "input": "本品为非处方药，片剂，禁忌、不良反应详见说明书，请按药品说明书或者在药师指导下购买和使用。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "6490cd3368015d07cc2ed93df8682cbcdef2c7bfe911fb620095ef65706b15e9",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical",
+        "category:device",
+        "rule:skipped:AL-16-D5"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-D5"
+      ],
+      "id": "B3-006",
+      "input": "XX市第X医院（虚构）引进新型理疗仪，医疗器械注册证齐全，欢迎体验。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "02905f9c9c9c74acd8bd9b1c1ea23de9f661ae99c48371289944494538bde138",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:MAM-7-2",
+        "hit:AL-16-1"
+      ],
+      "id": "B3-007",
+      "input": "XX中医诊所（虚构）不能保证治愈，也不承诺根治，请遵医嘱。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "ec0e39a4b46e5cc4124a61fae5f95ced3b1ae650b10fcb1e50b89a7deab88942",
+      "subject": null,
+      "suite": "b3_applies_reverse"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-3"
+      ],
+      "id": "B3-008",
+      "input": "XX医疗美容门诊部（虚构）第一时间响应需求，医疗机构第一名称公示。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "90a459b339b1bef7f69bf8b23b374eeb6fcaee1b449553e85d6780c981f7b7fc",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -605,6 +727,81 @@
       "sha256": "ac5a4a6f0c5815061b7265e7919df7a84b4908dc471879ec562c98e1205c9d7d",
       "subject": null,
       "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:drug",
+        "hit:AL-16-D3"
+      ],
+      "id": "B4-018",
+      "input": "本品为处方药，片剂，禁忌、不良反应详见说明书。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "05a847c176c98cf9c9a8656a7099ca32eb29abdd34db78fb72a54a36dc52fff6",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:drug",
+        "hit:AL-16-D4"
+      ],
+      "id": "B4-019",
+      "input": "本品为非处方药，片剂，禁忌、不良反应详见说明书。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "e1a4b6af0de650a4c04a18402c0cfddfab79957bca864d7a30e900c02751ae5e",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:device",
+        "hit:AL-16-D5"
+      ],
+      "id": "B4-020",
+      "input": "本医疗器械推荐给个人自用，家用理疗仪，操作简单。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "47b186e3212be4185388c11a1d8aa75a0ac02aadfdf5894c69d0756c5b3ce570",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:device",
+        "input_required:AL-16-D6"
+      ],
+      "id": "B4-021",
+      "input": "本医疗器械注册证明文件齐全，欢迎体验。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "72cfef62433c784fc0ce83761ab1b480bbe7288088e21730a3a4fdbc813f3815",
+      "subject": null,
+      "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-6"
+      ],
+      "id": "B4-022",
+      "input": "XX医疗美容门诊部（虚构）由患者现身说法，卫生技术人员作证明。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "c7bf3a5abd6b714563ceb3a7206ed7813b6beb1af885376f7384acba4b1933cd",
+      "subject": null,
+      "suite": "b4_rule_coverage"
     }
   ],
   "coverage_note": "抽样覆盖、非穷举：按规则形态采样，非逐条穷举",
@@ -615,7 +812,7 @@
   ],
   "generated_by": "tools/gen_cases.py",
   "ledger": {
-    "count": 37,
+    "count": 49,
     "entries": [
       {
         "id": "B1-001",
@@ -682,6 +879,18 @@
         "sha256": "2942854a4b4c086c0532a168558dc8427d7b20b3aaca20576c4f193bb361314a"
       },
       {
+        "id": "B2-012",
+        "sha256": "c307157f085aa28cc7c9f1f51476a7a139bcc5d5a30000c3ba3e38458dd428e3"
+      },
+      {
+        "id": "B2-013",
+        "sha256": "cee57e41dbdc462699a40dfb3dcdf678eb8559bbb0f2574302ce4bbddba7abad"
+      },
+      {
+        "id": "B2-014",
+        "sha256": "f620dc839c9d717fac3dc35fe554dddddf681212a7096ef6ac6bb8451c08d42b"
+      },
+      {
         "id": "B3-001",
         "sha256": "941141636ab1e3e75ec3b5933032f462197f0e317416b5bf992387912fdca459"
       },
@@ -696,6 +905,22 @@
       {
         "id": "B3-004",
         "sha256": "4f061086b55ed36a29a90631930b84c1501d73c106006a1dd443595440bd3e36"
+      },
+      {
+        "id": "B3-005",
+        "sha256": "6490cd3368015d07cc2ed93df8682cbcdef2c7bfe911fb620095ef65706b15e9"
+      },
+      {
+        "id": "B3-006",
+        "sha256": "02905f9c9c9c74acd8bd9b1c1ea23de9f661ae99c48371289944494538bde138"
+      },
+      {
+        "id": "B3-007",
+        "sha256": "ec0e39a4b46e5cc4124a61fae5f95ced3b1ae650b10fcb1e50b89a7deab88942"
+      },
+      {
+        "id": "B3-008",
+        "sha256": "90a459b339b1bef7f69bf8b23b374eeb6fcaee1b449553e85d6780c981f7b7fc"
       },
       {
         "id": "B4-001",
@@ -764,6 +989,26 @@
       {
         "id": "B4-017",
         "sha256": "ac5a4a6f0c5815061b7265e7919df7a84b4908dc471879ec562c98e1205c9d7d"
+      },
+      {
+        "id": "B4-018",
+        "sha256": "05a847c176c98cf9c9a8656a7099ca32eb29abdd34db78fb72a54a36dc52fff6"
+      },
+      {
+        "id": "B4-019",
+        "sha256": "e1a4b6af0de650a4c04a18402c0cfddfab79957bca864d7a30e900c02751ae5e"
+      },
+      {
+        "id": "B4-020",
+        "sha256": "47b186e3212be4185388c11a1d8aa75a0ac02aadfdf5894c69d0756c5b3ce570"
+      },
+      {
+        "id": "B4-021",
+        "sha256": "72cfef62433c784fc0ce83761ab1b480bbe7288088e21730a3a4fdbc813f3815"
+      },
+      {
+        "id": "B4-022",
+        "sha256": "c7bf3a5abd6b714563ceb3a7206ed7813b6beb1af885376f7384acba4b1933cd"
       }
     ]
   }

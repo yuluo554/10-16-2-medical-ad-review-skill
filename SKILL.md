@@ -36,6 +36,9 @@ medreview check --text "<文案>" \
   --proof no --scenario prepublication \
   --hint "<宿主 agent 的语境判断>"
 
+# 3b) 补材料后重跑（报告"待补材料清单"节要求的那份材料，用它回传）
+medreview check --text "<文案>" --proof yes --proof-file ./审查证明.pdf
+
 # 4) 批量审查一个目录下的全部 .txt
 medreview scan --dir ./samples --format json --out report.json
 
@@ -61,6 +64,7 @@ medreview rules
 | `--subject` | 否 | 主体类型（元信息） |
 | `--scenario` | 否 | `prepublication`（默认，发布前自查）/ `published`（已发布） |
 | `--proof` | 否 | 审查证明：`yes` / `no` / 未提供。**`no` → 无条件义务缺失 → BLOCK** |
+| `--proof-file` | 否 | 审查证明/许可材料文件。只把**文件名 + sha256 + 字节数**记进报告（不落路径）；实质核验仍以原件为准 |
 | `--hint` | 否 | 语境提示（**只进报告 advisory 分节，永不改结论**） |
 
 ## 结论语义（四态，务必按此解读）
@@ -86,7 +90,7 @@ medreview rules
 
 ## 输出契约（机器可解析）
 
-<!-- contract-fields: id text channel subject hint proof scenario categories grade findings applied_rule_count total_rule_count not_enabled advisories input_required ruleset_version rule_sources rule_id clause_anchor quote evidence severity kind notes -->
+<!-- contract-fields: id text channel subject hint proof scenario proof_file categories grade findings applied_rule_count total_rule_count not_enabled advisories input_required ruleset_version rule_sources rule_id clause_anchor quote evidence severity kind notes -->
 
 `medreview check --format json` 的顶层字段（顺序即输出顺序）：
 
@@ -95,6 +99,7 @@ medreview rules
 | `item.id` | string | 内容 ID（原文 sha256 前 12 位，确定性） |
 | `item.text` | string | 原文（逐字保留） |
 | `item.channel` / `item.subject` / `item.hint` / `item.proof` / `item.scenario` | string\|null | 入参回显 |
+| `item.proof_file` | object\|null | 证明材料摘要：`name` / `sha256` / `bytes`（**只记摘要不落路径**） |
 | `grade` | enum | `BLOCK` / `WARN` / `OK` / `NOT_ASSESSED` |
 | `categories` | string[] | 命中的品类（可能多个，不二选一） |
 | `findings` | object[] | 逐条命中：`rule_id` / `clause_anchor` / `quote` / `evidence` / `severity` / `kind` |

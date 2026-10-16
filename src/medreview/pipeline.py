@@ -140,11 +140,11 @@ def build_report(item, categories, grade_result, rule_results, engine,
 
 
 def check_text(engine, text, channel=None, subject=None, hint=None, proof=None,
-               source_path=None, scenario=None):
+               source_path=None, scenario=None, proof_file=None):
     """便捷入口：文本 → Report。"""
     item = normalize.normalize_text(text, channel=channel, subject=subject,
                                     hint=hint, proof=proof, source_path=source_path,
-                                    scenario=scenario)
+                                    scenario=scenario, proof_file=proof_file)
     return run_check(engine, item)
 
 

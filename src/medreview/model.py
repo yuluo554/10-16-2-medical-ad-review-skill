@@ -16,10 +16,10 @@ class ContentItem(object):
     """
 
     __slots__ = ("id", "text", "channel", "subject", "hint", "proof", "source_path",
-                 "scenario")
+                 "scenario", "proof_file")
 
     def __init__(self, item_id, text, channel=None, subject=None, hint=None,
-                 proof=None, source_path=None, scenario=None):
+                 proof=None, source_path=None, scenario=None, proof_file=None):
         self.id = item_id
         self.text = text
         self.channel = channel
@@ -28,6 +28,7 @@ class ContentItem(object):
         self.proof = proof
         self.source_path = source_path
         self.scenario = scenario
+        self.proof_file = proof_file
 
     def to_dict(self):
         return {
@@ -39,6 +40,7 @@ class ContentItem(object):
             "proof": self.proof,
             "source_path": self.source_path,
             "scenario": self.scenario,
+            "proof_file": self.proof_file,
         }
 
 
@@ -85,6 +87,26 @@ class Rule(object):
         （具体条款锚点见规则包，本文件零词面）。
         """
         return tuple(self.applies_if.get("scenario", ()))
+
+    @property
+    def subject_signals(self):
+        """本规则适用的**主体信号**词表（原文自带的主体限制，空 = 不限主体）。
+
+        用途：原文对**特定主体**设的义务（如"某类广告应当显著标明…"）只在该主体
+        成立时适用——主体未成立 → ``skipped``（"不适用"），而不是判命中。
+        词面来自规则包（本文件零词面）；判定在 ``check.rule_applies``。
+        """
+        return tuple(self.applies_if.get("subject_signals", ()))
+
+    @property
+    def subject_excludes(self):
+        """主体信号的**排除词表**（出现即该主体不成立，空 = 无排除）。
+
+        用途：**子串包含**导致的误适用——一个主体词可能是另一个主体词的子串，
+        若不做排除，后者的广告会因含前者的字面而被判"缺前者提示语"。
+        排除词命中 → 主体不成立 → ``skipped``（**不判命中**）。
+        """
+        return tuple(self.applies_if.get("subject_excludes", ()))
 
     def to_dict(self):
         return {

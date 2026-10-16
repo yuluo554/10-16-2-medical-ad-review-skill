@@ -43,6 +43,14 @@ def report_sections(report):
     """结构化章节（**单一渲染源**，两种格式共用）。"""
     sections = []
 
+    proof_file = getattr(report.item, "proof_file", None)
+    if proof_file:
+        proof_desc = "%s（sha256 %s…，%d 字节；只记摘要，实质核验以原件为准）" % (
+            proof_file.get("name", "?"), (proof_file.get("sha256") or "")[:12],
+            proof_file.get("bytes", 0))
+    else:
+        proof_desc = "未提供"
+
     sections.append({
         "id": "input_facts",
         "title": "一、输入事实",
@@ -51,6 +59,7 @@ def report_sections(report):
             ("发布渠道", report.item.channel or "未提供"),
             ("主体类型", report.item.subject or "未提供"),
             ("审查证明", report.item.proof or "未提供"),
+            ("证明材料文件", proof_desc),
             ("原文", report.item.text),
         ],
     })

@@ -62,6 +62,8 @@ def build_parser():
     p_check.add_argument("--subject", help="主体类型（元信息）")
     p_check.add_argument("--hint", help="语境提示（只进报告 advisory，不改结论）")
     p_check.add_argument("--proof", help="广告审查证明：yes / no / 未提供")
+    p_check.add_argument("--proof-file", dest="proof_file",
+                         help="审查证明/许可材料文件（只取文件名+sha256+字节数入报告，不外泄路径）")
     p_check.add_argument("--scenario", choices=("prepublication", "published"),
                          default="prepublication",
                          help="审查情形：prepublication=发布前自查（默认）/ published=已发布")
@@ -99,8 +101,12 @@ def cmd_check(args):
     from . import pipeline
     text = _read_text_arg(args)
     engine = pipeline.build_engine()
+    proof_file = None
+    if args.proof_file:
+        proof_file = normalize.read_proof_file(args.proof_file)
     rep = pipeline.check_text(engine, text, channel=args.channel, subject=args.subject,
-                              hint=args.hint, proof=args.proof, scenario=args.scenario)
+                              hint=args.hint, proof=args.proof, scenario=args.scenario,
+                              proof_file=proof_file)
     if args.format == "json":
         payload = report_mod.render_json(rep)
         text_out = serialize.dumps_json(payload)

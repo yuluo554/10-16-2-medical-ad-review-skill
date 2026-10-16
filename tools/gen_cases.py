@@ -106,6 +106,20 @@ CASES = [
     dict(id="B2-011", suite="b2_prohibited",
          input="本医疗器械保证有效，绝对安全，效果优于其他医疗器械。",
          expect=["grade:BLOCK", "category:device", "hit:AL-16-1", "hit:AL-16-3"]),
+    # §16 款 2 提示语义务的**已履行**形态（无条件义务被满足 → 该条 compliant）
+    dict(id="B2-012", suite="b2_prohibited",
+         input="本品为处方药，片剂，禁忌、不良反应详见说明书，本广告仅供医学药学专业人士阅读。",
+         expect=["grade:WARN", "category:drug", "rule:compliant:AL-16-D3"]),
+    dict(id="B2-013", suite="b2_prohibited",
+         input="本医疗器械推荐给个人自用，请仔细阅读产品说明书或者在医务人员的指导下购买和使用。",
+         expect=["grade:WARN", "category:device", "rule:compliant:AL-16-D5"]),
+    # 合规免责语不得被判命中：法条强制要求的免责语里含被禁词面，
+    # 否定辖域抑制必须让它们**不命中**（否则把合规文案报成违法）
+    dict(id="B2-014", suite="b2_prohibited",
+         input="本品为保健食品，不能代替药物治疗，每日一粒。",
+         expect=["grade:WARN", "category:health_food",
+                 "rule:compliant:AL-18-D1"],
+         forbid=["hit:AL-18-2", "hit:AL-18-D1"]),
 
     # ---- B3 适用域反向（"这条规则不该命中"） ----
     # 保健食品内容不得被《广告法》§16（只管医疗/药品/器械）判命中
@@ -135,6 +149,30 @@ CASES = [
          input="XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
          expect=["grade:WARN", "category:medical",
                  "rule:skipped:IAM-7-2", "input_required:IAM-7-1"]),
+    # 主体门控反向：非处方药**不得**被处方药提示语义务条判命中（子串"处方药"在
+    # "非处方药"里，不做排除就会误判"缺处方药提示语"）
+    dict(id="B3-005", suite="b3_applies_reverse",
+         input="本品为非处方药，片剂，禁忌、不良反应详见说明书，请按药品说明书或者在药师指导下购买和使用。",
+         expect=["grade:WARN", "category:drug", "rule:skipped:AL-16-D3",
+                 "rule:compliant:AL-16-D4"],
+         forbid=["hit:AL-16-D3"]),
+    # 主体门控反向：非个人自用器械**不得**被判"缺器械提示语"（原文前提未成立）
+    dict(id="B3-006", suite="b3_applies_reverse",
+         input="XX市第X医院（虚构）引进新型理疗仪，医疗器械注册证齐全，欢迎体验。",
+         expect=["grade:WARN", "category:medical", "category:device",
+                 "rule:skipped:AL-16-D5"],
+         forbid=["hit:AL-16-D5"]),
+    # 否定辖域反向：合规免责语**不得**被判命中（"不能保证治愈"不是功效承诺）
+    dict(id="B3-007", suite="b3_applies_reverse",
+         input="XX中医诊所（虚构）不能保证治愈，也不承诺根治，请遵医嘱。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:MAM-7-2", "hit:AL-16-1"]),
+    # 中性表述反向：§6 白名单项「医疗机构第一名称」与「第一时间」不得被
+    # 比较类规则判命中（裸「第一」的误报实测反例）
+    dict(id="B3-008", suite="b3_applies_reverse",
+         input="XX医疗美容门诊部（虚构）第一时间响应需求，医疗机构第一名称公示。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:AL-16-3"]),
 
     # ---- B4 规则驱动覆盖（触达每条生效规则） ----
     dict(id="B4-001", suite="b4_rule_coverage",
@@ -205,6 +243,26 @@ CASES = [
          input="XX中医诊所（虚构）分享养生知识，欢迎致电预约，联系电话见文末。",
          expect=["grade:BLOCK", "category:medical", "hit:IAM-8-2",
                  "input_required:IAM-7-1"]),
+    # §16 款 2 处方药提示语义务**缺失** → 无条件义务缺失 → BLOCK
+    dict(id="B4-018", suite="b4_rule_coverage",
+         input="本品为处方药，片剂，禁忌、不良反应详见说明书。",
+         expect=["grade:BLOCK", "category:drug", "hit:AL-16-D3"]),
+    # §16 款 2 非处方药提示语义务**缺失** → BLOCK
+    dict(id="B4-019", suite="b4_rule_coverage",
+         input="本品为非处方药，片剂，禁忌、不良反应详见说明书。",
+         expect=["grade:BLOCK", "category:drug", "hit:AL-16-D4"]),
+    # §16 款 2 推荐给个人自用的器械提示语义务**缺失** → BLOCK
+    dict(id="B4-020", suite="b4_rule_coverage",
+         input="本医疗器械推荐给个人自用，家用理疗仪，操作简单。",
+         expect=["grade:BLOCK", "category:device", "hit:AL-16-D5"]),
+    # 器械注册证明文件前提在外部 → 记待补材料（不是"缺提示语"判命中）
+    dict(id="B4-021", suite="b4_rule_coverage",
+         input="本医疗器械注册证明文件齐全，欢迎体验。",
+         expect=["grade:WARN", "category:device", "input_required:AL-16-D6"]),
+    # §7 第（六）项共现语义：角色词 + 作证明标记**同时**出现才命中
+    dict(id="B4-022", suite="b4_rule_coverage",
+         input="XX医疗美容门诊部（虚构）由患者现身说法，卫生技术人员作证明。",
+         expect=["grade:BLOCK", "category:medical", "hit:MAM-7-6"]),
 ]
 
 

@@ -91,7 +91,8 @@ def _ruleset_tokens():
     tokens = set()
     for rule in engine.rules:
         for group_key in ("any_of", "all_of", "none_of", "require_all_of",
-                          "knowledge_terms", "commerce_terms"):
+                          "knowledge_terms", "commerce_terms", "groups",
+                          "exclude_contexts"):
             value = engine.matches.get(rule.rule_id, {}).get(group_key)
             if isinstance(value, list):
                 for item in value:

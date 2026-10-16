@@ -29,8 +29,10 @@
         "胶囊",
         "口服液",
         "国药准字",
-        "说明书",
-        "适应症"
+        "处方药",
+        "非处方药",
+        "中成药",
+        "药片"
       ]
     },
     {
@@ -168,6 +170,134 @@
       "terms_basis": "literal"
     },
     {
+      "anchor": "《中华人民共和国广告法》§16",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "drug"
+        ],
+        "subject_excludes": [
+          "非处方药"
+        ],
+        "subject_signals": [
+          "处方药"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-D3",
+      "item": null,
+      "kind": "mandatory_disclosure",
+      "match": {
+        "require_all_of": [
+          [
+            "本广告仅供医学药学专业人士阅读"
+          ]
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "rx_drug_must_mark_professional_only",
+      "quote": "“本广告仅供医学药学专业人士阅读”",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "drug"
+        ],
+        "subject_signals": [
+          "非处方药"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-D4",
+      "item": null,
+      "kind": "mandatory_disclosure",
+      "match": {
+        "require_all_of": [
+          [
+            "请按药品说明书或者在药师指导下购买和使用"
+          ]
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "otc_drug_must_mark_pharmacist_guide",
+      "quote": "“请按药品说明书或者在药师指导下购买和使用”",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "device"
+        ],
+        "subject_signals": [
+          "个人自用",
+          "自用"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-D5",
+      "item": null,
+      "kind": "mandatory_disclosure",
+      "match": {
+        "require_all_of": [
+          [
+            "请仔细阅读产品说明书或者在医务人员的指导下购买和使用"
+          ]
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "pattern_id": "personal_use_device_must_mark_manual",
+      "quote": "“请仔细阅读产品说明书或者在医务人员的指导下购买和使用”",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
+      "anchor": "《中华人民共和国广告法》§16",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "device"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "16",
+      "id": "AL-16-D6",
+      "item": null,
+      "kind": "input_required",
+      "match": {
+        "required_input": "医疗器械产品注册证明文件（核对是否载有禁忌内容、注意事项；若载有，广告须显著标明“禁忌内容或者注意事项详见说明书”）"
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2023/art_5474cf75173c45d6a0379730fb4e8d97.html",
+      "quote": "“禁忌内容或者注意事项详见说明书”",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "advertising_law",
+      "source_title": "《中华人民共和国广告法》",
+      "terms_basis": "literal"
+    },
+    {
       "anchor": "《中华人民共和国广告法》§16第（一）项",
       "anchor_status": "verified",
       "applies_if": {
@@ -191,6 +321,10 @@
           "绝对安全",
           "保证有效",
           "100%有效"
+        ],
+        "exclude_contexts": [
+          "治愈系",
+          "治愈系风格"
         ]
       },
       "notes": "",
@@ -253,9 +387,25 @@
         "any_of": [
           "优于",
           "好于",
-          "第一",
+          "强于",
+          "胜过",
+          "超过其他",
+          "第一品牌",
+          "全国第一",
+          "行业第一",
           "最先进",
-          "其他医院"
+          "领先于",
+          "其他医院",
+          "其他医疗机构",
+          "其他药品",
+          "其他医疗器械",
+          "其他保健食品",
+          "其他诊所",
+          "其他机构",
+          "同类产品",
+          "相比其他",
+          "优于其他",
+          "竞争对手"
         ]
       },
       "notes": "",
@@ -378,11 +528,29 @@
       "kind": "prohibited_term",
       "match": {
         "any_of": [
-          "预防",
-          "治疗",
+          "预防疾病",
+          "治疗疾病",
+          "防治疾病",
+          "预防慢性病",
+          "治疗慢性病",
+          "治疗肿瘤",
           "抗肿瘤",
+          "抗癌",
+          "治疗癌症",
           "降血压",
-          "降血糖"
+          "降血糖",
+          "降血脂",
+          "治疗高血压",
+          "治疗糖尿病",
+          "治疗失眠",
+          "治疗近视",
+          "预防感冒",
+          "治疗胃病",
+          "治疗肝病",
+          "治疗风湿",
+          "治疗鼻炎",
+          "疾病预防",
+          "疾病治疗"
         ]
       },
       "notes": "",
@@ -852,11 +1020,25 @@
       "item": "6",
       "kind": "prohibited_term",
       "match": {
-        "any_of": [
-          "患者",
-          "卫生技术人员",
-          "医学教育科研机构",
-          "社会社团"
+        "groups": [
+          [
+            "患者",
+            "卫生技术人员",
+            "医学教育科研机构",
+            "社会社团"
+          ],
+          [
+            "作证明",
+            "见证",
+            "现身说法",
+            "好评",
+            "亲述",
+            "自述",
+            "感谢信",
+            "致谢",
+            "口碑",
+            "证言"
+          ]
         ]
       },
       "notes": "",
@@ -899,7 +1081,7 @@
       "terms_basis": "literal"
     }
   ],
-  "ruleset_version": "ruleset-fd5aa96c23",
+  "ruleset_version": "ruleset-f20a805f89",
   "variant_rules": [
     {
       "anchor": "《互联网广告管理办法》§8",
@@ -923,6 +1105,48 @@
       ],
       "quote": "禁止以介绍健康、养生知识等形式，变相发布医疗、药品、医疗器械、保健食品、特殊医学用途配方食品广告。",
       "signal_id": "variant_health_knowledge"
+    }
+  ],
+  "whitelist_items": [
+    {
+      "item": "1",
+      "numeral": "一",
+      "text": "（一）医疗机构第一名称；"
+    },
+    {
+      "item": "2",
+      "numeral": "二",
+      "text": "（二）医疗机构地址；"
+    },
+    {
+      "item": "3",
+      "numeral": "三",
+      "text": "（三）所有制形式；"
+    },
+    {
+      "item": "4",
+      "numeral": "四",
+      "text": "（四）医疗机构类别；"
+    },
+    {
+      "item": "5",
+      "numeral": "五",
+      "text": "（五）诊疗科目；"
+    },
+    {
+      "item": "6",
+      "numeral": "六",
+      "text": "（六）床位数；"
+    },
+    {
+      "item": "7",
+      "numeral": "七",
+      "text": "（七）接诊时间；"
+    },
+    {
+      "item": "8",
+      "numeral": "八",
+      "text": "（八）联系电话。"
     }
   ]
 }

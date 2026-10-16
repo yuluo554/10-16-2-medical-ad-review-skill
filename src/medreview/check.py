@@ -2,14 +2,17 @@
 
 **唯一实现源**：全部判定在此处，报告层不重算。
 
-两条硬纪律：
+三条硬纪律：
 
 1. **分派表结构 + 运行双层断言**（skill 定稿形态）：只断言"表里有三个键"是假门——
    分派表可以齐备而判定路径从不查它。故：① 结构层断言"表键集合与 kind 常量集合
    一一对应且各实现互不相同"；② 运行层对每个 kind 真跑一遍且不抛错；③ 变异自检
    （摘掉一个 kind → 必须报错）。
 2. **词面/模式一律来自冻结规则包**：本模块零政策字面量（K9）。匹配规格是数据
-   （``match.any_of`` / ``all_of`` / ``none_of``），不是代码。
+   （``match.any_of`` / ``all_of`` / ``none_of`` / ``groups``），不是代码。
+3. **否定辖域抑制**（M1 新增）：命中项若处于否定辖域内（同一句读段内、命中项之前
+   出现否定词），**不算命中**——否则会把法条**强制要求的免责语**报成违法
+   （免责语恰含被禁词面）。否定词表是语言层构造（见 ``constants.NEGATION_MARKERS``）。
 """
 
 from __future__ import annotations
@@ -18,34 +21,115 @@ from . import constants
 from .model import Finding, RuleResult
 
 
-def _any_of(text, terms):
-    """命中任一（返回命中项列表，保持规则包给出的顺序）。"""
-    return [t for t in terms if t and t in text]
+def _is_negated(text, index):
+    """下标处是否处于否定辖域内。
+
+    判据（两条都要满足才算"被否定"）：
+      ① **辖域不跨句读**：只看从上一个句读分隔符到命中项起点之间的片段；
+      ② 该片段里存在一个**真否定词**——即不是 ``NON_NEGATION_WORDS`` 成员的
+         那一个（「不」开头的非否定词修饰主语，不是否定谓语，见下表）。
+
+    为什么不是"否定词必须紧贴"：法条强制要求的免责语形态常是
+    「否定词 + 动词 + 被禁词面」（如「不能保证…」），中间隔着动词；
+    紧贴判定会漏掉它们，而"片段内出现真否定词"能覆盖该形态，同时靠例外表
+    挡住"否定词修饰别的主语"型漏报。
+    """
+    start = index
+    while start > 0 and text[start - 1] not in constants.SEGMENT_DELIMITERS:
+        start -= 1
+    prefix = text[start:index]
+    for marker in constants.NEGATION_MARKERS:
+        pos = prefix.find(marker)
+        while pos >= 0:
+            tail = prefix[pos:]
+            # 该出现位置若是某个"非否定词"的开头，不算否定
+            if not any(tail.startswith(word) for word in constants.NON_NEGATION_WORDS):
+                return True
+            pos = prefix.find(marker, pos + 1)
+    return False
 
 
-def _all_of(text, terms):
+def _excluded_context(text, term, index, contexts):
+    """命中项是否落在**排除语境**内（该处更大的词形把它"包住"了）。
+
+    用途：同一词面在中性词形里出现时不算命中（裸词与其"XX 系"式中性词形碰撞）。
+    判据是**位置包含**：命中项的出现区间落在某个排除语境的
+    出现区间内即跳过。排除语境来自规则包（数据），不是代码里的特例。
+    """
+    for context in contexts or ():
+        if not context or term not in context:
+            continue
+        start = 0
+        while True:
+            found = text.find(context, start)
+            if found < 0:
+                break
+            if found <= index and index + len(term) <= found + len(context):
+                return True
+            start = found + 1
+    return False
+
+
+def _term_is_live(text, term, contexts=None):
+    """词面是否**存在且未被否定、也未落在排除语境里**。
+
+    全部出现位置都被否定/被排除 → 视为未命中（"合规免责语"与"中性词形"两类
+    误报的唯一拦截点）。
+    """
+    start = 0
+    while True:
+        index = text.find(term, start)
+        if index < 0:
+            return False
+        if not _is_negated(text, index) and not _excluded_context(text, term, index,
+                                                                 contexts):
+            return True
+        start = index + 1
+
+
+def _any_of(text, terms, contexts=None):
+    """命中任一（返回命中项列表，保持规则包给出的顺序；排除否定/排除语境）。"""
+    return [t for t in terms if t and _term_is_live(text, t, contexts)]
+
+
+def _all_of(text, terms, contexts=None):
     """全部命中才命中（返回命中项；未全中返回空）。"""
     if not terms:
         return []
-    hits = [t for t in terms if t and t in text]
+    hits = [t for t in terms if t and _term_is_live(text, t, contexts)]
     return hits if len(hits) == len(terms) else []
 
 
-def _none_of(text, terms):
+def _none_of(text, terms, contexts=None):
     """必须一个都不出现（返回空列表表示"通过"）。"""
-    return [t for t in terms if t and t in text]
+    return [t for t in terms if t and _term_is_live(text, t, contexts)]
 
 
 def match_rule(rule, match_spec, text):
     """通用匹配：返回命中项列表（空 = 未命中）。
 
-    ``match_spec`` 结构：``{"any_of": [...], "all_of": [...], "none_of": [...]}``
-    ——全部字段可选；三者是**与**关系（any_of 命中 && all_of 全中 && none_of 全空）。
+    ``match_spec`` 结构：``{"any_of": [...], "all_of": [...], "none_of": [...],
+    "groups": [[...], [...]]}``——全部字段可选；各字段之间是**与**关系
+    （any_of 命中 && all_of 全中 && none_of 全空 && 每个 group 至少命中一项）。
+
+    ``groups`` 是**共现语义**：每组的词表是"任一即可"，但**组与组之间必须同时
+    成立**（如某条要求"主体词"与"证明标记"共现，光有主体词不算）。
+
+    ``exclude_contexts``（可选，顶层）是**排除语境**词表：命中项若落在这些更大
+    词形内部即不算命中（防裸词与中性词形碰撞）。
     """
     spec = match_spec or {}
-    any_hits = _any_of(text, spec.get("any_of") or ())
-    all_hits = _all_of(text, spec.get("all_of") or ())
-    none_hits = _none_of(text, spec.get("none_of") or ())
+    contexts = spec.get("exclude_contexts") or ()
+    any_hits = _any_of(text, spec.get("any_of") or (), contexts)
+    all_hits = _all_of(text, spec.get("all_of") or (), contexts)
+    none_hits = _none_of(text, spec.get("none_of") or (), contexts)
+
+    group_hits = []
+    for group in spec.get("groups") or ():
+        hits = _any_of(text, group or (), contexts)
+        if not hits:
+            return []
+        group_hits.extend(hits)
 
     if spec.get("all_of") and not all_hits:
         return []
@@ -53,10 +137,12 @@ def match_rule(rule, match_spec, text):
         return []
     if spec.get("any_of") and not any_hits:
         return []
-    if not spec.get("any_of") and not spec.get("all_of"):
+    if spec.get("groups") and not group_hits:
+        return []
+    if not (spec.get("any_of") or spec.get("all_of") or spec.get("groups")):
         # 没有正向条件 = 规格缺失，绝不"空规格恒命中"
         return []
-    return any_hits + all_hits
+    return any_hits + all_hits + group_hits
 
 
 def _check_prohibited_term(rule, match_spec, text, proof=None):
@@ -86,6 +172,8 @@ def _check_mandatory_disclosure(rule, match_spec, text, proof=None):
     """**无条件义务**：必须出现某提示语；缺失 → noncompliant（绝不记成"不适用"）。
 
     ``match_spec.require_all_of`` 是"每一组内至少出现一个"的列表；缺任一组即命中。
+    提示语本身也过否定辖域抑制——**否定形态的表述**不算已履行标明义务
+    （否则"我没写"会被读成"我写了"）。
     """
     spec = match_spec or {}
     groups = spec.get("require_all_of") or []
@@ -95,7 +183,7 @@ def _check_mandatory_disclosure(rule, match_spec, text, proof=None):
                           "规则缺 require_all_of 规格，无法判定")
     missing = []
     for group in groups:
-        if not any(t and t in text for t in group):
+        if not _any_of(text, group):
             missing.append(group)
     if not missing:
         return RuleResult(rule.rule_id, constants.RULE_COMPLIANT)
@@ -183,11 +271,16 @@ DISPATCH = {
 }
 
 
-def rule_applies(rule, categories, scenario=None):
-    """适用域判定：品类交集 **且** 情形命中才适用。
+def rule_applies(rule, categories, scenario=None, text=""):
+    """适用域判定：品类交集 **且** 情形命中 **且** 主体信号命中才适用。
 
-    两维都来自**原文自带的主体/情形限制**——无交集 → ``skipped``
+    三维都来自**原文自带的主体/情形限制**——任一维不成立 → ``skipped``
     （这是"不适用"的**唯一合法来源**："我没看到材料"或"用户没做"**不算**不适用）。
+
+    ``subject_signals`` 的用途：原文只对**特定主体**设的义务（如某细分品类的
+    提示语义务），若本文案不含该主体信号 → 该义务条**不适用**（skipped），
+    而不是"缺失 → 判命中"。把"不适用"和"该写没写"混为一谈会把非该主体的文案
+    误报为违规。
     """
     rule_cats = set(rule.categories)
     if not rule_cats:
@@ -197,15 +290,24 @@ def rule_applies(rule, categories, scenario=None):
     rule_scenarios = set(rule.scenarios)
     if rule_scenarios and scenario not in rule_scenarios:
         return False
+    signals = rule.subject_signals
+    if signals:
+        if not any(s and s in text for s in signals):
+            return False
+        # 排除词命中 → 主体不成立（防"一个主体词是另一个主体词的子串"型误适用）
+        excludes = rule.subject_excludes
+        if excludes and any(e and e in text for e in excludes):
+            return False
     return True
 
 
 def check_rule(rule, match_spec, text, categories, proof=None, scenario=None):
     """判定单条规则。"""
-    if not rule_applies(rule, categories, scenario):
+    if not rule_applies(rule, categories, scenario, text):
         return RuleResult(rule.rule_id, constants.RULE_SKIPPED, (),
-                          "不适用：规则限定品类 %s/情形 %s，本次品类 %s/情形 %s"
+                          "不适用：规则限定品类 %s/情形 %s/主体 %s，本次品类 %s/情形 %s"
                           % (list(rule.categories), list(rule.scenarios),
+                             list(rule.subject_signals) or "不限",
                              list(categories), scenario))
     handler = DISPATCH.get(rule.kind)
     if handler is None:
