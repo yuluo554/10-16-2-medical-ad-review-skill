@@ -26,12 +26,12 @@
 | B1 真值库扩充（5 → 13） | `fixtures/cases.json` | 多品类并列正例 + 似是而非边界例（B1-006…013） |
 | manifest 品类计数 | `references/manifest.json` | `category_rule_count` / `category_signal_counts` / `category_exclude_counts` / `variant_rule_count` |
 | **版本号指纹到品类词表** | `tools/gen_ruleset.py::build` | 哈希输入含 `category_rules` + `variant_rules`（M2 修 K8 实质缺陷） |
-| M2 语义门禁 | `tests/test_m2_semantics.py` | **17 项**（词表/反例/共用语面/advisory/多品类/文档计数） |
+| M2 语义门禁 | `tests/test_m2_semantics.py` | **18 项**（词表/反例/共用语面/advisory/多品类/原文逐字/文档计数） |
 | 文档计数漂移门禁 | 同上 | `test_data_readme_counts_match_manifest`（M2 实测发现旧版本号漂移后新加） |
 | M2 留档 | `plan/M2-词表复核.md` | 5 条实测缺陷 + 逐类词表复核 + 两款信号分工 |
-| 规则包版本 | `references/manifest.json` | `ruleset-8357b64fd1`（当轮实测） |
+| 规则包版本 | `references/manifest.json` | `ruleset-b229857603`（当轮实测） |
 | 真值库 | `fixtures/cases.json` | **57 用例**（B1×13 / B2×14 / B3×8 / B4×22），M1 为 49 |
-| 双解释器全量测试 | `tests/` | **108 项全绿**（3.8 与 3.12 双解释器），M1 为 91 |
+| 双解释器全量测试 | `tests/` | **109 项全绿**（3.8 与 3.12 双解释器），M1 为 91 |
 | 门禁自检 7 项 | `medreview selftest` | SELFTEST_OK |
 | 基准四套件 | `medreview bench` | exit 0（B1 用例 13） |
 | M2 变异验证 | 见 `plan/M2-词表复核.md` §七 | 四组变异全部使门变红 |
@@ -60,7 +60,11 @@
    且 `selftest._ruleset_tokens` 已把品类**反例结构**也收进扫描词表——写文档时
    用结构性描述（"反例结构""中性词形"），词面只在规则包。
 8. **改品类词表后必须重跑两个 `--check`**：`gen_ruleset --check`（版本号变了）与
-   `gen_cases --check`（B1 期望可能变）。M2 实测：改词表 → 版本号 `f20a805f89` → `8357b64fd1`。
+   `gen_cases --check`（B1 期望可能变）。M2 实测：改词表 → 版本号 `f20a805f89` → `b229857603`。
+9. **品类层引文此前无核验（M2 收尾实测发现）**：`category_rules`/`variant_rules` 有
+   `anchor`+`quote` 字段，但生成器**只对规则层**做逐字包含断言——品类层引文写错不会红。
+   已补 `source`/`clause` 字段 + 生成器回读校验 + 门禁 `test_category_and_variant_quotes_are_verbatim_in_snapshot`。
+   **下一棒若加品类/变相信号，必须填 `source`/`clause`，否则生成器拒绝出件。**
 
 ---
 
@@ -116,6 +120,7 @@ M2 已把品类判定器（模块 2）做扎实；M3 的重心是**模块 3 的�
 | **K24**（M2 新增） | **品类判定复用规则核查的词面原语**（唯一实现源，不自成第二套口径） | `src/medreview/phrase.py` | `test_category_matching_reuses_shared_primitive` + `test_check_module_aliases_shared_primitive` |
 | **K25**（M2 新增） | **变相发布疑似只进 advisory、不改结论；advisory 进观测集合** | `categorize.categorize` + `pipeline.run_check` + `bench/cases.observed_keys` | `test_variant_suspect_is_advisory_not_conclusion` + `test_variant_suspect_requires_cooccurrence` |
 | **K26**（M2 新增） | **文档计数表纳入漂移门禁**（`data/README.md` ↔ manifest 实算） | `data/README.md` §一之二 | `test_data_readme_counts_match_manifest`（变异验证过） |
+| **K27**（M2 新增） | **品类/变相发布条目同样逐条挂原文**（quote 须逐字在快照中） | `tools/gen_ruleset.py::build` + `category_rules`/`variant_rules` 的 `source`/`clause` | 生成器拒绝出件 + `test_category_and_variant_quotes_are_verbatim_in_snapshot`（变异验证过） |
 
 ---
 
@@ -151,12 +156,12 @@ M2 已把品类判定器（模块 2）做扎实；M3 的重心是**模块 3 的�
 | 2-8 | 版本号指纹到品类/变相发布词表 | `test_ruleset_version_fingerprints_category_tables`（变异验证过） | ✅ |
 | 2-9 | manifest 品类计数当轮实算 | `test_manifest_category_counts_match_actual`（变异验证过） | ✅ |
 | 2-10 | 文档计数漂移门禁 | `test_data_readme_counts_match_manifest`（变异验证过） | ✅ |
-| 2-11 | 双解释器全量测试 | 3.8 与 3.12 各 **108 passed** | ✅ |
+| 2-11 | 双解释器全量测试 | 3.8 与 3.12 各 **109 passed** | ✅ |
 | 2-12 | 冻结产物位级一致（双解释器） | `gen_ruleset/gen_cases --check` → FROZEN_TRUTH_OK | ✅ |
 | 2-13 | 门禁自检绿 + 基准四套件达标 | `selftest` SELFTEST_OK；`bench` exit 0 | ✅ |
-| 2-14 | 变异验证（守门非假门） | M2 四组（摘反例/装饰性反例/清空词表/观测器摘 advisory）全部使门变红 | ✅ |
-| 2-15 | 干净 venv 安装 + 裸 console script + 非仓库根 CWD | `.venv-test` 内 108 项绿、`medreview.exe selftest` OK、`bench` exit 0 | ✅ |
-| 2-16 | CI 检出形态本地复现 | 浅克隆内 108 项绿 + 快照 sha256 全对 + 冻结产物位级一致 | ✅ |
+| 2-14 | 变异验证（守门非假门） | M2 **五组**（摘反例/装饰性反例/清空词表/观测器摘 advisory/伪造引文）全部使门变红 | ✅ |
+| 2-15 | 干净 venv 安装 + 裸 console script + 非仓库根 CWD | `.venv-test` 内 109 项绿、`medreview.exe selftest` OK、`bench` exit 0 | ✅ |
+| 2-16 | CI 检出形态本地复现 | 浅克隆内 109 项绿 + 快照 sha256 全对 + 冻结产物位级一致 | ✅ |
 | 2-17 | `plan/HANDOFF-M3.md` 已落盘 | 本文件 | ✅ |
 | 2-18 | 首提交、工作树干净 | `git log` + `git status` | ✅ |
 
@@ -175,7 +180,7 @@ export PYTHONPATH=src
 # 跑测试（双解释器）
 py -3.12 -X utf8 -m pytest tests -q
 py -3.8  -X utf8 -m pytest tests -q
-py -3.12 -X utf8 -m pytest tests/test_m2_semantics.py -q   # M2 语义门禁（17 项）
+py -3.12 -X utf8 -m pytest tests/test_m2_semantics.py -q   # M2 语义门禁（18 项）
 py -3.12 -X utf8 -m pytest tests/test_m1_semantics.py -q   # M1 语义门禁（26 项）
 
 # 门禁自检 / 基准

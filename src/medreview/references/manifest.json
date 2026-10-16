@@ -24,7 +24,7 @@
   "coverage_note": "抽样覆盖、非穷举：真值库按规则形态采样，见 benchmark/manifest 登记",
   "enabled_rule_count": 29,
   "excluded_clause_count": 3,
-  "ruleset_version": "ruleset-8357b64fd1",
+  "ruleset_version": "ruleset-b229857603",
   "sources": [
     {
       "basis_date": "2026-10-15",

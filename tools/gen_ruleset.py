@@ -465,6 +465,7 @@ EXCLUDED_CLAUSES = [
 # （防装饰性排除：写了一条与词表无关的排除词也满足"非空"）。
 CATEGORY_RULES = [
     {"category": "medical", "signal_id": "cat_medical",
+     "source": "medical_ad_measures", "clause": "2",
      "anchor": "《医疗广告管理办法》§2",
      "quote": "本办法所称医疗广告，是指利用各种媒介或者形式直接或间接介绍医疗机构或医疗服务的广告。",
      # 机构形态 + 诊疗科目形态（原文定义位即"医疗机构或医疗服务"）。
@@ -473,6 +474,7 @@ CATEGORY_RULES = [
                "中医", "口腔科", "眼科", "骨科", "皮肤科", "体检"],
      "exclude_contexts": ["宠物医院", "动物医院", "挂号信", "医美护肤", "医美级"]},
     {"category": "drug", "signal_id": "cat_drug",
+     "source": "advertising_law", "clause": "16",
      "anchor": "《广告法》§16",
      "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
      # 「说明书」「适应症」刻意移出：实测反例——器械广告里的「请仔细阅读产品
@@ -484,6 +486,7 @@ CATEGORY_RULES = [
      "exclude_contexts": ["药品监督管理局", "药品监管", "药品广告审查办法",
                           "药品管理法"]},
     {"category": "device", "signal_id": "cat_device",
+     "source": "advertising_law", "clause": "16",
      "anchor": "《广告法》§16",
      "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
      # 器械名 + 注册证形态补入（M2）；裸「器械」须排除健身/运动/办公等跨行业词形。
@@ -492,12 +495,14 @@ CATEGORY_RULES = [
      "exclude_contexts": ["健身器械", "运动器械", "办公器械", "体育器械",
                           "厨房器械", "器械健身"]},
     {"category": "health_food", "signal_id": "cat_health_food",
+     "source": "advertising_law", "clause": "18",
      "anchor": "《广告法》§18",
      "quote": "保健食品广告不得含有下列内容：",
      "terms": ["保健食品", "保健品", "蓝帽子", "保健功能", "膳食补充",
                "营养素补充剂"],
      "exclude_contexts": ["保健食品广告审查", "保健品监管"]},
     {"category": "fsmp", "signal_id": "cat_fsmp",
+     "source": "internet_ad_measures", "clause": "7",
      "anchor": "《互联网广告管理办法》§7",
      "quote": "发布医疗、药品、医疗器械、农药、兽药、保健食品、特殊医学用途配方食品广告等法律、行政法规规定应当进行审查的广告",
      "terms": ["特殊医学用途配方食品", "特殊医学用途", "特医食品"],
@@ -512,6 +517,7 @@ CATEGORY_RULES = [
 # suspect 是"提请人工复核"的提示，宁可宽；判定由规则层负责精确。
 VARIANT_RULES = [
     {"signal_id": "variant_health_knowledge_commerce",
+     "source": "internet_ad_measures", "clause": "8",
      "anchor": "《互联网广告管理办法》§8",
      "quote": "禁止以介绍健康、养生知识等形式，变相发布医疗、药品、医疗器械、保健食品、特殊医学用途配方食品广告。",
      "knowledge_terms": ["养生知识", "健康知识", "科普", "养生", "调理",
@@ -519,6 +525,7 @@ VARIANT_RULES = [
      "commerce_terms": ["门诊部", "医院", "诊所", "购买", "预约", "就诊",
                         "挂号", "订购", "门店"]},
     {"signal_id": "variant_health_knowledge_contact",
+     "source": "internet_ad_measures", "clause": "8",
      "anchor": "《互联网广告管理办法》§8",
      "quote": "介绍健康、养生知识的，不得在同一页面或者同时出现相关医疗、药品、医疗器械、保健食品、特殊医学用途配方食品的商品经营者或者服务提供者地址、联系方式、购物链接等内容。",
      "knowledge_terms": ["养生知识", "健康知识", "科普", "养生", "调理",
@@ -706,6 +713,18 @@ def build():
         if entry["text"] not in clause_text:
             raise SystemExit("白名单项未逐字出现在 §%s 原文中：%s"
                              % (WHITELIST_CLAUSE, entry["text"]))
+
+    # 品类/变相发布条目**同样逐条挂原文**（plan/05 M2 DoD）——它们的 anchor/quote
+    # 也要回读快照逐字校验。否则"判定规则逐条挂原文"只对规则层成立，品类层是
+    # 一纸无核验的引文（引文写错/条款号漂移不会红）。
+    for entry in CATEGORY_RULES + VARIANT_RULES:
+        clause_text = clause_index.get((entry["source"], entry["clause"]))
+        if clause_text is None:
+            raise SystemExit("品类/变相信号 %s 的条款不在快照中: %s §%s"
+                             % (entry["signal_id"], entry["source"], entry["clause"]))
+        if entry["quote"] not in clause_text:
+            raise SystemExit("品类/变相信号 %s 的 quote 未逐字出现在 §%s 原文中"
+                             % (entry["signal_id"], entry["clause"]))
 
     literal_count = sum(1 for r in rules if r["terms_basis"] == "literal")
     interpretive_count = sum(1 for r in rules if r["terms_basis"] == "interpretive")

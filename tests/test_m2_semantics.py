@@ -239,6 +239,28 @@ def test_check_module_aliases_shared_primitive():
     assert check_mod._is_negated is phrase.is_negated
 
 
+def test_category_and_variant_quotes_are_verbatim_in_snapshot():
+    """品类/变相发布条目**逐条挂原文**（plan/05 M2 DoD 的机器可核验形态）。
+
+    判据：每条 anchor 的 quote 必须逐字出现在对应条文快照里（回读原文校验，
+    不只信一个 `located` 布尔）——否则"判定规则逐条挂原文"对品类层是一纸空话。
+    用生成器同源的 `ruleset.load_clauses` 读条文块（本文件零词面）。
+    """
+    from medreview import ruleset
+    clauses = ruleset.load_clauses(
+        os.path.join(SRC, "medreview", "references", "clauses.json"))
+    payload = _rule_pack()
+    entries = payload["category_rules"] + payload["variant_rules"]
+    assert entries, "品类/变相发布条目为空——扫描面为空（假门）"
+    for entry in entries:
+        key = (entry["source"], str(entry["clause"]))
+        assert key in clauses, \
+            "信号 %s 的条款不在条文块中：%s §%s" \
+            % (entry["signal_id"], entry["source"], entry["clause"])
+        assert entry["quote"] in clauses[key], \
+            "信号 %s 的 quote 未逐字出现在 §%s 原文中" % (entry["signal_id"], entry["clause"])
+
+
 # --------------------------------------------------------------------------
 # 文档计数联动：data/README 的计数表 ↔ manifest（防"文档抄旧数"漂移）
 # --------------------------------------------------------------------------

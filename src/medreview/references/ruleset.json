@@ -4,6 +4,7 @@
     {
       "anchor": "《医疗广告管理办法》§2",
       "category": "medical",
+      "clause": "2",
       "exclude_contexts": [
         "宠物医院",
         "动物医院",
@@ -13,6 +14,7 @@
       ],
       "quote": "本办法所称医疗广告，是指利用各种媒介或者形式直接或间接介绍医疗机构或医疗服务的广告。",
       "signal_id": "cat_medical",
+      "source": "medical_ad_measures",
       "terms": [
         "医疗机构",
         "医疗服务",
@@ -37,6 +39,7 @@
     {
       "anchor": "《广告法》§16",
       "category": "drug",
+      "clause": "16",
       "exclude_contexts": [
         "药品监督管理局",
         "药品监管",
@@ -45,6 +48,7 @@
       ],
       "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
       "signal_id": "cat_drug",
+      "source": "advertising_law",
       "terms": [
         "药品",
         "片剂",
@@ -64,6 +68,7 @@
     {
       "anchor": "《广告法》§16",
       "category": "device",
+      "clause": "16",
       "exclude_contexts": [
         "健身器械",
         "运动器械",
@@ -74,6 +79,7 @@
       ],
       "quote": "医疗、药品、医疗器械广告不得含有下列内容：",
       "signal_id": "cat_device",
+      "source": "advertising_law",
       "terms": [
         "医疗器械",
         "器械",
@@ -91,12 +97,14 @@
     {
       "anchor": "《广告法》§18",
       "category": "health_food",
+      "clause": "18",
       "exclude_contexts": [
         "保健食品广告审查",
         "保健品监管"
       ],
       "quote": "保健食品广告不得含有下列内容：",
       "signal_id": "cat_health_food",
+      "source": "advertising_law",
       "terms": [
         "保健食品",
         "保健品",
@@ -109,11 +117,13 @@
     {
       "anchor": "《互联网广告管理办法》§7",
       "category": "fsmp",
+      "clause": "7",
       "exclude_contexts": [
         "特殊医学用途配方食品广告审查"
       ],
       "quote": "发布医疗、药品、医疗器械、农药、兽药、保健食品、特殊医学用途配方食品广告等法律、行政法规规定应当进行审查的广告",
       "signal_id": "cat_fsmp",
+      "source": "internet_ad_measures",
       "terms": [
         "特殊医学用途配方食品",
         "特殊医学用途",
@@ -1129,10 +1139,11 @@
       "terms_basis": "literal"
     }
   ],
-  "ruleset_version": "ruleset-8357b64fd1",
+  "ruleset_version": "ruleset-b229857603",
   "variant_rules": [
     {
       "anchor": "《互联网广告管理办法》§8",
+      "clause": "8",
       "commerce_terms": [
         "门诊部",
         "医院",
@@ -1154,10 +1165,12 @@
         "健康科普"
       ],
       "quote": "禁止以介绍健康、养生知识等形式，变相发布医疗、药品、医疗器械、保健食品、特殊医学用途配方食品广告。",
-      "signal_id": "variant_health_knowledge_commerce"
+      "signal_id": "variant_health_knowledge_commerce",
+      "source": "internet_ad_measures"
     },
     {
       "anchor": "《互联网广告管理办法》§8",
+      "clause": "8",
       "commerce_terms": [
         "联系方式",
         "购物链接",
@@ -1178,7 +1191,8 @@
         "健康科普"
       ],
       "quote": "介绍健康、养生知识的，不得在同一页面或者同时出现相关医疗、药品、医疗器械、保健食品、特殊医学用途配方食品的商品经营者或者服务提供者地址、联系方式、购物链接等内容。",
-      "signal_id": "variant_health_knowledge_contact"
+      "signal_id": "variant_health_knowledge_contact",
+      "source": "internet_ad_measures"
     }
   ],
   "whitelist_items": [
