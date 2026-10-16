@@ -106,3 +106,49 @@ def all_of(text, terms, contexts=None):
 def none_of(text, terms, contexts=None):
     """必须一个都不出现（返回空列表表示"通过"）。"""
     return [t for t in terms if t and term_is_live(text, t, contexts)]
+
+
+def segments(text):
+    """按**句读分隔符**切分文本（分隔符表是结构性常量，见 ``constants``）。
+
+    用途：把"共现"约束到**同一句读段内**——两个词各自出现在不同句子里，
+    不构成"同一句陈述里的共现"。这与否定辖域"不跨句读"用的是同一套分隔符，
+    保证"一个句读段"在全项目只有一个定义。
+    """
+    out = []
+    current = []
+    for char in text:
+        if char in constants.SEGMENT_DELIMITERS:
+            if current:
+                out.append("".join(current))
+                current = []
+        else:
+            current.append(char)
+    if current:
+        out.append("".join(current))
+    return out
+
+
+def cooccur_in_segment(text, groups, contexts=None):
+    """**同段共现**：每个组至少命中一项，且全部组落在**同一个句读段**内。
+
+    为什么必须限定"同一段"：全局共现会把**分属两句**的词面凑成一次命中
+    （如"本店技术更好。另售其他商品。"会被读成"更好 + 其他商品"的比较），
+    而原文的构成要件是"**同一句**里出现了比较与被比较对象"。
+
+    返回命中项列表（各段命中合并、保持组序）；无任何段满足全部组 → 空列表。
+    """
+    if not groups:
+        return []
+    for segment in segments(text):
+        hits = []
+        ok = True
+        for group in groups:
+            found = any_of(segment, group, contexts)
+            if not found:
+                ok = False
+                break
+            hits.extend(found)
+        if ok:
+            return hits
+    return []

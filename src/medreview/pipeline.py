@@ -11,7 +11,7 @@ import os
 from typing import List
 
 from . import categorize, check, constants, grade, normalize, ruleset
-from .errors import RulesetUnavailable
+from .errors import FindingIncomplete, RulesetUnavailable
 from .paths import clauses_path, manifest_path, ruleset_path
 
 
@@ -119,8 +119,60 @@ def run_check(engine, item):
         if r.state == constants.RULE_INPUT_REQUIRED
     ]
 
-    return build_report(item, categories, grade_result, rule_results, engine,
-                        advisories, input_required)
+    report = build_report(item, categories, grade_result, rule_results, engine,
+                          advisories, input_required)
+    # **导出前常驻断言**（plan/03 §4.3）：四要素不齐备即拒绝出件——不留"半溯源"报告。
+    assert_findings_traceable(report, engine, item.text)
+    return report
+
+
+def assert_findings_traceable(report, engine, text):
+    """**导出前常驻断言**：每条 Finding 的四要素齐备且可机器核验（plan/03 §4.3）。
+
+    判据（不是"字段非空"——那挡不住"引文写错"）：
+      ① ``rule_id`` 非空且**存在于规则包**（引擎装配的生效规则集合）；
+      ② ``clause_anchor`` 非空且**可解析**（含条款号形态，且与规则的 source/clause 一致）；
+      ③ ``quote`` **逐字出现在该条款的官方快照切片中**（回读条文块校验）；
+      ④ ``evidence`` 非空；``evidence_kind == text_span`` 时还须**逐字出现在输入文案**中
+         （防"引用用户没写过的文字"）；``obligation_missing`` 类（义务缺失）只要求非空
+         ——这类证据描述的是"该写而没写"，**不可能**在文案里。
+
+    任一条不满足 → ``FindingIncomplete``（退出码 1），**拒绝导出**。
+    这是"每条结论可溯源"的落地：断言常驻在唯一导出点，不是"记得跑那条测试"。
+    """
+    by_id = {rule.rule_id: rule for rule in engine.rules}
+    clauses = ruleset.load_clauses(clauses_path())
+    problems = []
+
+    for finding in report.findings:
+        rule = by_id.get(finding.rule_id)
+        if rule is None:
+            problems.append("rule_id %r 不在生效规则包中" % finding.rule_id)
+            continue
+        if not finding.clause_anchor:
+            problems.append("%s 的 clause_anchor 为空" % finding.rule_id)
+        else:
+            anchor = finding.clause_anchor
+            if ("§%s" % rule.clause) not in anchor:
+                problems.append("%s 的 clause_anchor 与规则条款不符（锚点 %r / 条款 §%s）"
+                                % (finding.rule_id, anchor, rule.clause))
+        clause_text = clauses.get((rule.source, str(rule.clause)))
+        if clause_text is None:
+            problems.append("%s 的条款不在条文快照中：%s §%s"
+                            % (finding.rule_id, rule.source, rule.clause))
+        elif not finding.quote or finding.quote not in clause_text:
+            problems.append("%s 的 quote 未逐字出现在 §%s 快照中"
+                            % (finding.rule_id, rule.clause))
+        if not finding.evidence:
+            problems.append("%s 的 evidence 为空" % finding.rule_id)
+        elif finding.evidence_kind == constants.EVIDENCE_TEXT_SPAN                 and finding.evidence not in text:
+            problems.append("%s 的 evidence 未逐字出现在输入文案中" % finding.rule_id)
+
+    if problems:
+        raise FindingIncomplete(
+            "命中四要素断言失败（拒绝导出半溯源报告）：%s" % "；".join(problems),
+            code="finding_incomplete")
+    return True
 
 
 def build_report(item, categories, grade_result, rule_results, engine,

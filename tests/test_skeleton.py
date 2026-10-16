@@ -516,14 +516,19 @@ def test_finding_quote_verbatim_in_clause_snapshot():
 
 
 def test_finding_evidence_verbatim_in_input():
-    """命中证据必须**逐字出现在输入文案**中（防引用用户没写过的文字）。"""
+    """命中证据必须**逐字出现在输入文案**中（防引用用户没写过的文字）。
+
+    证据分两种**性质**（`evidence_kind` 结构性字段，不靠字符串前缀特判）：
+    ``text_span`` 须逐字在文案里；``obligation_missing`` 描述的是"该写而没写"，
+    **不可能**在文案里出现，故只要求非空。
+    """
     text = "XX医疗美容门诊部（虚构）保证治愈，无效退款。"
     rep = _run(text)
     for finding in rep.findings:
-        for token in finding.evidence.split("、"):
-            if token.startswith("缺失应显著标明"):
-                continue  # 义务缺失类证据描述的是"缺什么"，不是文案片段
-            assert token in text, token
+        if finding.evidence_kind == constants.EVIDENCE_OBLIGATION_MISSING:
+            assert finding.evidence, "义务缺失类证据不得为空"
+            continue
+        assert finding.evidence in text, finding.evidence
 
 
 # --------------------------------------------------------------------------

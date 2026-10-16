@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Sequence
 
+from . import constants
+
 
 class ContentItem(object):
     """标准化后的待审查内容对象（模块 1 的输出）。
@@ -131,11 +133,20 @@ class Finding(object):
 
     四要素：``clause_anchor``（条款号）、``quote``（法条原文逐字）、
     ``evidence``（文案命中片段逐字）、``rule_id``。
+
+    ``evidence_kind`` 区分证据的**两种性质**（导出前断言据此选判据）：
+      - ``text_span``：证据是**文案里的片段**，必须逐字出现在输入文案中；
+      - ``obligation_missing``：证据描述的是**"该写而没写"**（无条件义务缺失），
+        它**不可能**出现在文案里——这类证据只要求非空且规则为义务类。
+    把这两类混为一谈会让断言要么误红（义务缺失类），要么靠字符串前缀特判
+    （脆弱：改一句措辞就绕过门禁）。
     """
 
-    __slots__ = ("rule_id", "clause_anchor", "quote", "evidence", "severity", "kind", "notes")
+    __slots__ = ("rule_id", "clause_anchor", "quote", "evidence", "severity",
+                 "kind", "notes", "evidence_kind")
 
-    def __init__(self, rule_id, clause_anchor, quote, evidence, severity, kind, notes=""):
+    def __init__(self, rule_id, clause_anchor, quote, evidence, severity, kind,
+                 notes="", evidence_kind=constants.EVIDENCE_TEXT_SPAN):
         self.rule_id = rule_id
         self.clause_anchor = clause_anchor
         self.quote = quote
@@ -143,6 +154,7 @@ class Finding(object):
         self.severity = severity
         self.kind = kind
         self.notes = notes
+        self.evidence_kind = evidence_kind
 
     def to_dict(self):
         return {

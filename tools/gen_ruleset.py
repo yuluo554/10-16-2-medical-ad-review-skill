@@ -185,6 +185,10 @@ RULE_DEFS = [
         "kind": "prohibited_pattern", "severity": "block",
         "categories": ["medical"], "terms_basis": "interpretive",
         "terms": ["保证治愈", "彻底治愈", "根治", "包治", "无效退款", "永不复发"],
+        # M3 实测误报：裸「根治」与临床术语碰撞——「开展肿瘤**根治性**手术」
+        # 「可实施**根治术**」「**根治率**较高」被判 BLOCK（那是诊疗术式名，
+        # 不是"保证治愈"）。排除语境须与 AL-16-1 同族（同一词面两处碰撞）。
+        "exclude_contexts": ["根治性", "根治术", "根治率"],
         "pattern_id": "guaranteed_cure",
     },
     {
@@ -236,7 +240,16 @@ RULE_DEFS = [
         "id": "MAM-6-W", "source": "medical_ad_measures", "clause": "6", "item": None,
         "kind": "whitelist_scope", "severity": "warn",
         "categories": ["medical"], "terms_basis": "interpretive",
-        "terms": ["疗效", "无痛", "专家坐诊", "设备先进", "技术领先", "成功率"],
+        # M3 复核：§6 白名单是**穷举式**的（"医疗广告内容**仅限于**以下项目"），
+        # 故"超出白名单"有两个方向，原词表只覆盖了**医疗宣称**方向：
+        #   ① 医疗宣称类（疗效/无痛/专家坐诊/设备先进/技术领先/成功率）；
+        #   ② **商业促销与服务类**——实测「本月八折优惠」「服务态度好，环境优雅，
+        #      停车方便」零命中，而这两类内容同样不在 8 项白名单之内（8 项只允许
+        #      机构名/地址/所有制/类别/诊疗科目/床位数/接诊时间/联系电话）。
+        # 补入②，仍是 **warn 非 block**（白名单外是待复核，不是明确禁止）。
+        "terms": ["疗效", "无痛", "专家坐诊", "设备先进", "技术领先", "成功率",
+                  "优惠", "折扣", "促销", "体验价", "免费体验", "限时",
+                  "服务态度", "环境优雅", "停车方便", "包间"],
         "pattern_id": "beyond_whitelist",
     },
     {
@@ -253,9 +266,12 @@ RULE_DEFS = [
         "categories": ["medical", "drug", "device"], "terms_basis": "interpretive",
         "terms": ["包治", "根治", "治愈", "安全无副作用", "绝对安全", "保证有效",
                   "100%有效"],
-        # 排除语境：裸「治愈」与「治愈系」（装修/风格类中性词形）碰撞——
-        # 命中项落在这些更大词形内部即不算命中。
-        "exclude_contexts": ["治愈系", "治愈系风格"],
+        # 排除语境（M1 建「治愈系」；M3 补三条实测误报）：
+        #   ① 裸「治愈」与「治愈系」（装修/风格类中性词形）碰撞；
+        #   ② 裸「根治」与临床术语「根治性手术/根治术/根治率」碰撞——实测
+        #      「开展肿瘤根治性手术」被判 BLOCK（那是诊疗术式名，不是疗效保证）；
+        #   ③ 裸「安全」与「安全无副作用」区分靠词表本身，无须排除。
+        "exclude_contexts": ["治愈系", "治愈系风格", "根治性", "根治术", "根治率"],
         "pattern_id": "efficacy_safety_assertion",
     },
     {
@@ -269,14 +285,24 @@ RULE_DEFS = [
         "id": "AL-16-3", "source": "advertising_law", "clause": "16", "item": "3",
         "kind": "prohibited_pattern", "severity": "block",
         "categories": ["medical", "drug", "device"], "terms_basis": "interpretive",
-        # 原文是「与其他…的功效和安全性或者其他医疗机构**比较**」——比较语义。
-        # 裸「第一」刻意删除：实测反例「第一时间响应」「医疗机构第一名称」（§6
-        # 白名单项）都被它误判 BLOCK。改为只留**比较/排名语义**的复合词面。
-        "terms": ["优于", "好于", "强于", "胜过", "超过其他", "第一品牌",
-                  "全国第一", "行业第一", "最先进", "领先于", "其他医院",
-                  "其他医疗机构", "其他药品", "其他医疗器械", "其他保健食品",
-                  "其他诊所", "其他机构", "同类产品", "相比其他", "优于其他",
-                  "竞争对手"],
+        # 原文是「与其他…的功效和安全性或者其他医疗机构**比较**」——构成要件是
+        # **比较**：既要有比较标记，又要有**被比较的对象**，且两者须落在**同一
+        # 句读段**内（原文要求的是"同一句陈述里的比较"）。
+        # M3 实测误报（裸词表的三个失败形态）：
+        #   ①「与其他机构开展学术交流」「与其他机构合作共建」被判 BLOCK
+        #     ——裸「其他机构」把**非比较**的中性搭配误当比较；
+        #   ②「领先于行业标准」被判 BLOCK——裸「领先于」的比较对象是"标准"，
+        #     不是"其他药品/器械/医疗机构"；
+        #   ③「最先进」单独出现（无任何被比较对象）被判 BLOCK。
+        # 故改**同段共现**（`segment_groups`），对象限定为**同类指向**形态；
+        # 「第一时间」「医疗机构第一名称」（§6 白名单项）等中性词形不再碰撞。
+        "segment_groups": [
+            ["优于", "好于", "强于", "胜过", "超过", "相比", "比较",
+             "最先进", "领先", "第一品牌", "全国第一", "行业第一"],
+            ["其他药品", "其他医疗器械", "其他医疗机构", "其他医院", "其他诊所",
+             "其他保健食品", "其他机构", "其他品牌", "其他厂家",
+             "同类产品", "同类药品", "同类器械", "竞争对手", "同行"],
+        ],
         "pattern_id": "comparison_with_others",
     },
     {
@@ -298,7 +324,11 @@ RULE_DEFS = [
         "kind": "mandatory_disclosure", "severity": "block",
         "categories": ["drug"],
         "terms_basis": "literal", "quote_contains": "禁忌、不良反应",
-        "require_all_of": [["禁忌", "不良反应"]],
+        # M3 语义修正：原文是「应当显著标明**禁忌、不良反应**」——并列宾语，
+        # **两项都要标明**。原实现是"两项中任一项出现即算履行"（`_any_of` 组内
+        # 任一即可），于是「只标禁忌、未标不良反应」被判 compliant（漏报）。
+        # 改拆两组（每组一项），缺任一组即 noncompliant。
+        "require_all_of": [["禁忌"], ["不良反应"]],
         "pattern_id": "drug_must_mark_contraindication",
     },
     # ---- 《广告法》§16 款 2 的三条**提示语义务**（原文逐字可核，M1 补齐） ----
@@ -378,13 +408,28 @@ RULE_DEFS = [
         "kind": "prohibited_term", "severity": "block",
         "categories": ["health_food"], "terms_basis": "interpretive",
         "terms": ["必需", "必不可少", "人人必备"],
+        # M3 实测误报：裸「必需」与**营养学术语**碰撞——「含人体**必需**氨基酸」
+        # 「富含**必需**脂肪酸/营养素」「生活**必需**品」被判 BLOCK（那是成分名，
+        # 不是"为保障健康所必需"的声称）。排除语境逐条包住正向词「必需」。
+        "exclude_contexts": ["必需氨基酸", "必需脂肪酸", "必需营养素",
+                             "必需微量元素", "必需矿物质", "必需品"],
         "pattern_id": "claim_indispensable",
     },
     {
         "id": "AL-18-4", "source": "advertising_law", "clause": "18", "item": "4",
         "kind": "prohibited_term", "severity": "block",
         "categories": ["health_food"], "terms_basis": "interpretive",
-        "terms": ["优于", "好于", "其他保健食品"],
+        # 原文是「与**药品、其他保健食品**进行比较」——被比较对象是构成要件。
+        # M3 实测误报：裸「好于」把「本品保健食品**口感好于普通食品**」判 BLOCK
+        # （比较对象是普通食品，不是药品/其他保健食品）。故改**同段共现**，
+        # 对象限定为原文点名的两类（药品 / 其他保健食品）及其同类指向形态。
+        "segment_groups": [
+            ["优于", "好于", "强于", "胜过", "相比", "比较", "优于其他", "好于其他"],
+            ["其他保健食品", "其他药品", "其他保健品", "药品",
+             "同类产品", "同类保健食品", "其他品牌"],
+        ],
+        # 「药品级原料」是中性词形（不是与药品作比较），命中项落在其内部不算命中。
+        "exclude_contexts": ["药品级"],
         "pattern_id": "health_food_comparison",
     },
     {
@@ -637,6 +682,8 @@ def build():
                 literal_terms.extend(group)
             for group in definition.get("groups") or []:
                 literal_terms.extend(group)
+            for group in definition.get("segment_groups") or []:
+                literal_terms.extend(group)
             literal_terms.extend(definition.get("knowledge_terms") or [])
             literal_terms.extend(definition.get("commerce_terms") or [])
             literal_terms.extend(definition.get("subject_signals") or [])
@@ -681,6 +728,8 @@ def build():
             match = {"require_all_of": definition.get("require_all_of") or []}
         elif definition["kind"] in ("input_required", "review_proof"):
             match = {"required_input": definition.get("required_input", "")}
+        elif definition.get("segment_groups"):
+            match = {"segment_groups": [list(g) for g in definition["segment_groups"]]}
         elif definition.get("groups"):
             match = {"groups": [list(g) for g in definition["groups"]]}
         else:

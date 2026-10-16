@@ -36,11 +36,17 @@ def match_rule(rule, match_spec, text):
     """通用匹配：返回命中项列表（空 = 未命中）。
 
     ``match_spec`` 结构：``{"any_of": [...], "all_of": [...], "none_of": [...],
-    "groups": [[...], [...]]}``——全部字段可选；各字段之间是**与**关系
-    （any_of 命中 && all_of 全中 && none_of 全空 && 每个 group 至少命中一项）。
+    "groups": [[...], [...]], "segment_groups": [[...], [...]]}``——全部字段可选；
+    各字段之间是**与**关系（any_of 命中 && all_of 全中 && none_of 全空 &&
+    每个 group 至少命中一项 && 每个 segment_group 至少命中一项）。
 
     ``groups`` 是**共现语义**：每组的词表是"任一即可"，但**组与组之间必须同时
     成立**（如某条要求"主体词"与"证明标记"共现，光有主体词不算）。
+
+    ``segment_groups`` 是**同段共现**（比 ``groups`` 更严）：各组的命中必须落在
+    **同一个句读段**内。用途：原文的构成要件是"**同一句**里出现了比较标记与被
+    比较对象"时，全局共现会把**分属两句**的词面凑成一次命中（如"本院技术更好。
+    另售其他商品。"被读成"更好 + 其他商品"的比较），同段共现能拦住这类凑合。
 
     ``exclude_contexts``（可选，顶层）是**排除语境**词表：命中项若落在这些更大
     词形内部即不算命中（防裸词与中性词形碰撞）。
@@ -58,6 +64,13 @@ def match_rule(rule, match_spec, text):
             return []
         group_hits.extend(hits)
 
+    segment_groups = spec.get("segment_groups") or ()
+    segment_hits = []
+    if segment_groups:
+        segment_hits = phrase.cooccur_in_segment(text, segment_groups, contexts)
+        if not segment_hits:
+            return []
+
     if spec.get("all_of") and not all_hits:
         return []
     if none_hits:
@@ -66,10 +79,11 @@ def match_rule(rule, match_spec, text):
         return []
     if spec.get("groups") and not group_hits:
         return []
-    if not (spec.get("any_of") or spec.get("all_of") or spec.get("groups")):
+    if not (spec.get("any_of") or spec.get("all_of") or spec.get("groups")
+            or spec.get("segment_groups")):
         # 没有正向条件 = 规格缺失，绝不"空规格恒命中"
         return []
-    return any_hits + all_hits + group_hits
+    return any_hits + all_hits + group_hits + segment_hits
 
 
 def _check_prohibited_term(rule, match_spec, text, proof=None):
@@ -84,13 +98,20 @@ def _check_prohibited_term(rule, match_spec, text, proof=None):
 
 
 def _check_prohibited_pattern(rule, match_spec, text, proof=None):
-    """结构性禁止模式（共现/顺序类）——与 prohibited_term 共用匹配器但语义独立。"""
+    """结构性禁止模式（共现/顺序类）——与 prohibited_term 共用匹配器但语义独立。
+
+    **逐命中项各出一条 Finding**（不把多项 join 成一个字符串）：join 出来的
+    "A、B" 并不是文案里的片段，会让"evidence 逐字在文案"的导出前断言无法成立
+    （M3 实测：某条规则把两个命中词 join 成一个串，导出前断言当场报红）。
+    逐项出条既保住可核验性，也让报告能逐词指认。
+    """
     hits = match_rule(rule, match_spec, text)
     if not hits:
         return RuleResult(rule.rule_id, constants.RULE_COMPLIANT)
-    evidence = "、".join(hits)
     findings = [
-        Finding(rule.rule_id, rule.anchor, rule.quote, evidence, rule.severity, rule.kind)
+        Finding(rule.rule_id, rule.anchor, rule.quote, hit,
+                rule.severity, rule.kind)
+        for hit in hits
     ]
     return RuleResult(rule.rule_id, constants.RULE_NONCOMPLIANT, findings)
 
@@ -117,34 +138,45 @@ def _check_mandatory_disclosure(rule, match_spec, text, proof=None):
     findings = [
         Finding(rule.rule_id, rule.anchor, rule.quote,
                 "缺失应显著标明的内容（第 %d 组）" % (idx + 1),
-                rule.severity, rule.kind)
+                rule.severity, rule.kind,
+                evidence_kind=constants.EVIDENCE_OBLIGATION_MISSING)
         for idx, _ in enumerate(missing)
     ]
     return RuleResult(rule.rule_id, constants.RULE_NONCOMPLIANT, findings)
 
 
 def _check_whitelist_scope(rule, match_spec, text, proof=None):
-    """超出白名单范围的表述 → warn（非明确禁止）。"""
+    """超出白名单范围的表述 → warn（非明确禁止）。
+
+    同样**逐命中项各出一条 Finding**（join 出的 "A、B" 不是文案片段，
+    过不了"evidence 逐字在文案"的导出前断言）。
+    """
     hits = match_rule(rule, match_spec, text)
     if not hits:
         return RuleResult(rule.rule_id, constants.RULE_COMPLIANT)
-    evidence = "、".join(hits)
     findings = [
-        Finding(rule.rule_id, rule.anchor, rule.quote, evidence, rule.severity, rule.kind)
+        Finding(rule.rule_id, rule.anchor, rule.quote, hit,
+                rule.severity, rule.kind)
+        for hit in hits
     ]
     return RuleResult(rule.rule_id, constants.RULE_NONCOMPLIANT, findings)
 
 
 def _check_variant_publish(rule, match_spec, text, proof=None):
-    """变相发布情形：知识形态 + 商品/服务信息**共现**（条款号见规则锚点）。"""
+    """变相发布情形：知识形态 + 商品/服务信息**共现**（条款号见规则锚点）。
+
+    证据**逐命中项各出一条**：共现是判定条件，但引证必须是文案里的逐字片段
+    （join 出来的串过不了导出前断言）。
+    """
     spec = match_spec or {}
     knowledge = _any_of(text, spec.get("knowledge_terms") or ())
     commerce = _any_of(text, spec.get("commerce_terms") or ())
     if not (knowledge and commerce):
         return RuleResult(rule.rule_id, constants.RULE_COMPLIANT)
-    evidence = "、".join(knowledge + commerce)
     findings = [
-        Finding(rule.rule_id, rule.anchor, rule.quote, evidence, rule.severity, rule.kind)
+        Finding(rule.rule_id, rule.anchor, rule.quote, hit,
+                rule.severity, rule.kind)
+        for hit in (knowledge + commerce)
     ]
     return RuleResult(rule.rule_id, constants.RULE_NONCOMPLIANT, findings)
 
@@ -176,7 +208,8 @@ def _check_review_proof(rule, match_spec, text, proof=None):
         findings = [
             Finding(rule.rule_id, rule.anchor, rule.quote,
                     "用户声明未取得广告审查证明（未经审查不得发布）",
-                    rule.severity, rule.kind)
+                    rule.severity, rule.kind,
+                    evidence_kind=constants.EVIDENCE_OBLIGATION_MISSING)
         ]
         return RuleResult(rule.rule_id, constants.RULE_NONCOMPLIANT, findings)
     if value in ("yes", "true", "已取得", "是"):

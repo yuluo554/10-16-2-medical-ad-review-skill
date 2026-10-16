@@ -48,3 +48,14 @@ class ConfigMissing(RulesetUnavailable):
     """基准门槛缺失（配置错误，不回落代码默认值 → 退出码 2）。"""
 
     code = "config_missing"
+
+
+class FindingIncomplete(MedReviewError):
+    """命中的**四要素**未齐备或不可核验——导出前断言拒绝出件（→ 退出码 1）。
+
+    四要素：``clause_anchor``（条款号可解析）、``quote``（逐字在条款快照中）、
+    ``evidence``（逐字在输入文案中）、``rule_id``（存在于规则包）。
+    任一不成立即"半溯源报告"，不得导出（见 plan/03 §4.3）。
+    """
+
+    code = "finding_incomplete"

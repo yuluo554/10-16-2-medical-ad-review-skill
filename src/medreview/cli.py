@@ -261,6 +261,10 @@ def main(argv=None):
     except MedReviewError as exc:
         # 领域异常继承 ValueError → CLI 抓得住；退出码按 code 分档
         code = getattr(exc, "code", "")
+        if code == "finding_incomplete":
+            # 溯源断言失败 = "查出了问题但报告不可信" → 与检出命中同码（1），非故障
+            sys.stderr.write("[溯源断言] %s\n" % exc.message)
+            return constants.EXIT_FINDING
         if code in ("ruleset_missing", "ruleset_bad_json", "anchor_unresolved",
                     "config_missing", "bad_scope"):
             if code == "config_missing":
