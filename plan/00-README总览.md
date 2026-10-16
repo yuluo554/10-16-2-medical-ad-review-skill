@@ -31,9 +31,10 @@
 | 实测勘误 | ✅ 1 处：《医疗广告管理办法》§6 白名单**实为 8 项**（题面写 7 项）→ 06 D8 |
 | 计划文档 00–06 | ✅ 齐全 |
 | 可运行骨架 | ✅ 已落盘（pyproject / src / tests / CI / .gitattributes） |
-| 双解释器全量测试 | ✅ 3.8 + 3.12 各 62 项全绿 |
+| 双解释器全量测试 | ✅ 3.8 + 3.12 各 65 项全绿 |
 | 门禁自检（阳性对照） | ✅ 7 项全 PASS（`medreview selftest`） |
 | 基准四套件 | ✅ 全部达标（`medreview bench` exit 0） |
+| 合成数据纪律 | ✅ 假机构名白名单可校验（`data/fake_org_whitelist.txt`，变异验证过） |
 | 冻结产物位级一致 | ✅ `gen_ruleset.py --check` + `gen_cases.py --check` → FROZEN_TRUTH_OK |
 | 干净 venv 安装 + 裸 console script 冒烟 | ✅（安装面三通路均通） |
 | 变异验证（守门非假门） | ✅ 4 组变异全部使门变红 |
