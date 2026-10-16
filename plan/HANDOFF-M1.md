@@ -23,11 +23,12 @@
 | 计划文档 00–06 | `plan/` | 总览/题目/架构/模块详设/数据计划/里程碑/交付对标 |
 | 官方快照入仓 | `data/knowledge/raw/*.txt` | 3 份，LF 无 CRLF，sha256 入 `data/ledger.csv` |
 | 条文块 + 规则包 + manifest | `src/medreview/references/` | 25 条生效规则 + 3 条兜底条款（显式不建规则） |
-| 真值库 + 假机构名白名单 | `src/medreview/fixtures/cases.json` | 37 用例（B1×5 / B2×11 / B3×4 / B4×17） |
+| 真值库 | `src/medreview/fixtures/cases.json` | 37 用例（B1×5 / B2×11 / B3×4 / B4×17） |
+| 假机构名白名单 | `data/fake_org_whitelist.txt` | 3 个虚构机构名；基准 fail-fast 校验样例机构名（变异验证过） |
 | 引擎（13 模块 + bench 包） | `src/medreview/` | 分层：规则/判定/分级/报告/编排 |
 | 基准四套件 | `src/medreview/bench/` | **全部达标**（`medreview bench` exit 0） |
 | 门禁自检 7 项 | `medreview selftest` | SELFTEST_OK（含阳性对照） |
-| 测试套件 | `tests/` | **62 项全绿**（3.8 与 3.12 双解释器） |
+| 测试套件 | `tests/` | **65 项全绿**（3.8 与 3.12 双解释器） |
 | CI workflow（三矩阵） | `.github/workflows/ci.yml` | win 3.8 / win 3.12 / ubuntu 3.12 + workflow-lint job |
 | SKILL.md 主入口 | `SKILL.md` | 含机器契约块（三面对账守门已验） |
 
@@ -104,11 +105,11 @@ M1 的骨架**已经预置完毕**（快照、生成器、规则包、台账都�
 | 0-4 | `plan/00–06` 齐全 | `plan/` | ✅ |
 | 0-5 | 待定决策表经用户拍板 | `plan/06` §三 P1–P8（按推荐默认执行，**未获逐项答复**，如实留档） | ⬜ 待用户确认 |
 | 0-6 | 可运行骨架 | `src/` `tests/` `pyproject.toml` `tools/` | ✅ |
-| 0-7 | 双解释器全量测试 | 3.8 与 3.12 各 **62 passed** | ✅ |
+| 0-7 | 双解释器全量测试 | 3.8 与 3.12 各 **65 passed** | ✅ |
 | 0-8 | 门禁自检绿（含阳性对照） | `medreview selftest` → SELFTEST_OK（7 项全 PASS） | ✅ |
 | 0-9 | 基准四套件达标 | `medreview bench` → exit 0，四套件全"达标" | ✅ |
 | 0-10 | 冻结产物位级一致 | `gen_ruleset.py --check` + `gen_cases.py --check` → FROZEN_TRUTH_OK（双解释器） | ✅ |
-| 0-11 | 干净 venv 安装 + 裸 console script 冒烟 | `.venv-test` 内 `pip install -e ".[dev]"` → `medreview.exe selftest` OK、62 项测试绿、`bench` exit 0、非仓库根 CWD 跑 `python -m medreview.cli` OK | ✅ |
+| 0-11 | 干净 venv 安装 + 裸 console script 冒烟 | `.venv-test` 内 `pip install -e ".[dev]"` → `medreview.exe selftest` OK、65 项测试绿、`bench` exit 0、非仓库根 CWD 跑 `python -m medreview.cli` OK | ✅ |
 | 0-12 | CI workflow 结构守门 | `tests/check_workflows.py` → WORKFLOW_LINT_OK | ✅ |
 | 0-13 | **本地等价校验（未接远端，CI 待首推验证）** | 上列全部本机通路；**不可本机实跑的 ubuntu 矩阵与 cp1252 环境差异显式标注"待首推验证"** | ✅（等价） |
 | 0-14 | 变异验证（守门不是假门） | 4 组变异全部使门变红：① 关掉锚点硬门 → `test_rule_with_unresolvable_quote_is_refused` 红；② `input_required` 判 OK → `test_input_required_never_grades_ok` 红；③ 改 SKILL.md 契约块 → 2 项契约测试红；④ 篡改用例 → 冻结台账报红 | ✅ |

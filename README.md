@@ -97,6 +97,8 @@ medreview selftest
 
 来源 URL、抓取记录与 sha256 台账见 [`data/README.md`](data/README.md) 与 [`data/ledger.csv`](data/ledger.csv)。
 
+合成样例一律使用虚构机构名，白名单见 [`data/fake_org_whitelist.txt`](data/fake_org_whitelist.txt)（基准断言校验样例机构名必须在名单内）。
+
 ## 项目结构
 
 ```

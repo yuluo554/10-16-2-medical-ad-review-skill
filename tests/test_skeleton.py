@@ -300,6 +300,28 @@ def test_frozen_ledger_detects_missing_case():
     assert any("缺失" in p for p in problems)
 
 
+def test_fake_org_whitelist_enforced():
+    """合成数据纪律：全部样例机构名必须在白名单内（题面 §四.1）。"""
+    payload, _ = runner.load_fixture_payload()
+    assert ledger_mod.check_fake_org_whitelist(payload) == []
+
+
+def test_fake_org_whitelist_catches_violation():
+    """**变异验证**：样例里塞进一个白名单外的真实机构名 → 必须报红。"""
+    payload, _ = runner.load_fixture_payload()
+    tampered = json.loads(json.dumps(payload))
+    tampered["cases"][0]["input"] = "某某第一人民医院推广内容，保证治愈。"
+    tampered["cases"][0]["sha256"] = ledger_mod.case_digest(tampered["cases"][0])
+    problems = ledger_mod.check_fake_org_whitelist(tampered)
+    assert problems, "白名单外的机构名未被检出——假门"
+
+
+def test_fake_org_whitelist_empty_is_an_error():
+    """白名单为空 = 纪律未落地，必须报错（不是静默放行）。"""
+    payload, _ = runner.load_fixture_payload()
+    assert ledger_mod.check_fake_org_whitelist(payload, whitelist=[])
+
+
 def test_truth_library_has_no_observed_fields():
     """真值库只存输入与期望——出现 observed 一类字段即红。"""
     payload, _ = runner.load_fixture_payload()

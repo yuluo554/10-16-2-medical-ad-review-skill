@@ -49,6 +49,10 @@ def _load_frozen_cases(explicit_dir=None):
     if violations:
         raise FrozenLedgerError(["真值库含观测类字段（观测必须在运行时产生）: %s" % v
                                  for v in violations])
+    # 合成数据纪律：样例机构名必须在假机构名白名单内（题面 §四.1）
+    org_problems = ledger_mod.check_fake_org_whitelist(payload)
+    if org_problems:
+        raise FrozenLedgerError(org_problems)
     return payload
 
 

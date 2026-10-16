@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))))
@@ -26,6 +27,58 @@ def case_digest(case):
     payload = {k: v for k, v in case.items() if k not in DIGEST_EXCLUDED_FIELDS}
     text = json.dumps(payload, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def load_fake_org_whitelist(path=None):
+    """读取假机构名白名单（每行一个，``#`` 注释与空行忽略）。
+
+    白名单文件是**手编**资产（人工判断类）；样例机构名必须在名单内，
+    出现名单外的机构名形态即红（题面 §四.1 的硬要求）。
+    """
+    if path is None:
+        path = os.path.join(ROOT, "data", "fake_org_whitelist.txt")
+    if not os.path.isfile(path):
+        return []
+    names = []
+    with open(path, "r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            names.append(line)
+    return names
+
+
+# 机构名形态的识别模式（结构性特征，非具体机构名）
+ORG_PATTERNS = (
+    r"[一-鿿]{2,10}(?:门诊部|医院|诊所|卫生院|医疗美容机构)",
+)
+
+
+def scan_org_names(text, patterns=None):
+    """扫出一段文本里的"机构名形态"片段（用于白名单校验）。"""
+    found = []
+    for pattern in (patterns or ORG_PATTERNS):
+        for match in re.finditer(pattern, text):
+            found.append(match.group(0))
+    return found
+
+
+def check_fake_org_whitelist(payload, whitelist=None):
+    """校验全部样例的机构名都在白名单内。
+
+    返回问题列表（空 = 合规）。这是"合成数据纪律"的机器可验形态：
+    只测"该命中的用例"，白名单纪律写错永远不会红——故必须做成断言。
+    """
+    names = list(whitelist) if whitelist is not None else load_fake_org_whitelist()
+    if not names:
+        return ["假机构名白名单为空（纪律未落地：无法校验）"]
+    problems = []
+    for case in payload.get("cases", []):
+        for found in scan_org_names(case.get("input", "")):
+            if not any(name.startswith(found[:4]) or found in name for name in names):
+                problems.append("用例 %s 含白名单外的机构名形态：%s" % (case["id"], found))
+    return problems
 
 
 def check_frozen_ledger(payload):
