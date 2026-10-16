@@ -42,7 +42,7 @@
 | 基准四套件 | ✅ 全部达标（`medreview bench` exit 0；M3 覆盖 30 条生效规则，B1 用例 13 / B4 用例 23） |
 | 合成数据纪律 | ✅ 假机构名白名单可校验（`data/fake_org_whitelist.txt`，变异验证过） |
 | 冻结产物位级一致 | ✅ `gen_ruleset.py --check` + `gen_cases.py --check` → FROZEN_TRUTH_OK（双解释器） |
-| 干净 venv 安装 + 裸 console script 冒烟 | ✅（安装面三通路均通，M2 复跑 109 项绿） |
+| 干净 venv 安装 + 裸 console script 冒烟 | ✅（安装面三通路均通；M3 复跑：`selftest` OK、`bench` exit 0、`check` 退出码 1/0 符合声明语义） |
 | 变异验证（守门非假门） | ✅ M0 四组 + M1 五组 + M2 五组 + **M3 十组**（拆断言接线/退化共现/摘对象组/退回单组/删项规则/摘两类排除语境/摘极性词/摘促销词/删疾病名条）全部使门变红 |
 | CI 检出形态本地复现 | ✅ 浅克隆内 148 项全绿 + 快照 sha256 全对 + 冻结产物位级一致 |
 | §6 白名单按实测 8 项落地 | ✅ 结构化登记（`ruleset.whitelist_items`）+ 8 项逐字断言门禁 |
