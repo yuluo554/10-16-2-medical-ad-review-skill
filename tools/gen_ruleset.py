@@ -181,6 +181,21 @@ RULE_DEFS = [
         "pattern_id": "involves_tech_disease_drug",
     },
     {
+        "id": "MAM-7-1B", "source": "medical_ad_measures", "clause": "7", "item": "1",
+        "kind": "prohibited_term", "severity": "block",
+        "categories": ["medical"], "terms_basis": "interpretive",
+        # 原文第（一）项的枚举里"疾病名称"是**类别词**，字面几乎不出现在广告里——
+        # 只匹配字面「疾病名称」会让本项**抓不到它自己的目标形态**（M3 实测：
+        # 「专治糖尿病、高血压」零命中）。故另立一条 interpretive 规则承载
+        # **具体疾病名**，与 literal 条**分开挂 basis**（不把解释层混进原文层）。
+        # 词表与 §18（二）的疾病名族同源（同一解释层口径，不各写一份）。
+        "terms": ["糖尿病", "高血压", "高血糖", "高血脂", "冠心病", "中风",
+                  "癌症", "肿瘤", "白血病", "尿毒症", "肝硬化", "肾衰竭",
+                  "抑郁症", "失眠", "哮喘", "风湿", "痛风", "近视", "鼻炎",
+                  "胃病", "肝病", "皮肤病", "颈椎病", "腰椎间盘突出"],
+        "pattern_id": "disease_name_mentioned",
+    },
+    {
         "id": "MAM-7-2", "source": "medical_ad_measures", "clause": "7", "item": "2",
         "kind": "prohibited_pattern", "severity": "block",
         "categories": ["medical"], "terms_basis": "interpretive",

@@ -995,6 +995,57 @@
       "terms_basis": "literal"
     },
     {
+      "anchor": "《医疗广告管理办法》§7第（一）项",
+      "anchor_status": "verified",
+      "applies_if": {
+        "categories": [
+          "medical"
+        ]
+      },
+      "basis_date": "2026-10-15",
+      "clause": "7",
+      "id": "MAM-7-1B",
+      "item": "1",
+      "kind": "prohibited_term",
+      "match": {
+        "any_of": [
+          "糖尿病",
+          "高血压",
+          "高血糖",
+          "高血脂",
+          "冠心病",
+          "中风",
+          "癌症",
+          "肿瘤",
+          "白血病",
+          "尿毒症",
+          "肝硬化",
+          "肾衰竭",
+          "抑郁症",
+          "失眠",
+          "哮喘",
+          "风湿",
+          "痛风",
+          "近视",
+          "鼻炎",
+          "胃病",
+          "肝病",
+          "皮肤病",
+          "颈椎病",
+          "腰椎间盘突出"
+        ]
+      },
+      "notes": "",
+      "official_url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2023/art_6584dc1c94c2408db7c73f0b5e3d225a.html",
+      "pattern_id": "disease_name_mentioned",
+      "quote": "（一）涉及医疗技术、诊疗方法、疾病名称、药物的；",
+      "quote_status": "verified",
+      "severity": "block",
+      "source": "medical_ad_measures",
+      "source_title": "《医疗广告管理办法》",
+      "terms_basis": "interpretive"
+    },
+    {
       "anchor": "《医疗广告管理办法》§7第（二）项",
       "anchor_status": "verified",
       "applies_if": {
@@ -1195,7 +1246,7 @@
       "terms_basis": "literal"
     }
   ],
-  "ruleset_version": "ruleset-85e8f55716",
+  "ruleset_version": "ruleset-c7c2a6d1fd",
   "variant_rules": [
     {
       "anchor": "《互联网广告管理办法》§8",

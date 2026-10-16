@@ -125,13 +125,47 @@ def test_every_catch_all_clause_is_registered():
 
 def test_clause_7_1_medical_technology_rule_has_verbatim_terms():
     """§7（一）「涉及医疗技术、诊疗方法、疾病名称、药物」——四个词面逐字在原文中。"""
-    rule = [r for r in _rules_of("medical_ad_measures", 7) if r["item"] == "1"][0]
+    rule = [r for r in _rules_of("medical_ad_measures", 7) if r["item"] == "1"
+            and r["id"] == "MAM-7-1"][0]
     assert rule["terms_basis"] == "literal", "§7（一）是原文逐字枚举，应为 literal"
     terms = rule["match"]["any_of"]
     clauses = ruleset.load_clauses(os.path.join(REFERENCES, "clauses.json"))
     clause_text = clauses[("medical_ad_measures", "7")]
     for term in terms:
         assert term in clause_text, "§7（一）词面未逐字在原文中：%s" % term
+
+
+def test_clause_7_1_covers_actual_disease_names():
+    """§7（一）须能抓**具体疾病名**（原文枚举里的"疾病名称"是类别词）。
+
+    M3 实测召回缺口：只匹配字面「疾病名称」时，「专治糖尿病、高血压」零命中
+    ——规则抓不到它自己的目标形态。故另立 interpretive 条承载具体疾病名，
+    与 literal 条**分开挂 basis**（不把解释层混进原文层）。
+    """
+    item1_rules = [r for r in _rules_of("medical_ad_measures", 7) if r["item"] == "1"]
+    bases = {r.get("terms_basis") for r in item1_rules}
+    assert "literal" in bases and "interpretive" in bases, \
+        "§7（一）未按两级 basis 分条（原文类别词与具体疾病名混在一层）"
+    rep = _run("XX中医诊所（虚构）专治糖尿病与高血压，欢迎咨询。")
+    hits = [f.rule_id for f in rep.findings]
+    assert "MAM-7-1B" in hits, "具体疾病名未被 §7（一）抓到（召回缺口）"
+    assert rep.grade == constants.GRADE_BLOCK
+
+
+def test_clause_7_1_disease_terms_shared_with_18_2_family():
+    """疾病名解释层**同源**：§7（一）与 §18（二）不得各写一份疾病名口径。
+
+    判据：两条规则的具体疾病名词表交集必须非空（同族口径）；
+    若完全不相交，说明两处各写了一份解释层（漂移源）。
+    """
+    payload = _rule_pack()
+    mam = [r for r in payload["rules"] if r["id"] == "MAM-7-1B"][0]
+    al = [r for r in payload["rules"] if r["id"] == "AL-18-2"][0]
+    mam_terms = set(mam["match"]["any_of"])
+    al_terms = set(al["match"]["any_of"])
+    # §18（二）是"预防/治疗 + 疾病名"复合形态，故按**子串包含**判同源
+    shared = {t for t in mam_terms if any(t in a for a in al_terms)}
+    assert shared, "§7（一）与 §18（二）的疾病名口径不相交（各写一份解释层）"
 
 
 # --------------------------------------------------------------------------
@@ -480,15 +514,39 @@ def test_assert_findings_traceable_passes_on_real_report():
 
 
 def test_cli_exit_code_on_traceability_failure(monkeypatch):
-    """端到端：断言失败时 CLI 返回 EXIT_FINDING（1），**不是**静默出件。"""
+    """端到端：断言失败时 CLI 返回 EXIT_FINDING（1），**不是**静默出件。
+
+    探针文本刻意选**非涉医内容**（无命中 → 正常退出码 0）——若断言没被接进
+    导出通路，该文本会以 0 退出、本测试报红（用会命中 BLOCK 的文本会让
+    "断言未接线"与"查出了问题"都返回 1，测试为真但不为**该**原因）。
+    """
     from medreview import cli
 
     def boom(report, engine, text):
         raise errors.FindingIncomplete("注入缺陷：四要素不全", code="finding_incomplete")
 
     monkeypatch.setattr(pipeline, "assert_findings_traceable", boom)
-    code = cli.main(["check", "--text", "XX医疗美容门诊部（虚构）保证治愈。"])
-    assert code == constants.EXIT_FINDING
+    code = cli.main(["check", "--text", "今天天气不错，适合出门散步。"])
+    assert code == constants.EXIT_FINDING, \
+        "溯源断言未接进导出通路（CLI 静默出件，退出码 %s）" % code
+
+
+def test_run_check_invokes_traceability_assertion(monkeypatch):
+    """接线自证：`run_check` **确实调用**了四要素断言（不是只定义了它）。
+
+    判据：装一个记录器替换断言，跑一次真实审查，断言记录器被调用过。
+    "函数存在"与"函数被调用"是两件事——只断言前者是假门。
+    """
+    calls = []
+    original = pipeline.assert_findings_traceable
+
+    def recorder(report, engine, text):
+        calls.append(len(report.findings))
+        return original(report, engine, text)
+
+    monkeypatch.setattr(pipeline, "assert_findings_traceable", recorder)
+    _run("XX医疗美容门诊部（虚构）保证治愈。")
+    assert calls, "run_check 未调用四要素断言——断言未接进导出通路（假门）"
 
 
 def test_evidence_kind_is_structural_not_string_prefix():

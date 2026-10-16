@@ -942,6 +942,21 @@
       "sha256": "c7bf3a5abd6b714563ceb3a7206ed7813b6beb1af885376f7384acba4b1933cd",
       "subject": null,
       "suite": "b4_rule_coverage"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-1B"
+      ],
+      "id": "B4-023",
+      "input": "XX中医诊所（虚构）专治糖尿病与高血压，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "437bc005e6740be2f8de5d06a0db3292f31953a1c5e19afceb8fc54680f0d832",
+      "subject": null,
+      "suite": "b4_rule_coverage"
     }
   ],
   "coverage_note": "抽样覆盖、非穷举：按规则形态采样，非逐条穷举",
@@ -952,7 +967,7 @@
   ],
   "generated_by": "tools/gen_cases.py",
   "ledger": {
-    "count": 57,
+    "count": 58,
     "entries": [
       {
         "id": "B1-001",
@@ -1181,6 +1196,10 @@
       {
         "id": "B4-022",
         "sha256": "c7bf3a5abd6b714563ceb3a7206ed7813b6beb1af885376f7384acba4b1933cd"
+      },
+      {
+        "id": "B4-023",
+        "sha256": "437bc005e6740be2f8de5d06a0db3292f31953a1c5e19afceb8fc54680f0d832"
       }
     ]
   }

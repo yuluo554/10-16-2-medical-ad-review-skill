@@ -28,17 +28,17 @@
 
 | 计数项 | 实测值 | 出处（单一实现源） |
 |---|---|---|
-| 规则包版本 | `ruleset-85e8f55716` | `references/manifest.json` `ruleset_version`（由内容哈希派生，K8；**M2 起指纹含品类/变相发布词表**） |
-| 生效规则数 | **29** | `manifest.enabled_rule_count` == `medreview rules` 实算 |
+| 规则包版本 | `ruleset-c7c2a6d1fd` | `references/manifest.json` `ruleset_version`（由内容哈希派生，K8；**M2 起指纹含品类/变相发布词表**） |
+| 生效规则数 | **30** | `manifest.enabled_rule_count` == `medreview rules` 实算 |
 | 未启用兜底条款数 | **3** | `manifest.excluded_clause_count`（§16（五）/§18（六）/§7（八）） |
-| 总条目数 | **32** | 生效 29 + 兜底 3 |
+| 总条目数 | **33** | 生效 30 + 兜底 3 |
 | 白名单登记项数 | **8** | `manifest.whitelist_item_count` == `ruleset.whitelist_items` 长度 |
-| 词表溯源分级 | literal **16** / interpretive **13** | `manifest.terms_basis_counts` == 逐条实算 |
+| 词表溯源分级 | literal **16** / interpretive **14** | `manifest.terms_basis_counts` == 逐条实算 |
 | 品类条目数 | **5** | `manifest.category_rule_count` == `ruleset.category_rules` 长度 |
 | 品类信号词数 | medical 18 / drug 13 / device 11 / health_food 6 / fsmp 3 | `manifest.category_signal_counts` == 逐条实算 |
 | 品类反例结构数 | medical 5 / drug 4 / device 6 / health_food 2 / fsmp 1 | `manifest.category_exclude_counts` == 逐条实算 |
 | 变相发布信号条数 | **2**（§8 两款各一条） | `manifest.variant_rule_count` == `ruleset.variant_rules` 长度 |
-| 真值用例数 | **57**（B1×13 / B2×14 / B3×8 / B4×22） | `fixtures/cases.json` 内置台账 `ledger.count` |
+| 真值用例数 | **58**（B1×13 / B2×14 / B3×8 / B4×23） | `fixtures/cases.json` 内置台账 `ledger.count` |
 
 > 计数**当轮实测**（`medreview rules --format json` + 逐条实算），并已锁门：
 > `tests/test_m1_semantics.py::test_manifest_counts_match_actual_rules` 断言规则类计数、

@@ -307,6 +307,11 @@ CASES = [
     dict(id="B4-022", suite="b4_rule_coverage",
          input="XX医疗美容门诊部（虚构）由患者现身说法，卫生技术人员作证明。",
          expect=["grade:BLOCK", "category:medical", "hit:MAM-7-6"]),
+    # §7 第（一）项**具体疾病名**形态（interpretive 条）：原文枚举里的"疾病名称"
+    # 是类别词，字面不出现在广告里——M3 实测「专治糖尿病」零命中，故补此条。
+    dict(id="B4-023", suite="b4_rule_coverage",
+         input="XX中医诊所（虚构）专治糖尿病与高血压，欢迎咨询。",
+         expect=["grade:BLOCK", "category:medical", "hit:MAM-7-1B"]),
 ]
 
 

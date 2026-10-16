@@ -22,9 +22,9 @@
     "medical": 18
   },
   "coverage_note": "抽样覆盖、非穷举：真值库按规则形态采样，见 benchmark/manifest 登记",
-  "enabled_rule_count": 29,
+  "enabled_rule_count": 30,
   "excluded_clause_count": 3,
-  "ruleset_version": "ruleset-85e8f55716",
+  "ruleset_version": "ruleset-c7c2a6d1fd",
   "sources": [
     {
       "basis_date": "2026-10-15",
@@ -49,10 +49,10 @@
     }
   ],
   "terms_basis_counts": {
-    "interpretive": 13,
+    "interpretive": 14,
     "literal": 16
   },
-  "total_rule_count": 32,
+  "total_rule_count": 33,
   "variant_rule_count": 2,
   "whitelist_item_count": 8
 }
