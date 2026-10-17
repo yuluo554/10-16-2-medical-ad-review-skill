@@ -55,7 +55,9 @@ def test_audit_full_run_zero_hard_hits():
     _, s4 = audit_repo.scan_binary(files)
     s5, _info, _note = audit_repo.scan_artifacts(files)
     status, _emails, meta = audit_repo.scan_commit_metadata(tracked_only=False)
-    assert status in ("ok", "no_git"), "提交元数据检查异常状态：%s" % status
+    # ok=完整历史；shallow=浅克隆检出形态（工具显式 INCOMPLETE，不冒充"历史已验"；
+    # CI checkout 为 fetch-depth: 0，走 ok。no_git=导出树。
+    assert status in ("ok", "no_git", "shallow"), "提交元数据检查异常状态：%s" % status
     hits = s1 + s2 + s3 + s4 + s5 + meta
     assert not hits, "脱敏审计命中 %d 处：%s" % (len(hits), hits[:5])
 
