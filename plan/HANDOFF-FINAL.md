@@ -106,7 +106,10 @@ py -3.12 -X utf8 tools/make_release.py --rev v0.1.0 --out rebuilt.zip       # sh
    删旧 tag 重打；附件 `--clobber` 重传并**重新真下载复算**；
 7. **`gh repo edit --visibility public` 需要 `--accept-visibility-change-consequences`**
    （gh 2.93 新要求）；
-8. **tag push 会触发独立一轮 CI**（`on: push` 无 filters）——对账时按 event+ref 区分同 sha 双 run。
+8. **tag push 会触发独立一轮 CI**（`on: push` 无 filters）——对账时按 event+ref 区分同 sha 双 run；
+9. **tag 删除重建会把 Release 打回 draft**——迁移 tag 后必须 `gh release edit --draft=false`；
+   匿名下载随即 404 还叠加**边缘缓存分钟级收敛延迟**（API `state: uploaded` 正常但浏览器
+   URL 404）——复验等一分钟或走 `api.github.com` asset 端点（`Accept: application/octet-stream`）。
 
 ---
 

@@ -138,7 +138,20 @@ gh token 无 workflow scope，HTTPS 推含 workflow 改动的提交会被拒—�
 
 ## 八、发布后匿名复核（R8）
 
-（无凭据路径：裸 https clone + 下载 + 读 tag——切换 public 后实测，见 §九。）
+**无凭据路径全部实测通过**（裸 https + curl，零凭据）：
+
+| 检查 | 结果 |
+|---|---|
+| `git clone https://github.com/…`（无凭据） | 成功；`git rev-list -n1 v0.1.0` = `5a04d43`（收官提交） |
+| tag 树内容 | `plan/RELEASE-M6.md` / `plan/DIST-sha256-M6.txt` / `plan/HANDOFF-FINAL.md` 均在 tag 树内（API `?ref=v0.1.0` 回读） |
+| 匿名下载（release download URL + API asset 端点双路） | 均 998,563 字节，sha256 `4ffdb217…` **与台账一致** |
+| `releases/latest` API | `"tag_name": "v0.1.0"`、`"draft": false`、release 页 HTTP 200 |
+
+**实测坑（记下）**：tag 删除重建后 Release 自动回到 **draft** 态 → 匿名下载 404
+（`browser_download_url` 404，`state: uploaded`、`draft:false` API 均正常）——两件事：
+① 必须 `gh release edit v0.1.0 --draft=false` 重新转正；② 边缘缓存收敛有分钟级延迟，
+复验时若 API 正常而浏览器 URL 404，等一分钟或走 `api.github.com` asset 端点
+（`Accept: application/octet-stream`）再验。
 
 ## 九、缓议项清零（R9）
 
