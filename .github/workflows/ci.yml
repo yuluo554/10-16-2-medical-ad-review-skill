@@ -25,7 +25,11 @@ jobs:
             python: "3.12"
     runs-on: ${{ matrix.os }}
     steps:
+      # fetch-depth: 0——脱敏审计器的提交元数据/全历史扫描需要完整历史
+      # （浅克隆下审计器显式报 INCOMPLETE 而非静默空扫，check_workflows.py 守此配置）。
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -57,6 +61,14 @@ jobs:
       # 基准四套件（退出码 0 达标 / 1 未达标 / 2 用法错误）
       - name: Benchmarks
         run: medreview bench
+
+      # 脱敏审计（M6 固化形态：五步扫描 + 提交元数据邮箱；命中即红）
+      - name: Desensitize audit
+        run: python tools/audit_repo.py
+
+      # 发布打包确定性（同 rev 两次构建逐字节一致 + 打包面 = git 跟踪面）
+      - name: Release pack determinism gate
+        run: python -m pytest tests/test_m6_release.py -q
 
       # README ↔ pyproject ↔ 测试 三面对账 + 包布局（第五面）
       - name: README/packaging consistency gate

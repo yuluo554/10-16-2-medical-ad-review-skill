@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml)
 
-**状态**：🚧 v0.1.0 开发中（M0 计划先行 + M1 数据先行 + M2 品类判定器 + M3 禁止情形核查 + M4 真值基准 + **M5 交付**已完成；M6 发布待办）
+**状态**：✅ **v0.1.0 已发布**（[Release](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.0) · 脱敏审计 + 干净环境验证 + CI 三矩阵全绿后发布）
 
 ---
 
@@ -28,6 +28,15 @@
 | 报告层零判定 | 报告层不 import 引擎模块、不做算术、不内联政策数值——三条 **AST 静态门禁**可核验（含阳性/阴性对照） |
 | 批量审查 | `scan` 逐件出全报告、逐件失败隔离（一个坏件不拖垮整批）；空目录不产出"跑过了"的空报告 |
 | 纯本地 | 引擎源码零网络导入（AST 静态门禁可核验），文案不外发 |
+
+## 下载即用（不装环境，先看发布物）
+
+[Releases 页](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.0) 提供**确定性源码 zip**（`ZIP_STORED` + 条目排序 + 固定时间戳，同 tag 两次重建逐字节一致；sha256 台账见 [`plan/DIST-sha256-M6.txt`](plan/DIST-sha256-M6.txt)，复算命令在台账头部）。
+
+```bash
+# 下载附件后校验（可选，发布链路已做过"真下载 → sha256 对账 → 中立目录自检"）
+python tools/make_release.py --verify <下载的.zip> --rev v0.1.0
+```
 
 ## 安装
 
@@ -129,13 +138,24 @@ python -m pytest tests -q              # 全量测试
 python tools/gen_ruleset.py --check    # 冻结规则包位级一致守门
 python tools/gen_cases.py --check      # 冻结真值库位级一致守门
 python tests/check_workflows.py        # CI workflow 结构守门
+python tools/audit_repo.py             # 脱敏审计（五步扫描 + 提交元数据；DESENSITIZE_AUDIT_OK）
+python tools/make_release.py --rev v0.1.0 --out dist.zip   # 确定性发布打包（ZIP_BUILD_OK）
 ```
+
+## 发布链路（M6 留档摘要）
+
+发布按 `plan/06-交付对标.md` §六 R1–R10 执行，全程留档见 [`plan/RELEASE-M6.md`](plan/RELEASE-M6.md)：
+脱敏五步审计（命令+结论）、提交元数据邮箱检查、干净环境验证（新目录 clone + 全新 venv 按 README 逐条跑通）、
+建仓首推 CI 三矩阵、确定性源码 zip（sha256 台账）、真下载复算与中立目录自检、发布后匿名复核。
+仓库先 private 跑绿 CI，再切 public（发布顺序纪律）。
 
 ## 已知环境问题
 
 - **底线 Python 3.8**：全部源码按 3.8 语法写（`typing.List` 而非 `list[str]`）；
 - **Windows 用 `python -m pip`**：`py` 启动器会绕过 venv 装进系统 Python；
-- **规则包是生成物**：请勿手改 `src/medreview/references/*.json`，改需求走 `tools/gen_ruleset.py` 整目录重生成。
+- **规则包是生成物**：请勿手改 `src/medreview/references/*.json`，改需求走 `tools/gen_ruleset.py` 整目录重生成；
+- **发布物为源码包 + editable 安装**：`[tool.setuptools.package-data]` 随包携带冻结规则包，
+  但未做 wheel 安装面验证（源码 zip 的打包面 = git 跟踪面，见 [`plan/RELEASE-M6.md`](plan/RELEASE-M6.md)）。
 
 ## 许可
 
