@@ -11,12 +11,16 @@
   S5 kind 分派表结构+运行双层断言：键集合一致 + 各实现互不相同 + 逐 kind 真跑
   S6 序列化确定性：同输入双跑逐字节一致
   S7 适用域反向自证：构造"不该命中"的输入，断言该规则确实未命中
+  S8 报告层不 import 引擎模块（AST 静态门禁，阳性对照）
+  S9 报告层不做算术（AST 静态门禁，含"模板/拼接不算算术"的阴性对照）
+  S10 报告层不内联政策数值（AST 静态门禁，阳性对照）
 """
 
 from __future__ import annotations
 
 import ast
 import os
+import re
 import sys
 from typing import List, Tuple
 
@@ -79,6 +83,68 @@ def scan_policy_tokens(source, tokens):
     for token in tokens:
         if token and token in source:
             found.append(token)
+    return found
+
+
+# ---- 报告层"零判定"AST 门禁（D12，三条；S8/S9/S10） ----
+# 报告层只渲染：**不 import 引擎模块**（判定数据只能由调用方注入）、
+# **不做算术**（算术 = 在渲染层算结论）、**不内联政策数值**（数值只从数据来）。
+REPORT_MODULE = "report.py"
+ENGINE_MODULES = ("constants", "model", "normalize", "ruleset", "categorize",
+                  "check", "phrase", "grade", "serialize", "paths", "pipeline",
+                  "selftest", "bench")
+_ARITHMETIC_OPS = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod,
+                   ast.Pow, ast.MatMult, ast.LShift, ast.RShift, ast.BitOr,
+                   ast.BitXor, ast.BitAnd)
+# "政策数值"的可机读形态：条款号引用（§+数字 / 第+数字）与百分比阈值。
+# `%(?![sdfr%])` = 阈值形态的百分号，**排除** `%s`/`%d` 这类模板占位符
+# （否则 `"sha256 %s"` 会被误判成阈值"256 %"）。
+POLICY_NUMERIC_PATTERNS = (r"§\s*\d+", r"第\s*\d+", r"\d+\s*%(?![sdfr%])")
+
+
+def scan_engine_imports(source, forbidden=ENGINE_MODULES):
+    """扫描源码里对引擎模块的导入（相对与绝对两种写法都算）。"""
+    found = []
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                root = alias.name.split(".")[0]
+                if root in forbidden:
+                    found.append(root)
+        elif isinstance(node, ast.ImportFrom):
+            roots = []
+            if node.level:  # 包内相对导入：`from . import x` / `from .x import y`
+                roots.extend(alias.name.split(".")[0] for alias in node.names)
+            if node.module:
+                roots.append(node.module.split(".")[0])
+            found.extend(r for r in roots if r in forbidden)
+    return found
+
+
+def _is_str_constant(node):
+    return isinstance(node, ast.Constant) and isinstance(node.value, str)
+
+
+def scan_arithmetic_binops(source):
+    """扫描源码里的**算术** BinOp（模板式 `%` 格式化与字符串拼接不算算术）。"""
+    found = []
+    for node in ast.walk(ast.parse(source)):
+        if not isinstance(node, ast.BinOp) or not isinstance(node.op, _ARITHMETIC_OPS):
+            continue
+        if isinstance(node.op, ast.Mod) and _is_str_constant(node.left):
+            continue  # `"…%s…" % values` = 模板渲染，不是判定计算
+        if isinstance(node.op, ast.Add) and (_is_str_constant(node.left)
+                                             or _is_str_constant(node.right)):
+            continue  # 字符串拼接（任一侧是字符串常量即视为拼接）
+        found.append((node.lineno, type(node.op).__name__))
+    return found
+
+
+def scan_policy_numeric_literals(source, patterns=POLICY_NUMERIC_PATTERNS):
+    """扫描源码里的政策数值形态（条款号引用 / 百分比阈值）。"""
+    found = []
+    for pattern in patterns:
+        found.extend(re.findall(pattern, source))
     return found
 
 
@@ -242,6 +308,48 @@ def s7_applies_reverse_selfcheck():
     return True, "保健食品专属规则对医疗内容判不适用 %d 条，零误命中" % len(skipped)
 
 
+def s8_report_no_engine_imports():
+    """报告层只许标准库：import 引擎模块 = 渲染层能直接读到判定数据（越界）。"""
+    clean = scan_engine_imports(_read_source(REPORT_MODULE))
+    if clean:
+        return False, "报告层 import 了引擎模块：%s" % sorted(set(clean))
+    injected = _read_source(REPORT_MODULE) + "\nfrom . import grade\n"
+    hits = scan_engine_imports(injected)
+    if not hits:
+        return False, "注入引擎导入后扫描器仍报绿——假门"
+    return True, "阴性对照 0 命中；阳性对照命中 %s" % sorted(set(hits))
+
+
+def s9_report_no_arithmetic():
+    """报告层不做算术（只看**运算**；结构性常量如切片宽度不算）。"""
+    clean = scan_arithmetic_binops(_read_source(REPORT_MODULE))
+    if clean:
+        return False, "报告层含算术 BinOp：%s" % clean[:3]
+    template = 'label = "%s 件" % count\njoined = "a" + "b"\n'
+    if scan_arithmetic_binops(template):
+        return False, "模板格式化/字符串拼接被误判为算术——门禁过宽（会误红）"
+    injected = "total = applied_count + total_count\n"
+    hits = scan_arithmetic_binops(injected)
+    if not hits:
+        return False, "注入算术后扫描器仍报绿——假门"
+    return True, "阴性对照 0 命中（模板/拼接豁免）；阳性对照命中 %s" % hits
+
+
+def s10_report_no_policy_numbers():
+    """报告层不内联政策数值（条款号/阈值形态）——数值只能从 Report 数据来。"""
+    clean = scan_policy_numeric_literals(_read_source(REPORT_MODULE))
+    if clean:
+        return False, "报告层内联政策数值形态：%s" % sorted(set(clean))[:3]
+    structural = "levels = {1: '#', 2: '##'}\nwidth = text[:12]\n"
+    if scan_policy_numeric_literals(structural):
+        return False, "结构性常量被误判为政策数值——门禁过宽（会误红）"
+    injected = "引用 §1 与阈值 1%\n"
+    hits = scan_policy_numeric_literals(injected)
+    if not hits:
+        return False, "注入政策数值形态后扫描器仍报绿——假门"
+    return True, "阴性对照 0 命中；阳性对照命中 %s" % sorted(set(hits))
+
+
 CHECKS = [
     ("S1 装配完整性", s1_assembly),
     ("S2 零字面量门禁阳性对照", s2_policy_token_positive_control),
@@ -250,6 +358,9 @@ CHECKS = [
     ("S5 kind 分派表双层断言", s5_dispatch_table),
     ("S6 序列化确定性", s6_serialization_determinism),
     ("S7 适用域反向自证", s7_applies_reverse_selfcheck),
+    ("S8 报告层不 import 引擎模块", s8_report_no_engine_imports),
+    ("S9 报告层不做算术", s9_report_no_arithmetic),
+    ("S10 报告层不内联政策数值", s10_report_no_policy_numbers),
 ]
 
 

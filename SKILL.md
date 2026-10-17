@@ -39,8 +39,11 @@ medreview check --text "<文案>" \
 # 3b) 补材料后重跑（报告"待补材料清单"节要求的那份材料，用它回传）
 medreview check --text "<文案>" --proof yes --proof-file ./审查证明.pdf
 
-# 4) 批量审查一个目录下的全部 .txt
+# 4) 批量审查一个目录下的全部 .txt（机读 JSON；失败件单列，不中断整批）
 medreview scan --dir ./samples --format json --out report.json
+
+# 4b) 批量审查的人读 Markdown 报告（逐件出全 8 章节；与 JSON **同一渲染源**）
+medreview scan --dir ./samples --format markdown --out report.md
 
 # 5) 查看规则包条目与锚点（含未启用清单）
 medreview rules
@@ -102,7 +105,7 @@ medreview rules
 | `item.proof_file` | object\|null | 证明材料摘要：`name` / `sha256` / `bytes`（**只记摘要不落路径**） |
 | `grade` | enum | `BLOCK` / `WARN` / `OK` / `NOT_ASSESSED` |
 | `categories` | string[] | 命中的品类（可能多个，不二选一） |
-| `findings` | object[] | 逐条命中：`rule_id` / `clause_anchor` / `quote` / `evidence` / `severity` / `kind` |
+| `findings` | object[] | 逐条命中：`rule_id` / `clause_anchor` / `quote` / `evidence` / `severity` / `kind` / `notes` |
 | `input_required` | object[] | **待补材料清单**：`rule_id` / `reason` |
 | `not_enabled` | object[] | 未启用规则清单（不参与判定）：`rule_id` / `reason` / `code` |
 | `advisories` | object[] | 语境提示（不参与分级） |
@@ -111,6 +114,26 @@ medreview rules
 | `rule_sources` | object[] | 每条规则的法规名/条款锚点/官方 URL/基准日 |
 
 `findings` 的每条**四要素齐备**：`clause_anchor`（条款号锚点）、`quote`（法条原文逐字）、`evidence`（文案命中片段逐字）、`rule_id`。
+
+### 报告必备章节（8 节，缺一即断言失败）
+
+<!-- report-sections: input_facts coverage grade findings input_required advisory sources disclaimer -->
+
+人读 Markdown（单件 `check` 与批量 `scan`）与机读 JSON **共用同一 `report_sections()` 渲染源**——"多格式内容一致"是**结构性质**，不是人工比对。章节序：
+
+| # | 章节 id | 标题 | 必备内容 |
+|---|---|---|---|
+| 1 | `input_facts` | 一、输入事实 | 内容 ID / 渠道 / 主体 / 审查证明 / 证明材料摘要 / 原文 |
+| 2 | `coverage` | 二、本次评估覆盖 | 规则包版本 / 基准日 / 适用规则数 / 总条目数 / 未启用清单 |
+| 3 | `grade` | 三、分级结论 | 四态结论 + 判定品类（多品类并列，不二选一） |
+| 4 | `findings` | 四、逐条命中明细 | 每条四要素：条款锚点 / 法条原文 / 命中证据 / rule_id |
+| 5 | `input_required` | 五、待补材料清单 | 缺什么材料、为什么判不了（**"判不了"≠"没问题"**） |
+| 6 | `advisory` | 六、语境提示 | `--hint` 与实算疑似信号；**声明不参与分级** |
+| 7 | `sources` | 七、规则来源 | 每条规则的法规名 + 条款锚点 + 基准日（人读侧零外链） |
+| 8 | `disclaimer` | 八、免责声明 | 辅助自查、不构成法律意见、不替代官方审查 |
+
+**报告层零判定**：报告层不 import 引擎模块、不做算术、不内联政策数值（条款号/阈值形态）。
+三条均有 AST 静态门禁（`medreview selftest` 的 S8/S9/S10，各含阳性对照）。
 
 ## 隐私红线
 

@@ -127,27 +127,46 @@ def cmd_scan(args):
         raise MedReviewError("目录不存在: %s" % args.scan_dir, code="input_unavailable")
 
     engine = pipeline.build_engine()
-    items = []
+
+    # 逐件**读入阶段**也做失败隔离：一个坏编码文件不得把整批拖垮
+    # （否则 "失败件单列、不中断整批" 只是口号——实测：一个 BOM 坏件会让
+    # 整批报 exit 2 且不产出报告，用户看不到其余件的结果）。
+    loaded = []  # (来源名, ContentItem 或 None, 失败原因或 None)
     for name in sorted(os.listdir(args.scan_dir)):
         if not name.endswith(".txt"):
             continue
         path = os.path.join(args.scan_dir, name)
-        text = normalize.read_text_file(path)
-        items.append(normalize.normalize_text(text, source_path=path))
+        try:
+            text = normalize.read_text_file(path)
+        except ValueError as exc:
+            loaded.append((name, None, str(exc)))
+            continue
+        loaded.append((name, normalize.normalize_text(text, source_path=path), None))
 
-    if not items:
+    if not loaded:
         # "根本没得查" ≠ "查了没问题"：不产出一份空报告（伪造的空报告会被当"跑过了"）
         raise MedReviewError("目录下没有可审查的 .txt 文案：%s（无输入源，不产出报告）"
                              % args.scan_dir, code="no_input_source")
 
-    results = pipeline.scan_items(engine, items)
+    # 判定阶段复用**单件同一分派点**（pipeline.scan_items 自带逐件异常隔离）
+    ok_results = iter(pipeline.scan_items(
+        engine, [entry[1] for entry in loaded if entry[1] is not None]))
+    results = []
+    for display_id, item, error in loaded:
+        if item is None:
+            results.append({"id": display_id, "ok": False, "error": error})
+        else:
+            results.append(next(ok_results))
+
     payload = {"results": []}
     any_finding = False
     failed = 0
     for entry in results:
         if entry["ok"]:
             rep = entry["report"]
-            payload["results"].append(rep.to_dict())
+            # 逐件用**同一机读渲染源**（含 sections / disclaimer）——
+            # 批量机读与单件机读于是结构同形（否则"两格式一致"在批量面不成立）
+            payload["results"].append(report_mod.render_json(rep))
             if rep.grade in constants.GRADES_WITH_FINDING:
                 any_finding = True
         else:
@@ -161,8 +180,13 @@ def cmd_scan(args):
         "failed": failed,
         "finding": any_finding,
     }
-    text_out = serialize.dumps_json(payload) if args.format == "json" \
-        else report_mod.render_markdown(results[0]["report"]) if results else "（无输入）\n"
+    if args.format == "json":
+        text_out = serialize.dumps_json(payload)
+    else:
+        # **批量人读报告**：逐件出全必备章节（同一 report_sections 渲染源）。
+        # 早先此处只渲染 results[0]，多件时后面的件静默丢失——"批量跑过了"
+        # 于是名不副实（报告里看不到它们）。
+        text_out = report_mod.render_markdown_batch(results, payload["summary"])
     if args.out:
         serialize.write_text_atomic(args.out, text_out)
     else:

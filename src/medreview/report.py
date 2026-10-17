@@ -4,8 +4,14 @@
 不重算任何判定、不新增结论。判别：把报告单独发给一个没有引擎的人，
 他看不出这份报告是"渲染"的还是"计算"的。
 
-**单一渲染源**：``report_sections()`` 产出结构化章节，Markdown 渲染器与 JSON
-渲染器各自读它——"两格式内容一致"于是是**结构性质**，不是人工比对。
+**单一渲染源**：``report_sections()`` 产出结构化章节，单件 Markdown 渲染器、
+批量 Markdown 渲染器与 JSON 渲染器各自读它——"多格式内容一致"于是是
+**结构性质**，不是人工比对；``_section_lines()`` 是章节正文的唯一实现源。
+
+**零判定可静态核验**（AST 门禁三条，见 ``selftest`` 的 S8/S9/S10）：
+本模块**不 import 任何引擎模块**（只许标准库）、**不做算术**（模板式字符串
+格式化与字符串拼接除外）、**不内联政策数值**（条款号引用形态与百分比阈值
+形态一律不得出现，数值只从 ``Report`` 数据来）。
 
 **无外链**：报告正文不得含 URL（断网可开、可归档）；规则的官方 URL 只出现在
 机读产物的 ``rule_sources`` 字段里（供核证，非链接）。报告出口即断言
@@ -15,8 +21,6 @@
 from __future__ import annotations
 
 import re
-
-from . import constants
 
 DISCLAIMER = (
     "**免责声明**：本报告为发布前**辅助自查**参考，不构成法律意见，"
@@ -124,86 +128,123 @@ def _fmt_rows(rows):
     return "\n".join("- **%s**：%s" % (key, value) for key, value in rows)
 
 
+# 标题层级查表（**不用字符串乘法**：报告层不做算术，AST 门禁会核）
+_HEADING_PREFIX = {1: "#", 2: "##", 3: "###"}
+
+
+def _section_lines(section):
+    """单个章节的正文行（单件渲染器与批量渲染器的**唯一实现源**）。"""
+    lines = []
+    if section["id"] == "grade":
+        cats = section["categories"]
+        lines.append("- 判定品类：%s" % ("、".join(cats) if cats else "非涉医内容（未评估）"))
+    elif section["id"] == "findings":
+        if not section["findings"]:
+            lines.append("（无命中）")
+        for finding in section["findings"]:
+            lines.append("- **[%s]** `%s`" % (finding["severity"], finding["rule_id"]))
+            lines.append("  - 条款锚点：%s" % finding["clause_anchor"])
+            lines.append("  - 法条原文：%s" % finding["quote"])
+            lines.append("  - 命中证据：%s" % finding["evidence"])
+    elif section["id"] == "coverage":
+        lines.append(_fmt_rows(section["rows"]))
+        if section["not_enabled"]:
+            lines.append("**未启用清单**（不参与本次判定）：")
+            for entry in section["not_enabled"]:
+                lines.append("- `%s`：%s" % (entry["rule_id"], entry["reason"]))
+        else:
+            lines.append("未启用清单：（空）")
+    elif section["id"] == "input_required":
+        if not section["items"]:
+            lines.append("（无）")
+        for entry in section["items"]:
+            lines.append("- `%s`：%s" % (entry["rule_id"], entry["reason"]))
+    elif section["id"] == "advisory":
+        if not section["items"]:
+            lines.append("（无）")
+        for entry in section["items"]:
+            # advisory 有两种形态：纯提示（hint）与带**实算信号**的疑似项。
+            # 后者必须把命中词与条款锚点一并呈现（提示要可核验，不是散文）。
+            label = entry.get("text", "")
+            signals = entry.get("signals") or []
+            lines.append("- %s" % label)
+            for signal in signals:
+                lines.append("  - 命中信号：%s（%s）"
+                             % ("、".join(signal.get("matched_terms") or ()),
+                                signal.get("anchor", "")))
+            if entry.get("note"):
+                lines.append("  - 说明：%s" % entry["note"])
+    elif section["id"] == "sources":
+        if not section["items"]:
+            lines.append("（无）")
+        for entry in section["items"]:
+            # **人读报告零外链**（断网可开）：URL 只出现在机读产物字段里
+            lines.append("- `%s`｜%s｜%s｜基准日 %s"
+                         % (entry["rule_id"], entry["source_title"],
+                            entry["anchor"], entry["basis_date"] or "未提供"))
+    elif section["id"] == "disclaimer":
+        lines.append(section["text"])
+    else:
+        lines.append(_fmt_rows(section.get("rows") or []))
+    lines.append("")
+    return lines
+
+
+def _render_sections(sections, level):
+    """把结构化章节渲染成 Markdown 行（``level`` = 标题井号层级）。"""
+    prefix = _HEADING_PREFIX[level]
+    lines = []
+    for section in sections:
+        lines.append("%s %s" % (prefix, section["title"]))
+        lines.append("")
+        lines.extend(_section_lines(section))
+    return lines
+
+
 def render_markdown(report):
     """人读 Markdown 渲染器（只读 ``report_sections``）。"""
-    sections = report_sections(report)
-    lines = []
-    lines.append("# 医疗广告合规预审报告")
-    lines.append("")
-    lines.append("- 内容 ID：`%s`" % report.item.id)
-    lines.append("- 结论：**%s**" % report.grade)
-    lines.append("")
+    lines = [
+        "# 医疗广告合规预审报告",
+        "",
+        "- 内容 ID：`%s`" % report.item.id,
+        "- 结论：**%s**" % report.grade,
+        "",
+    ]
+    lines.extend(_render_sections(report_sections(report), 2))
+    text = "\n".join(lines).rstrip("\n") + "\n"
+    assert_no_external_links(text)
+    return text
 
-    for section in sections:
-        lines.append("## %s" % section["title"])
-        lines.append("")
-        if section["id"] == "grade":
-            cats = section["categories"]
-            lines.append("- 判定品类：%s" % ("、".join(cats) if cats else "非涉医内容（未评估）"))
-            lines.append("")
-            continue
-        if section["id"] == "findings":
-            if not section["findings"]:
-                lines.append("（无命中）")
-            for finding in section["findings"]:
-                lines.append("- **[%s]** `%s`" % (finding["severity"], finding["rule_id"]))
-                lines.append("  - 条款锚点：%s" % finding["clause_anchor"])
-                lines.append("  - 法条原文：%s" % finding["quote"])
-                lines.append("  - 命中证据：%s" % finding["evidence"])
-            lines.append("")
-            continue
-        if section["id"] == "coverage":
-            lines.append(_fmt_rows(section["rows"]))
-            lines.append("")
-            if section["not_enabled"]:
-                lines.append("**未启用清单**（不参与本次判定）：")
-                for entry in section["not_enabled"]:
-                    lines.append("- `%s`：%s" % (entry["rule_id"], entry["reason"]))
-            else:
-                lines.append("未启用清单：（空）")
-            lines.append("")
-            continue
-        if section["id"] == "input_required":
-            if not section["items"]:
-                lines.append("（无）")
-            for entry in section["items"]:
-                lines.append("- `%s`：%s" % (entry["rule_id"], entry["reason"]))
-            lines.append("")
-            continue
-        if section["id"] == "advisory":
-            if not section["items"]:
-                lines.append("（无）")
-            for entry in section["items"]:
-                # advisory 有两种形态：纯提示（hint）与带**实算信号**的疑似项。
-                # 后者必须把命中词与条款锚点一并呈现（提示要可核验，不是散文）。
-                label = entry.get("text", "")
-                signals = entry.get("signals") or []
-                lines.append("- %s" % label)
-                for signal in signals:
-                    lines.append("  - 命中信号：%s（%s）"
-                                 % ("、".join(signal.get("matched_terms") or ()),
-                                    signal.get("anchor", "")))
-                if entry.get("note"):
-                    lines.append("  - 说明：%s" % entry["note"])
-            lines.append("")
-            continue
-        if section["id"] == "sources":
-            if not section["items"]:
-                lines.append("（无）")
-            for entry in section["items"]:
-                # **人读报告零外链**（断网可开）：URL 只出现在机读产物字段里
-                lines.append("- `%s`｜%s｜%s｜基准日 %s"
-                             % (entry["rule_id"], entry["source_title"],
-                                entry["anchor"], entry["basis_date"] or "未提供"))
-            lines.append("")
-            continue
-        if section["id"] == "disclaimer":
-            lines.append(section["text"])
-            lines.append("")
-            continue
-        lines.append(_fmt_rows(section.get("rows") or []))
-        lines.append("")
 
+def render_markdown_batch(entries, summary):
+    """批量人读报告（**同一 ``report_sections`` 渲染源**，逐件出全必备章节）。
+
+    ``entries`` = ``pipeline.scan_items`` 的返回（``ok`` / ``report`` / ``id`` / ``error``）。
+    ``summary`` 由调用方实算（**报告层不重算分级**），键：``total`` / ``failed`` / ``finding``。
+    """
+    lines = [
+        "# 医疗广告合规预审报告（批量）",
+        "",
+        "- 总件数：%d" % summary.get("total", len(entries)),
+        "- 处理失败：%d" % summary.get("failed", 0),
+        "- 检出命中：%s" % ("是" if summary.get("finding") else "否"),
+        "",
+    ]
+    total = len(entries)
+    for index, entry in enumerate(entries, 1):
+        if not entry.get("ok"):
+            lines.append("## 件 %d/%d：`%s`（**处理失败**）"
+                         % (index, total, entry.get("id", "?")))
+            lines.append("")
+            lines.append("- 失败原因：%s" % entry.get("error", ""))
+            lines.append("")
+            continue
+        report = entry["report"]
+        lines.append("## 件 %d/%d：`%s`" % (index, total, report.item.id))
+        lines.append("")
+        lines.append("- 结论：**%s**" % report.grade)
+        lines.append("")
+        lines.extend(_render_sections(report_sections(report), 3))
     text = "\n".join(lines).rstrip("\n") + "\n"
     assert_no_external_links(text)
     return text
