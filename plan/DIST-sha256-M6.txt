@@ -1,10 +1,11 @@
 # plan/DIST-sha256-M6.txt — 发布物 sha256 台账（由 tools/make_release.py 生成）
 # 打包面 = git 跟踪面；配方 = ZIP_STORED + 路径排序 + 固定 date_time + 固定外部属性
 # 复算：py -X utf8 tools/make_release.py --verify <zip> --rev v0.1.0
+# 自指规避：本值在附件外（zip 内只写复算规则）；tag 指向用 git rev-list -n1 v0.1.0 现取
 zip_name: 10-16-2-medical-ad-review-skill-0.1.0-src.zip
-sha256: PENDING_FIRST_RELEASE_BUILD
-bytes: 0
-files: 0
+sha256: 8d991723ef6c6637fe50a4f7f948e5d700631e2e6b79795e96fa6fe60982e305
+bytes: 981167
+files: 76
 rev: v0.1.0
-tree: PENDING
+tree: 91455cdc9c5099c57864c7ea1f0ad739fce4af43
 built_date: 2026-10-17
