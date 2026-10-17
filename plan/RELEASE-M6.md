@@ -88,10 +88,12 @@ gh token 无 workflow scope，HTTPS 推含 workflow 改动的提交会被拒—�
 | 38994796787 | `c7c4bc2` | push/v0.1.0（tag，迁移前） | success | 同提交 tag 轮 |
 | 38995147018 | `2572ccf` | push/main | success | 本体复核轮 2 修复（测试面导出树形态） |
 | 38995855247 | `5a04d43` | push/main | success | M6 收官（发布留档回填 + HANDOFF-FINAL）；**tag 迁移至此提交** |
+| 38996072014 | `5a04d43` | push/v0.1.0 | success | 迁移后 tag push 轮（同 sha 双 run 按 event+ref 区分） |
+| 38996271265 | `b51aa1a` | push/main | success | DIST 台账终值 + 发布坐标回填 |
+| 38997095114 | `dd1deee` | push/main | success | **收官终记**（匿名复核坑留档）——末次实测 |
 
-（后续收尾回填提交各产生 1 个 main run——快照非终值；可复跑规则：
-`gh api repos/yuluo554/10-16-2-medical-ad-review-skill/actions/runs --jq '.total_count'`
-等于该仓收到的 push 事件数。）
+**对账（收官时点实测）**：run 总数 **9** == push 事件数（main 7 次 + tag 2 次，逐行见上表）；
+`gh api …/actions/runs --jq '.total_count'` 可复算。此后每次 push 各自再产生 1 个 run（快照非终值）。
 
 ## 五、tag + Release（R5）
 

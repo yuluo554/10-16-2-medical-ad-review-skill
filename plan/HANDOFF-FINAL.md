@@ -3,7 +3,7 @@
 > M6 出口门 = 项目收官门。本文件是本项目的**收官快照**——任何人在任何时间拿到这个仓库，
 > 读这一份就能知道"现在是什么状态、怎么复跑、还剩什么没做"。
 >
-> 生成于 2026-10-17（M6 收棒，**项目终局，无下一棒**）。库内一律相对路径；
+> 生成于 2026-10-17（M6 收棒，**项目终局，无下一棒**；末次实测 HEAD `dd1deee`，run `38997095114` 绿）。库内一律相对路径；
 > 发布执行细节见 [`plan/RELEASE-M6.md`](./RELEASE-M6.md)。
 
 ---
@@ -38,7 +38,7 @@
 | 基准 | 四套件全达标（B1 13 / B2 22 / B3 8 / B4 23；66 用例，期望锚定冻结真值库） | `py -X utf8 -m medreview.cli bench`（exit 0） |
 | 门禁自检 | **10 项** SELFTEST_OK（含报告层零判定三条 AST 门禁 S8/S9/S10） | `py -X utf8 -m medreview.cli selftest` |
 | 冻结产物 | `gen_ruleset.py --check` + `gen_cases.py --check` → FROZEN_TRUTH_OK（双解释器） | 见复跑手册 |
-| CI | **6/6 push run 全 success**（首推 `38993895184` 即 4 job 全绿；收官 run `38995855247`；tag 迁移至收官提交 `5a04d43`） | `gh run list --repo yuluo554/10-16-2-medical-ad-review-skill` |
+| CI | **9/9 run 全 success**（首推 `38993895184` 即 4 job 全绿；收官 run `38997095114`；tag `v0.1.0`→`5a04d43`；9 run = 7 main push + 2 tag push，逐条见 RELEASE-M6 §四） | `gh run list --repo yuluo554/10-16-2-medical-ad-review-skill` |
 | 脱敏 | 五步 0 硬门命中（姊妹表述/文件名/内容/二进制/产物 + 提交元数据 noreply） | `py -X utf8 tools/audit_repo.py` → DESENSITIZE_AUDIT_OK |
 | 发布物 | 真下载 sha256 对账一致 + 中立目录（无 .git）全量绿 + 解压树重建 zip 与下载件**逐字节一致** | 见 `plan/RELEASE-M6.md` §六 |
 | 匿名复核 | 裸 https clone 见 v0.1.0 + curl 下载 sha256 一致 + latest API 可达（无凭据） | `plan/RELEASE-M6.md` §六·八 |
