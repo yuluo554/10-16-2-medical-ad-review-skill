@@ -90,7 +90,9 @@ def _list_filesystem():
     entries = []
     for dirpath, dirnames, filenames in os.walk(REPO):
         dirnames[:] = [d for d in dirnames
-                       if d not in _SKIP_DIRS and not d.endswith(".egg-info")]
+                       if d not in _SKIP_DIRS and not d.endswith(".egg-info")
+                       and not d.startswith(".venv") and d != "venv"
+                       and not d.startswith("venv.")]
         if "pyvenv.cfg" in filenames:
             continue
         for name in sorted(filenames):
@@ -109,7 +111,14 @@ def _read_blob(rev, path):
 
 
 def build_zip_bytes(rev):
-    """按确定性配方构建 zip 字节；rev 为 None 时走无 git 兜底。"""
+    """按确定性配方构建 zip 字节。
+
+    rev 为 None 或（``"HEAD"`` 且无 ``.git``，即源码 zip 解压树）时走文件系统
+    遍历兜底——"下载件 → 解包 → 重打包比对"是发布物复核的常用形态，
+    依赖 git 的打包器在无 ``.git`` 树里会直接崩（同类工具的发布期实录）。
+    """
+    if rev == "HEAD" and not _is_git_tree():
+        rev = None
     if rev is None:
         entries = _list_filesystem()
         rev_label = "(filesystem walk, 无 .git 兜底)"

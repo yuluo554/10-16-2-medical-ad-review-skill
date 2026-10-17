@@ -123,8 +123,7 @@ def _tracked_files():
                 return names, "git ls-files"
     names = []
     for dirpath, dirnames, filenames in os.walk(REPO):
-        dirnames[:] = [d for d in dirnames
-                       if d not in _SKIP_DIRS and not d.endswith(".egg-info")]
+        dirnames[:] = [d for d in dirnames if not _is_skip_dir(d)]
         if "pyvenv.cfg" in filenames:
             continue
         for name in sorted(filenames):
@@ -209,6 +208,17 @@ def _sibling_tokens():
         else:
             tokens.add(entry)
     return sorted(tokens)
+
+
+def _is_skip_dir(name):
+    """目录剪枝：精确名 + 前缀形态（.venv-clean / .venv-n 等里程碑命名 venv）。
+
+    实测（发布物本体复核）：中立目录里就地建的 `.venv-n` 不等于 `.venv`，
+    不剪会把整个 venv 的 site-packages 扫进去（1126 处误报）。
+    """
+    return (name in _SKIP_DIRS or name.endswith(".egg-info")
+            or name.startswith(".venv") or name == "venv"
+            or name.startswith("venv."))
 
 
 def _personal_literals():

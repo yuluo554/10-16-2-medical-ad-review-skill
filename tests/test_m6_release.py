@@ -150,16 +150,24 @@ def test_pack_surface_equals_git_tracked_surface():
 
 
 def test_pack_verify_ok_and_tamper_failed(tmp_path):
-    """verify 模式：同 rev zip 判 OK；篡改一字节判 FAILED（exit 1）。"""
+    """verify 模式：同 rev zip 判 OK；篡改一字节判 FAILED（exit 1）。
+
+    **导出树守门**：源码 zip 解压树无 ``.git``——``--verify`` 按设计 exit 2
+    （显式报"无法按 rev 复算"，不静默通过）。本测试在 git 树内才有重建比对语义。
+    """
     data, _entries, _ = make_release.build_zip_bytes("HEAD")
     zip_path = tmp_path / "check.zip"
     zip_path.write_bytes(data)
+    if not make_release._is_git_tree():
+        rc = make_release.main(["--verify", str(zip_path), "--rev", "HEAD"])
+        assert rc == 2, "导出树下 --verify 应显式 exit 2（不静默通过）"
+        return
     rc = make_release.main(["--verify", str(zip_path), "--rev", "HEAD"])
     assert rc == 0
     tampered = bytearray(data)
     marker = tampered.find(b"PK\x03\x04")
     assert marker >= 0
-    # 篡改中央目录之后的一个字节（跳过本地头 magic，保证仍是"可读 zip"）
+    # 篡改文件尾部的一个字节（跳过本地头 magic，保证仍是"可读 zip"）
     pos = len(tampered) - 10
     tampered[pos] ^= 0xFF
     zip_path.write_bytes(bytes(tampered))
@@ -168,19 +176,24 @@ def test_pack_verify_ok_and_tamper_failed(tmp_path):
 
 
 def test_pack_cli_build_and_verify_end_to_end(tmp_path):
-    """CLI 端到端：--out 构建 + --verify 校验 + 台账文件落盘且 sha 一致。"""
+    """CLI 端到端：--out 构建 + --verify 校验 + 台账文件落盘且 sha 一致。
+
+    导出树（无 .git）：--out 走文件系统遍历兜底仍可构建；--verify 步骤跳过。
+    """
     import hashlib
 
     out_zip = tmp_path / "rel.zip"
     ledger = tmp_path / "DIST.txt"
-    rc = make_release.main(["--out", str(out_zip), "--ledger", str(ledger), "--rev", "HEAD"])
+    rc = make_release.main(["--out", str(out_zip), "--ledger", str(ledger),
+                            "--rev", "HEAD" if make_release._is_git_tree() else None])
     assert rc == 0
     data = out_zip.read_bytes()
     text = ledger.read_text(encoding="utf-8")
     assert hashlib.sha256(data).hexdigest() in text
     assert "sha256: " in text
-    rc = make_release.main(["--verify", str(out_zip), "--rev", "HEAD"])
-    assert rc == 0
+    if make_release._is_git_tree():
+        rc = make_release.main(["--verify", str(out_zip), "--rev", "HEAD"])
+        assert rc == 0
 
 
 def test_pack_readme_named_release_tools_run(tmp_path):
