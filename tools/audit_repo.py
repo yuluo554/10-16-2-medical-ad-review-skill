@@ -163,9 +163,22 @@ def _line_of(text, pos):
 
 
 def _own_names():
-    """自家名允许集（运行时实算）：本地目录名 + 去系列前缀的纯净名。"""
-    own_local = os.path.basename(REPO)
-    own_clean = _SERIES_PREFIX_RE.sub("", own_local)
+    """自家名允许集（运行时实算，**数据驱动**）：README 自指 URL 的仓库名 + 本地目录名。
+
+    判据落仓库内容而非目录名——干净 clone / 导出树的目录名不等于仓库名
+    （实测：clone 到 cleanclone 时按目录名推导会让自家 badge URL 误报）。
+    """
+    own_clean = os.path.basename(REPO)
+    own_local = os.path.basename(os.path.abspath(REPO))
+    for probe in ("README.md", "SKILL.md", "pyproject.toml"):
+        raw = _read_bytes(probe)
+        if raw is None:
+            continue
+        text = _decode_text(raw) or raw.decode("utf-8", "replace")
+        match = re.search(r"github\.com/[A-Za-z0-9-]+/([A-Za-z0-9._-]+)", text)
+        if match:
+            own_clean = match.group(1)
+            break
     return own_local, own_clean
 
 
@@ -173,21 +186,24 @@ def _sibling_tokens():
     """工作区姊妹目录名（运行时从父目录推导；CI 检出目录下通常为空）。
 
     两种形态都扫：带系列前缀的原名 + 去前缀的 kebab 名。
+    自家名（目录名 / README 自指仓库名 / 各自去前缀变体）一律排除。
     """
     parent = os.path.dirname(REPO)
     own_local, own_clean = _own_names()
+    allowed = {own_local, own_clean, _SERIES_PREFIX_RE.sub("", own_local),
+               _SERIES_PREFIX_RE.sub("", own_clean)}
     tokens = set()
     try:
         entries = sorted(os.listdir(parent))
     except OSError:
         return []
     for entry in entries:
-        if entry.startswith(".") or entry == own_local:
+        if entry.startswith(".") or entry in allowed:
             continue
         if not _SERIES_PREFIX_RE.match(entry):
             continue
         stripped = _SERIES_PREFIX_RE.sub("", entry)
-        if stripped and stripped != own_clean and len(stripped) >= 4:
+        if stripped and stripped not in allowed and len(stripped) >= 4:
             tokens.add(entry)
             tokens.add(stripped)
         else:
@@ -212,12 +228,13 @@ def _personal_literals():
 
 
 def _series_hits_in(value):
-    """系列名检查：自家名允许；其余系列形态 = 命中（返回原文，调用方掩码）。"""
+    """系列名检查：自家名允许（原名或去前缀变体）；其余系列形态 = 命中。"""
     hits = []
-    _own_local, own_clean = _own_names()
+    own_local, own_clean = _own_names()
+    allowed = {own_local, own_clean, _SERIES_PREFIX_RE.sub("", own_local)}
     for match in _FAMILY_RE.finditer(value):
         token = match.group(1)
-        if _SERIES_PREFIX_RE.sub("", token) == own_clean:
+        if _SERIES_PREFIX_RE.sub("", token) in allowed:
             continue
         hits.append((token, match.start()))
     return hits

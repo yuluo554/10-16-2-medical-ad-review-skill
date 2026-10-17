@@ -78,12 +78,19 @@ def test_audit_scanner_has_no_self_literals():
 
 
 def test_audit_sibling_tokens_excluded_own_name():
-    """姊妹 token 集合不含自家名（自家名是发布坐标，不是姊妹表述）。"""
+    """姊妹 token 集合与系列名检查都不含自家名（自家名是发布坐标，不是姊妹表述）。
+
+    自家名**数据驱动**（README 自指 URL），与检出目录名无关——
+    变异：把仓库 clone/改名到任意目录，自家 badge 仍不得误报。
+    """
     _own_local, own_clean = audit_repo._own_names()
+    assert own_clean, "自家名推导为空（README 自指 URL 缺失？）"
     tokens = audit_repo._sibling_tokens()
     assert own_clean not in tokens
-    assert own_clean not in audit_repo._series_hits_in("plan/00-README总览.md") if False else True
-    assert not audit_repo._series_hits_in("README.md")
+    assert not audit_repo._series_hits_in("https://github.com/yuluo554/%s/releases" % own_clean)
+    # 自家名的带前缀变体同样允许（本地目录名形态）
+    own_local, _ = audit_repo._own_names()
+    assert not audit_repo._series_hits_in(own_local)
 
 
 # --------------------------------------------------------------------------
