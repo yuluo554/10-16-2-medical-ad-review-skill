@@ -231,7 +231,8 @@ def _series_hits_in(value):
     """系列名检查：自家名允许（原名或去前缀变体）；其余系列形态 = 命中。"""
     hits = []
     own_local, own_clean = _own_names()
-    allowed = {own_local, own_clean, _SERIES_PREFIX_RE.sub("", own_local)}
+    allowed = {own_local, own_clean, _SERIES_PREFIX_RE.sub("", own_local),
+               _SERIES_PREFIX_RE.sub("", own_clean)}
     for match in _FAMILY_RE.finditer(value):
         token = match.group(1)
         if _SERIES_PREFIX_RE.sub("", token) in allowed:
