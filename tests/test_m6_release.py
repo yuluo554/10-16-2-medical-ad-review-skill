@@ -139,13 +139,27 @@ def test_pack_recipe_is_stored_sorted_fixed_dates():
 
 
 def test_pack_surface_equals_git_tracked_surface():
-    """打包面 = git 跟踪面：打包条目集合与 git ls-files 完全一致（忽略面不入包）。"""
-    _rc, out, _err = make_release._git(["ls-files"])
-    tracked = set(out.decode("utf-8", "replace").splitlines())
-    tracked = {name for name in tracked if name.strip()}
-    _data, entries, _ = make_release.build_zip_bytes("HEAD")
+    """git 树内：打包面 = git 跟踪面（不多不少；忽略面不入包）。
+
+    导出树（无 .git）：打包面 = 文件系统遍历面——断言非空、含关键路径、
+    排除 venv/缓存（"下载件解包后打包面仍成立"的发布物本体形态）。
+    """
+    if make_release._is_git_tree():
+        _rc, out, _err = make_release._git(["ls-files"])
+        tracked = set(out.decode("utf-8", "replace").splitlines())
+        tracked = {name for name in tracked if name.strip()}
+    else:
+        tracked = None
+    _data, entries, rev_label = make_release.build_zip_bytes(
+        "HEAD" if tracked is not None else None)
     packed = {p for _m, p in entries}
-    assert packed == tracked
+    if tracked is not None:
+        assert packed == tracked
+    else:
+        assert len(packed) >= make_release._SCAN_FLOOR if hasattr(
+            make_release, "_SCAN_FLOOR") else len(packed) >= 40
+        assert "tools/make_release.py" in packed and "README.md" in packed
+        assert "filesystem" in rev_label
     assert not any(name.startswith(".tmp/") or ".venv" in name for name in packed)
 
 
@@ -197,11 +211,19 @@ def test_pack_cli_build_and_verify_end_to_end(tmp_path):
 
 
 def test_pack_readme_named_release_tools_run(tmp_path):
-    """两个 M6 工具以子进程形态真跑（README/CI 引用的命令行形态，不是只 import）。"""
+    """两个 M6 工具以子进程形态真跑（README/CI 引用的命令行形态，不是只 import）。
+
+    导出树（无 .git）：make_release 不传 --rev（走文件系统兜底）；
+    输出 zip 落 tmp_path（**不落遍历树内**，否则二次打包会把产物扫进去）。
+    """
     env = dict(os.environ)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    out_zip = tmp_path / ("s.zip" if make_release._is_git_tree() else "s-fs.zip")
+    release_args = [] if make_release._is_git_tree() else []
+    if make_release._is_git_tree():
+        release_args = ["--rev", "HEAD"]
     for script, args in (("audit_repo.py", ["--selftest"]),
-                         ("make_release.py", ["--out", str(tmp_path / "s.zip"), "--rev", "HEAD"])):
+                         ("make_release.py", ["--out", str(out_zip)] + release_args)):
         proc = subprocess.run([_py(), "-X", "utf8", os.path.join(TOOLS, script)] + args,
                               cwd=ROOT, env=env,
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
