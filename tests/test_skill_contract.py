@@ -25,7 +25,9 @@ SRC = os.path.join(ROOT, "src")
 if SRC not in sys.path:
     sys.path.insert(0, SRC)
 
-from medreview import constants, normalize, pipeline, report as report_mod  # noqa: E402
+from medreview import (  # noqa: E402
+    constants, model, normalize, pipeline, report as report_mod,
+)
 
 CONTRACT_RE = re.compile(r"<!--\s*contract-fields:\s*(.*?)\s*-->")
 REPORT_SECTIONS_RE = re.compile(r"<!--\s*report-sections:\s*(.*?)\s*-->")
@@ -122,6 +124,17 @@ def test_contract_field_order_matches_output():
     if finding_order:
         assert finding_order == expected_finding, \
             "契约块命中字段序与输出不一致：文档 %s vs 输出 %s" % (expected_finding, finding_order)
+
+
+def test_evidence_kind_is_internal_not_a_contract_field():
+    """``Finding.evidence_kind`` **刻意不进契约字段**——它是内部判定字段（导出前四要素
+    断言据此选判据），不是输出字段。混进契约字段会把内部实现暴露成对外承诺。"""
+    assert "evidence_kind" not in set(constants.CONTRACT_FIELDS_ALL), \
+        "evidence_kind 混进了契约字段（它是内部判定字段，不是输出字段）"
+    finding = model.Finding("R-TEST", "某条锚点", "某条原文", "某段证据",
+                            constants.SEVERITY_BLOCK, constants.KIND_PROHIBITED_TERM)
+    assert "evidence_kind" not in finding.to_dict(), \
+        "命中输出竟带上了内部字段 evidence_kind"
 
 
 def test_skill_report_sections_marker_matches_renderer():

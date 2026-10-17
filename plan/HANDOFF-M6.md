@@ -17,7 +17,7 @@
 
 | 交付物 | 位置 | 证据 |
 |---|---|---|
-| **SKILL.md 契约三处对齐** | `SKILL.md` + `constants.CONTRACT_FIELDS_*` | 契约块 + **人读字段表** + 输出字段序，三处各有门（`tests/test_skill_contract.py`，5 项） |
+| **SKILL.md 契约三处对齐** | `SKILL.md` + `constants.CONTRACT_FIELDS_*` | 契约块 + **人读字段表** + 输出字段序，三处各有门（`tests/test_skill_contract.py`，6 项） |
 | **报告必备 8 章节机器可解析声明** | `SKILL.md` `<!-- report-sections: ... -->` | 8 节 id 与**序** ↔ `report_sections()` 实算逐 id 对齐 |
 | **报告层零判定三条 AST 门禁** | `src/medreview/selftest.py` S8/S9/S10 | 不 import 引擎模块 / 不做算术 / 不内联政策数值；**阳性 + 阴性对照齐备** |
 | **分级报告双轨（单一渲染源）** | `report.py::report_sections` + `_section_lines` | 机读 `sections` **逐字段等于**结构源；人读标题来自同源；批量同源 |
@@ -27,15 +27,15 @@
 | 免责三要件 | `report.py::DISCLAIMER` | 辅助自查 / 不构成法律意见 / 不替代官方审查 |
 | 合成数据纪律 | `samples/`（3 件）+ 假机构名白名单 | `samples/` 与**渲染产物**机构名形态全在白名单内 |
 | M5 语义门禁 | `tests/test_m5_delivery.py` | **29 项** |
-| M5 变异验证 | `.tmp/m5/mutate.py`（不入仓库） | **12 组**全部使门变红，还原后全量绿 |
-| M5 留档 | `plan/M5-交付复核.md` | 12 类实测发现 + 三处对齐表 + 三条门禁对照 + 批量演示 + 12 组变异 |
+| M5 变异验证 | `.tmp/m5/mutate.py`（不入仓库） | **13 组**全部使门变红，还原后全量绿 |
+| M5 留档 | `plan/M5-交付复核.md` | 12 类实测发现 + 三处对齐表 + 三条门禁对照 + 批量演示 + 13 组变异 |
 | 规则包 / 真值库 | `references/manifest.json` / `fixtures/cases.json` | **M5 未改规则与用例**：版本号仍 `ruleset-c7c2a6d1fd`，真值库仍 **66 用例** |
-| 双解释器全量测试 | `tests/` | **203 项全绿**（3.8 与 3.12），M4 为 172 |
+| 双解释器全量测试 | `tests/` | **204 项全绿**（3.8 与 3.12），M4 为 172 |
 | 门禁自检 | `medreview selftest` | **10 项** SELFTEST_OK（M4 为 7 项） |
 | 基准四套件 | `medreview bench` | exit 0（B1 13 / B2 22 / B3 8 / B4 23） |
 | 冻结产物位级一致 | `gen_ruleset/gen_cases --check` | FROZEN_TRUTH_OK（双解释器） |
 | 干净 venv | `.venv-m5`（已进 `.gitignore`） | `selftest` OK、`bench` exit 0、`check` exit 1/0、`scan` 两格式 exit 1 |
-| CI 检出形态本地复现 | 浅克隆 | **203 项**绿 + 快照 sha256 3/3 全对 + 冻结产物位级一致 |
+| CI 检出形态本地复现 | 浅克隆 | **204 项**绿 + 快照 sha256 3/3 全对 + 冻结产物位级一致 |
 
 ### 本棒的关键实测发现（写清，避免下一棒重复踩）
 
@@ -131,7 +131,7 @@ M6 是发布棒，重心在**对外动作与发布留档**（`plan/05` M6 行 + 
 | K36（M4） | **kind 双层断言在测试面也锁一份**（结构层 + 运行层），与 selftest S5 同源 | 两条 `test_dispatch_*` | 变异 G8/G9（M4 驱动） |
 | K37（M4） | **真值形态分布纳入文档漂移门禁** | `data/README.md` §一之二 新增行 | `test_data_readme_form_counts_match` |
 | **K38**（M5 新增） | **报告层零判定三条 AST 门禁**：不 import 引擎模块 / 不做算术（豁免模板 `%` 与字符串拼接）/ 不内联政策数值（条款号引用形态 + 百分比阈值形态）；**各配阳性 + 阴性对照** | `selftest.scan_engine_imports` / `scan_arithmetic_binops` / `scan_policy_numeric_literals` + S8/S9/S10 | `test_report_layer_*`（含阴性对照） + 变异 G1/G2/G3 |
-| **K39**（M5 新增） | **报告层契约三处对齐**（契约块 + 人读字段表 + 输出字段序）+ **章节声明 ↔ 渲染器 id/序** | `SKILL.md` + `constants.CONTRACT_FIELDS_*` | `tests/test_skill_contract.py` 5 项 + 变异 G4/G5/G6 |
+| **K39**（M5 新增） | **报告层契约三处对齐**（契约块 + 人读字段表 + 输出字段序）+ **章节声明 ↔ 渲染器 id/序** | `SKILL.md` + `constants.CONTRACT_FIELDS_*` | `tests/test_skill_contract.py` 6 项 + 变异 G4/G5/G6/G13 |
 | **K40**（M5 新增） | **批量通路（`scan`）**：逐件渲染 + **读入阶段失败隔离** + 逐件机读走 `render_json`（与单件同形）；**空输入不产出报告**（exit 2） | `report.render_markdown_batch` + `cli.cmd_scan` | `test_scan_*` 5 项 + 变异 G8/G9 |
 | **K41**（M5 新增） | **报告必备 8 章节**；两轨（人读单件/人读批量/机读）共用同一 `report_sections()`，章节正文唯一源 `_section_lines()` | `report.py` | `test_mandatory_sections_are_exactly_eight_in_order` + `test_both_tracks_share_the_single_section_source` + 变异 G7 |
 | **K42**（M5 新增） | **报告格式要件**：覆盖表的行与「未启用清单」行之间必须留空行（否则 Markdown 吸行） | `report.py::_section_lines` | `test_markdown_coverage_rows_separated_from_not_enabled_line` + 变异 G11 |
@@ -175,7 +175,7 @@ M6 是发布棒，重心在**对外动作与发布留档**（`plan/05` M6 行 + 
 | # | DoD | 证据 | 状态 |
 |---|---|---|---|
 | 5-1 | SKILL.md 主入口定稿（入参表 + 契约块 + 确定性纪律明写） | `SKILL.md` + 两条门禁 | ✅ |
-| 5-2 | 文档契约块 ↔ 代码字段常量 ↔ 实际输出字段序 三方对齐 | `tests/test_skill_contract.py`（5 项；含 M5 新增两处） | ✅ |
+| 5-2 | 文档契约块 ↔ 代码字段常量 ↔ 实际输出字段序 三方对齐 | `tests/test_skill_contract.py`（6 项；含 M5 新增三处） | ✅ |
 | 5-3 | 分级报告双轨共用同一 `report_sections()` | `test_both_tracks_share_the_single_section_source` | ✅ |
 | 5-4 | 报告必备 8 章节（缺一即断言失败） | `test_mandatory_sections_are_exactly_eight_in_order` + 章节声明门 | ✅ |
 | 5-5 | 报告层零判定（AST 门禁） | `selftest` S8/S9/S10 + 阳性/阴性对照 | ✅ |
@@ -183,12 +183,12 @@ M6 是发布棒，重心在**对外动作与发布留档**（`plan/05` M6 行 + 
 | 5-7 | `medreview scan` 出 Markdown + JSON 报告（逐件齐备） | `test_scan_markdown_renders_every_item` + `test_scan_json_covers_every_item` | ✅ |
 | 5-8 | 免责与红线（强制免责 / 不做药品推荐 / 不引用真实机构案例） | 免责要件门 + 两项白名单门禁 | ✅ |
 | 5-9 | 全基准绿 | `bench` exit 0（B1 13 / B2 22 / B3 8 / B4 23） | ✅ |
-| 5-10 | 双解释器全量测试 | 3.8 与 3.12 各 **203 passed** | ✅ |
+| 5-10 | 双解释器全量测试 | 3.8 与 3.12 各 **204 passed** | ✅ |
 | 5-11 | 冻结产物位级一致（双解释器） | `gen_ruleset/gen_cases --check` → FROZEN_TRUTH_OK | ✅ |
 | 5-12 | 门禁自检绿 | `selftest` **10 项** SELFTEST_OK | ✅ |
-| 5-13 | **变异验证（守门非假门）** | M5 **12 组**全部使门变红 | ✅ |
+| 5-13 | **变异验证（守门非假门）** | M5 **13 组**全部使门变红 | ✅ |
 | 5-14 | 干净 venv 安装 + 裸 console script + 非仓库根 CWD | `.venv-m5` 内 `selftest` OK、`bench` exit 0、`check` exit 1/0、`scan` exit 1 | ✅ |
-| 5-15 | CI 检出形态本地复现 | 浅克隆内 **203 项**绿 + 快照 sha256 3/3 全对 + 冻结产物位级一致 | ✅ |
+| 5-15 | CI 检出形态本地复现 | 浅克隆内 **204 项**绿 + 快照 sha256 3/3 全对 + 冻结产物位级一致 | ✅ |
 | 5-16 | `plan/M5-交付复核.md` 已落盘 | 文件 | ✅ |
 | 5-17 | `plan/HANDOFF-M6.md` 已落盘 | 本文件 | ✅ |
 | 5-18 | 首提交、工作树干净 | `git log` + `git status` | ✅ |
@@ -209,7 +209,7 @@ export PYTHONPATH=src
 py -3.12 -X utf8 -m pytest tests -q
 py -3.8  -X utf8 -m pytest tests -q
 py -3.12 -X utf8 -m pytest tests/test_m5_delivery.py -q      # M5 交付面门禁（29 项）
-py -3.12 -X utf8 -m pytest tests/test_skill_contract.py -q   # 契约三处对齐（5 项）
+py -3.12 -X utf8 -m pytest tests/test_skill_contract.py -q   # 契约三处对齐（6 项）
 py -3.12 -X utf8 -m pytest tests/test_m4_benchmark.py -q     # M4 真值基准门禁（24 项）
 
 # 门禁自检 / 基准
