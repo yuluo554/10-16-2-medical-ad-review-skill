@@ -10,16 +10,17 @@
 
 ## 一、干净环境验证（R3）
 
-**结论：通过（见下表逐条退出码）。** 形态：新目录 clone（`--no-local`）+ 全新 venv + 按 README 逐条执行。
+**结论：通过（下表 19 条命令退出码全部符合明示语义）。** 形态：新目录 clone（`--no-local`）+
+全新 venv（Python 3.12；README 安装通路）+ 逐条执行。
 
 | # | 命令（README/开发节原文形态） | 退出码 | 语义判定 |
 |---|---|---|---|
-| 1 | `python -m pytest tests -q` | 0 | 全量测试绿 |
+| 1 | `python -m pytest tests -q` | 0 | **216 passed** 全量绿 |
 | 2 | `medreview selftest` | 0 | SELFTEST_OK（裸 console script 通路） |
 | 3 | `medreview check --text "<命中文案>"` | **1** | **检出命中 = 既定语义，非故障**（K2） |
 | 4 | `medreview check --text "<中性文案>"` | 0 | OK / NOT_ASSESSED 未命中 |
 | 5 | `medreview check --format json --text "…"` | **1** | 机读命中，同上 |
-| 6 | `medreview check … --proof yes --proof-file ./审查证明.pdf` | **2** | 输入/用法错误（文件不存在），契约语义 |
+| 6 | `medreview check … --proof yes --proof-file ./审查证明.pdf`（文件不存在） | **2** | 输入/用法错误，契约语义 |
 | 7 | `medreview scan --dir ./samples --format markdown --out report.md` | **1** | 批量含命中件，整批 exit 1 |
 | 8 | `medreview scan --dir ./samples --format json --out report.json` | **1** | 同上 |
 | 9 | `medreview rules` | 0 | 规则包加载 + 展示 |
@@ -32,10 +33,21 @@
 | 16 | `python tests/check_workflows.py` | 0 | WORKFLOW_LINT_OK |
 | 17 | `python tools/make_release.py --rev HEAD --out …` | 0 | ZIP_BUILD_OK |
 | 18 | `python tools/make_release.py --verify …` | 0 | ZIP_VERIFY_OK |
+| 19 | `medreview scan --dir <空目录>` | **2** | 无输入源不产出空报告，契约语义 |
 
-（发布前在本机 clone 实测；GitHub 侧全新 clone 复核见 §六。实测轮抓出的
-"干净 clone 目录名 ≠ 仓库名 → 自家 badge 误报"缺陷已修：自家名改**数据驱动**
-（README 自指 URL），判据不再依赖检出目录名。）
+**CI 检出形态本地复现**（`--depth 1 --no-tags` 浅克隆 + 全新 venv）：**216 passed** +
+`selftest` OK + 冻结产物位级一致（双 `--check` OK）。浅克隆下 `audit_repo.py` 按设计显式
+报 INCOMPLETE（exit 2，"提交元数据检查：浅克隆只见 1 提交"）——**不冒充"历史已验"**；
+CI 侧 `fetch-depth: 0` 提供完整历史走全量审计。
+
+**本轮干净环境/检出复现实测抓出并修复的缺陷（4 个，均非推测）**：
+1. **审计器自家名按检出目录名推导** → clone 到任意目录名时自家 badge URL 误报
+   （实测：cleanclone 下 7 处误报）→ 改**数据驱动**（README 自指 URL）；
+2. 审计器 selftest 自家名变体表未随数据驱动对齐 → clean clone 下 selftest AssertionError → 修；
+3. 系列名正则把**版本后缀**（`…-skill-0.1.0`）并进系列 token → DIST 台账文件名误报 →
+   尾部边界收紧（下一 token 须非数字起头）；
+4. 全量审计门不接受"浅克隆显式 INCOMPLETE"状态 → CI 检出形态复现实测抓出 → 门放宽到
+   三态白名单（ok / no_git / shallow），**不是**把浅克隆静默当通过。
 
 ## 二、脱敏五步 + 提交元数据邮箱（R1/R2）
 
