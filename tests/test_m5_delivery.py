@@ -263,6 +263,26 @@ def test_rendered_report_contains_only_whitelisted_org_names():
     assert ledger_mod.check_fake_org_whitelist(payload) == []
 
 
+def test_markdown_coverage_rows_separated_from_not_enabled_line():
+    """格式要件回归：覆盖表的行与「未启用清单」行之间必须留一个空行。
+
+    实测（M5 重构踩到）：缺了空行，Markdown 会把「未启用清单：（空）」
+    吸进上一条列表项（列表项与后续段落必须空行分隔）——报告排版静默走形。
+    """
+    lines = report_mod.render_markdown(_report()).splitlines()
+    rows_index = next(i for i, line in enumerate(lines)
+                      if line.startswith("- **规则包总条目数**"))
+    assert lines[rows_index + 1] == "", "覆盖表与未启用清单之间缺空行（Markdown 会吸行）"
+
+
+def test_readme_and_skill_declare_no_drug_recommendation():
+    """红线声明门：不做药品推荐（题面 §六.2）须在对外文档明写。"""
+    for path in (os.path.join(ROOT, "README.md"), os.path.join(ROOT, "SKILL.md")):
+        with open(path, "r", encoding="utf-8") as handle:
+            text = handle.read()
+        assert "药品推荐" in text, "%s 未声明'不做药品推荐'" % os.path.basename(path)
+
+
 def _skill_text():
     with open(os.path.join(ROOT, "SKILL.md"), "r", encoding="utf-8") as handle:
         return handle.read()

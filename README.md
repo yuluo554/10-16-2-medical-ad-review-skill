@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml)
 
-**状态**：🚧 v0.1.0 开发中（M0 骨架 + M1 数据先行 + M2 品类判定器 + M3 禁止情形核查 + M4 真值基准已完成；M5 交付待办）
+**状态**：🚧 v0.1.0 开发中（M0 计划先行 + M1 数据先行 + M2 品类判定器 + M3 禁止情形核查 + M4 真值基准 + **M5 交付**已完成；M6 发布待办）
 
 ---
 
@@ -24,6 +24,9 @@
 | 待补材料清单 | 判定需外部材料时显式列出缺什么，**绝不静默判合规** |
 | 锚点硬门 | 引文核不到原文的规则**拒绝加载**，进"未启用清单"显式报出 |
 | **导出前溯源断言** | 每条命中四要素（条款锚点／法条原文／文案证据／规则 id）**导出前常驻校验**：引文必须逐字在快照、证据必须逐字在文案，不满足即**拒绝出件**（不留"半溯源"报告） |
+| 分级报告双轨 | 人读 Markdown（单件/批量）与机读 JSON **共用同一渲染源**——"两格式一致"是**结构性质**；报告**必备 8 章节**缺一即断言失败 |
+| 报告层零判定 | 报告层不 import 引擎模块、不做算术、不内联政策数值——三条 **AST 静态门禁**可核验（含阳性/阴性对照） |
+| 批量审查 | `scan` 逐件出全报告、逐件失败隔离（一个坏件不拖垮整批）；空目录不产出"跑过了"的空报告 |
 | 纯本地 | 引擎源码零网络导入（AST 静态门禁可核验），文案不外发 |
 
 ## 安装
@@ -49,8 +52,9 @@ medreview check --format json --text "本品保健食品可有效降血糖、降
 # 补材料后重跑（报告"待补材料清单"节索要的材料，用它回传；只记摘要不落路径）
 medreview check --text "XX医疗美容门诊部（虚构）双眼皮手术。" --proof yes --proof-file ./审查证明.pdf
 
-# 批量审查一个目录下的全部 .txt 文案（失败件单列，不中断整批）
-medreview scan --dir ./samples
+# 批量审查一个目录下的全部 .txt 文案（逐件出全 8 章节；失败件单列，不中断整批）
+medreview scan --dir ./samples --format markdown --out report.md   # 人读
+medreview scan --dir ./samples --format json     --out report.json # 机读
 
 # 列出规则包全部条目与锚点（含未启用清单）
 medreview rules

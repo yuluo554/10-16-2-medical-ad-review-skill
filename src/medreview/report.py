@@ -148,6 +148,9 @@ def _section_lines(section):
             lines.append("  - 命中证据：%s" % finding["evidence"])
     elif section["id"] == "coverage":
         lines.append(_fmt_rows(section["rows"]))
+        # 空行是**格式要件**，不是装饰：缺了它，"未启用清单"那行会被 Markdown
+        # 当上一条列表项的续行吸进去（列表项与后续段落必须有空行分隔）。
+        lines.append("")
         if section["not_enabled"]:
             lines.append("**未启用清单**（不参与本次判定）：")
             for entry in section["not_enabled"]:
