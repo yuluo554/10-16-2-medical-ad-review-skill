@@ -16,7 +16,7 @@
 | 可见性 | **PUBLIC**（先 private 跑绿 CI → tag/Release → public，P1 顺序；API 回读确认） |
 | Release | `v0.1.0` · <https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.0> |
 | 发布基线提交 | **tag `v0.1.0`**——权威值用 `git rev-list -n1 v0.1.0` 现取（**故意不写死 SHA**：本文件每次改动都会移动 HEAD，写死的 SHA 必然过期；M6 当轮已做过一次 tag 迁移重打） |
-| 附件（ASCII 名） | `10-16-2-medical-ad-review-skill-0.1.0-src.zip`（76 tracked 文件 / 981,167 字节 / 确定性构建） |
+| 附件（ASCII 名） | `10-16-2-medical-ad-review-skill-0.1.0-src.zip`（77 tracked 文件 / 998,563 字节 / 确定性构建；含发布留档与收官快照） |
 | sha256 留档 | `plan/DIST-sha256-M6.txt`（zip sha256 + 字节数 + 文件数；**自指规避**：zip 内不含本值） |
 | topics | 8 个（`medical-advertising` / `compliance` / `agent-skill` / `rules-engine` / `china-regulation` / `deterministic` / `cli` / `offline`），已回读确认 |
 | description | 已设（中文一句话定位），`gh api` 回读确认 |
@@ -24,7 +24,7 @@
 **附件 sha256**（真下载 + 匿名 curl 双链路核对一致）：
 
 ```
-8d991723ef6c6637fe50a4f7f948e5d700631e2e6b79795e96fa6fe60982e305  10-16-2-medical-ad-review-skill-0.1.0-src.zip
+4ffdb217393ef2ada1a90536e6fdd85ba69649c1561d4f6c839bd301c69a8053  10-16-2-medical-ad-review-skill-0.1.0-src.zip
 ```
 
 ---
@@ -38,7 +38,7 @@
 | 基准 | 四套件全达标（B1 13 / B2 22 / B3 8 / B4 23；66 用例，期望锚定冻结真值库） | `py -X utf8 -m medreview.cli bench`（exit 0） |
 | 门禁自检 | **10 项** SELFTEST_OK（含报告层零判定三条 AST 门禁 S8/S9/S10） | `py -X utf8 -m medreview.cli selftest` |
 | 冻结产物 | `gen_ruleset.py --check` + `gen_cases.py --check` → FROZEN_TRUTH_OK（双解释器） | 见复跑手册 |
-| CI | **5/5 push run 全 success**（首推 `38993895184` 即 4 job 全绿；末次实测 run `38995147018`） | `gh run list --repo yuluo554/10-16-2-medical-ad-review-skill` |
+| CI | **6/6 push run 全 success**（首推 `38993895184` 即 4 job 全绿；收官 run `38995855247`；tag 迁移至收官提交 `5a04d43`） | `gh run list --repo yuluo554/10-16-2-medical-ad-review-skill` |
 | 脱敏 | 五步 0 硬门命中（姊妹表述/文件名/内容/二进制/产物 + 提交元数据 noreply） | `py -X utf8 tools/audit_repo.py` → DESENSITIZE_AUDIT_OK |
 | 发布物 | 真下载 sha256 对账一致 + 中立目录（无 .git）全量绿 + 解压树重建 zip 与下载件**逐字节一致** | 见 `plan/RELEASE-M6.md` §六 |
 | 匿名复核 | 裸 https clone 见 v0.1.0 + curl 下载 sha256 一致 + latest API 可达（无凭据） | `plan/RELEASE-M6.md` §六·八 |

@@ -87,6 +87,7 @@ gh token 无 workflow scope，HTTPS 推含 workflow 改动的提交会被拒—�
 | 38994583216 | `c7c4bc2` | push/main | success | 发布物本体复核轮 1 修复（venv 剪枝 + no-git 兜底） |
 | 38994796787 | `c7c4bc2` | push/v0.1.0（tag，迁移前） | success | 同提交 tag 轮 |
 | 38995147018 | `2572ccf` | push/main | success | 本体复核轮 2 修复（测试面导出树形态） |
+| 38995855247 | `5a04d43` | push/main | success | M6 收官（发布留档回填 + HANDOFF-FINAL）；**tag 迁移至此提交** |
 
 （后续收尾回填提交各产生 1 个 main run——快照非终值；可复跑规则：
 `gh api repos/yuluo554/10-16-2-medical-ad-review-skill/actions/runs --jq '.total_count'`
@@ -100,7 +101,7 @@ gh token 无 workflow scope，HTTPS 推含 workflow 改动的提交会被拒—�
   抓出 2 个发布物级缺陷 → 修复（`c7c4bc2`）→ 删旧 tag → 在含修复的提交重打（本轮再修
   测试面 2 处于 `2572ccf`，见 §六）。迁移后核验：`git cat-file -e v0.1.0:tools/audit_repo.py` 成功。
 - **Release**：`gh release create v0.1.0 <zip> --verify-tag --notes-file`；
-  附件 `10-16-2-medical-ad-review-skill-0.1.0-src.zip`（**ASCII 名**）；
+  附件 `10-16-2-medical-ad-review-skill-0.1.0-src.zip`（**ASCII 名**；终版 77 文件，含发布留档与收官快照——tag 指向 M6 收官提交 `5a04d43`，发布留档/台账/收官快照均在 tag 树内）；
   `gh release edit v0.1.0 --draft=false` 转正后 `isDraft=false`（API 回读实测）。
 - **sha256 台账**：`plan/DIST-sha256-M6.txt`（**自指规避**：zip 内不含本值，台账随发布后
   回填提交落 main；zip 内只写复算规则）。
@@ -117,7 +118,7 @@ gh token 无 workflow scope，HTTPS 推含 workflow 改动的提交会被拒—�
    - 审计器 filesystem 兜底不剪**里程碑命名 venv**（`.venv-n` ≠ `.venv`）→ 1126 处误报；
    - 打包测试面 4 处假设 `.git` 存在 → 导出树必红。
    修复：前缀剪枝 + `--verify` 导出树显式 exit 2 + `HEAD` 无 git 自动降级 + 测试双形态断言。
-3. **第二轮**：删旧 tag/附件 → 修复提交（`c7c4bc2`）CI 绿 → 迁移重打 tag → 重建附件
+3. **第二轮**：删旧 tag/附件 → 修复提交（`c7c4bc2`）CI 绿 → 迁移重打 tag → 重建附件（终版 tag 再迁移至收官提交 `5a04d43`，使发布留档/台账/HANDOFF-FINAL 均在 tag 树内）
    （`--clobber`）→ 真下载复算 sha256 一致 → 干净解压树全量绿（`audit` OK、`pytest` 剩余
    2 处测试面假设已修，修复提交 `2572ccf` CI 绿）。
 4. **同源证明**：从下载件解压树重建 zip（`tools/make_release.py --out`，无 git 兜底）→
