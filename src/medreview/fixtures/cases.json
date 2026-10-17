@@ -8,11 +8,12 @@
         "category:medical",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B1-001",
       "input": "XX医疗美容门诊部（虚构）开展双眼皮手术，欢迎预约面诊。",
       "proof": null,
       "scenario": null,
-      "sha256": "42e2e86f4d23b89d1596f09d821e7bcf1160aa5295b50987d19f7b2f959a78a4",
+      "sha256": "728a19bfc5cb05caf8db177f5ce562b45b7c261c78fcbbb8a12c27eeae82f12e",
       "subject": null,
       "suite": "b1_category"
     },
@@ -23,11 +24,12 @@
         "category:health_food",
         "hit:AL-18-D1"
       ],
+      "form": "positive",
       "id": "B1-002",
       "input": "本品为保健食品，蓝帽子认证，每日一粒。",
       "proof": null,
       "scenario": null,
-      "sha256": "5fc4fe494c9c797f6db4ab5e3dc1d771f1093750a7469e3aadf10b2717b7c5ec",
+      "sha256": "61b982fda2432d4bc9a919cfc687d7b02c6b84f110f035d8e71ad93dc508cb14",
       "subject": null,
       "suite": "b1_category"
     },
@@ -38,11 +40,12 @@
         "category:fsmp",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B1-003",
       "input": "特殊医学用途配方食品，适用于术后营养支持。",
       "proof": null,
       "scenario": null,
-      "sha256": "cf1fbdf2a753dfa470e90cd84c053dc596a69f5394edbb80a5a0b0daf55c79be",
+      "sha256": "da826f7c739ca079ff554dcc99125ba9a15a9a6720ccfcf6a3d0bb1b584e6fc9",
       "subject": null,
       "suite": "b1_category"
     },
@@ -58,11 +61,12 @@
         "category:health_food",
         "category:fsmp"
       ],
+      "form": "positive",
       "id": "B1-004",
       "input": "今天天气不错，适合出门散步。",
       "proof": null,
       "scenario": null,
-      "sha256": "d9bc881de4aa9ad051d700c76150409d666fec6e239f862c7f684d1e321c182c",
+      "sha256": "2cfbc433f81da79076ce1e8039f2f456b89982e273b31577f2495e60988b20d9",
       "subject": null,
       "suite": "b1_category"
     },
@@ -74,11 +78,12 @@
         "category:device",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B1-005",
       "input": "XX市第X医院（虚构）引进新型理疗仪，医疗器械注册证齐全，欢迎体验。",
       "proof": null,
       "scenario": null,
-      "sha256": "cc3acfc4b2c7bf735ccfcc560c8a21870161239441c43b0434d6e8f9ae1de349",
+      "sha256": "998c495d3353234498c8063d4c9452c4f5e4d1cfb11845b7a15bc60268f443f9",
       "subject": null,
       "suite": "b1_category"
     },
@@ -91,11 +96,12 @@
         "category:device",
         "hit:AL-16-D2"
       ],
+      "form": "positive",
       "id": "B1-006",
       "input": "XX市第X医院（虚构）引进医疗器械血压计与药品片剂，国药准字与械字号齐全，欢迎咨询。",
       "proof": null,
       "scenario": null,
-      "sha256": "a5505291c647ddb5edfea6ad73ecd62e4933088b26a42fd45d71216dddf5540c",
+      "sha256": "f5f7497a455531219cdb500235aa7b8ec73772dc654591c0dddcf6d721cf9c02",
       "subject": null,
       "suite": "b1_category"
     },
@@ -111,11 +117,12 @@
         "category:health_food",
         "category:fsmp"
       ],
+      "form": "positive",
       "id": "B1-007",
       "input": "XX医美护肤品（虚构）焕亮精华，温和护肤，欢迎购买。",
       "proof": null,
       "scenario": null,
-      "sha256": "720ff7c4bc34e43a577a42fd13c1a9526cf5bb1b13daafb0b776c477e0c40879",
+      "sha256": "aa8ea359ca492678911367e0baddc65fbdafe40d76fcae4c60ee3b4784a3a97e",
       "subject": null,
       "suite": "b1_category"
     },
@@ -128,11 +135,12 @@
         "category:device",
         "category:medical"
       ],
+      "form": "positive",
       "id": "B1-008",
       "input": "健身器械专卖店（虚构）开业，全场五折。",
       "proof": null,
       "scenario": null,
-      "sha256": "06dc025d2fb64b19d6412c1303046a7fe5e7cd8d9d802d5d50825070cf29ab3e",
+      "sha256": "221e6a148ffc32ecf8e694af58d15cd1354d03777bbf0e3bc1bd9785c3facf6b",
       "subject": null,
       "suite": "b1_category"
     },
@@ -144,11 +152,12 @@
       "forbid_keys": [
         "category:drug"
       ],
+      "form": "positive",
       "id": "B1-009",
       "input": "国家药品监督管理局发布通告。",
       "proof": null,
       "scenario": null,
-      "sha256": "91f184a518cb45ab5c7012a6d494e6f784ad4011c30405fd6aa2e98aa7990f7b",
+      "sha256": "6e16608bb170f5d091f38f391bb1b8051031aa7066fa9b1a84640357bd0b746b",
       "subject": null,
       "suite": "b1_category"
     },
@@ -160,11 +169,12 @@
       "forbid_keys": [
         "category:medical"
       ],
+      "form": "positive",
       "id": "B1-010",
       "input": "请寄挂号信至收件处。",
       "proof": null,
       "scenario": null,
-      "sha256": "2494c43c5287d59049daa08a7ca0f15116607e046d07411745c4d24a5cf29f89",
+      "sha256": "2100f9d503ac8a6a436c7cf0af8442b0346a10957407bbab55fdce952642a968",
       "subject": null,
       "suite": "b1_category"
     },
@@ -181,11 +191,12 @@
         "category:health_food",
         "category:fsmp"
       ],
+      "form": "positive",
       "id": "B1-011",
       "input": "分享养生知识，扫码加微信了解详情。",
       "proof": null,
       "scenario": null,
-      "sha256": "bdfb3b838578690fd46015a05e895c5fac60035dd665fe78cf3573665a2a999d",
+      "sha256": "3574294405d37cae3cadf1d9809ba253566f898983e3ef758798790cd5854697",
       "subject": null,
       "suite": "b1_category"
     },
@@ -197,11 +208,12 @@
         "hit:IAM-8-1",
         "advisory:variant_publish_suspect"
       ],
+      "form": "positive",
       "id": "B1-012",
       "input": "XX中医诊所（虚构）分享养生知识，欢迎致电预约。",
       "proof": null,
       "scenario": null,
-      "sha256": "49502f628e869f337a47b5d71382eb6484443f1861b6809a765468f3c253ebf9",
+      "sha256": "f2ca9b767c983f71cb2eca242cb4f63ad84b43b2daa05adfaf18c81c498e7c35",
       "subject": null,
       "suite": "b1_category"
     },
@@ -214,11 +226,12 @@
         "category:fsmp",
         "hit:AL-18-D1"
       ],
+      "form": "positive",
       "id": "B1-013",
       "input": "XX市第X医院（虚构）营养科：特殊医学用途配方食品与保健食品推荐，欢迎咨询。",
       "proof": null,
       "scenario": null,
-      "sha256": "21bd9905248738c82f0fc0c2f3809af27e406ad850e335289ce2f904dcbea727",
+      "sha256": "59d5d0edb015177585c91dfaf8484c14a3b944d43a699184732be578ab6f3461",
       "subject": null,
       "suite": "b1_category"
     },
@@ -229,11 +242,12 @@
         "category:medical",
         "hit:MAM-7-2"
       ],
+      "form": "positive",
       "id": "B2-001",
       "input": "XX医疗美容门诊部（虚构）双眼皮手术，保证治愈，无效退款。",
       "proof": null,
       "scenario": null,
-      "sha256": "b0864bf9fffa51597c49fdd7c887212fb6bc48d79803b202bab32db94eb027cf",
+      "sha256": "ab18d1a3ebc3acea3adcd36c8e6e268db2514d9bab154b3eb0b16f4407371183",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -244,11 +258,12 @@
         "category:medical",
         "hit:MAM-7-3"
       ],
+      "form": "positive",
       "id": "B2-002",
       "input": "XX市第X医院（虚构）肿瘤科，本院治疗有效率达到98%，欢迎咨询。",
       "proof": null,
       "scenario": null,
-      "sha256": "5c987b1934e52d72a77b7aee14f76dd7cf2003f800223310139d8ff9934da4c7",
+      "sha256": "33ec4834119493fb3353cd625f8d1d46b41a201e383d525deff050cdfce6e7ae",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -259,11 +274,12 @@
         "category:medical",
         "hit:AL-16-4"
       ],
+      "form": "positive",
       "id": "B2-003",
       "input": "XX医疗美容门诊部（虚构）由某知名代言人倾情推荐，效果显著。",
       "proof": null,
       "scenario": null,
-      "sha256": "ff2182f621cb7b3b9ef5c9f46306d8a7abfdeef47d77a3cb824f3d552079b45e",
+      "sha256": "3200d14c323abf9fbad967ce030958ce6532a0b220e82fb8a825bdd18caaf5be",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -274,11 +290,12 @@
         "category:health_food",
         "hit:AL-18-2"
       ],
+      "form": "positive",
       "id": "B2-004",
       "input": "本品保健食品可有效降血糖、降血压，是糖尿病患者的必需之选。",
       "proof": null,
       "scenario": null,
-      "sha256": "923b07c48f9910f997ad48d688d89442883f8e6602b71d83695fce6409a970ba",
+      "sha256": "ec47b857c6eebd75f22298734f22cc7313018a26df475cd905c69cc6a0bba832",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -289,11 +306,12 @@
         "category:medical",
         "hit:MAM-7-7"
       ],
+      "form": "positive",
       "id": "B2-005",
       "input": "XX中医诊所（虚构）使用解放军专家团队技术，专治疑难杂症。",
       "proof": null,
       "scenario": null,
-      "sha256": "2ce69e5fae291fa7efd8380d7724cdc32b4224b2914668039f533d5127b54f2b",
+      "sha256": "befbfea94813bb40497326cd90d0f42fa18abc03dd918e5804ef5ccb8db621cf",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -310,11 +328,12 @@
         "hit:MAM-7-2",
         "hit:MAM-7-3"
       ],
+      "form": "positive",
       "id": "B2-006",
       "input": "XX医疗美容门诊部（虚构）无痛双眼皮手术，专家坐诊，技术领先。",
       "proof": null,
       "scenario": null,
-      "sha256": "4ea645f096f081b7501b5ef22f64f4bb5942bb3728ef2a8693e78a7e1980b7ad",
+      "sha256": "91e3f8a3a3931dc6dd25b184a3418937dff27ea086c194c01e2ad523b6a020df",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -326,11 +345,12 @@
         "rule:compliant:AL-18-D1",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B2-007",
       "input": "本品为保健食品，本品不能代替药物，每日一粒。",
       "proof": null,
       "scenario": null,
-      "sha256": "10b5bf813805990e50dcc109f8ff5477f1f8298788436509acd82b98249cc369",
+      "sha256": "e349b60db10f861d91b547eb4e79172eb07e81c53ef6a43b8dab3095027f72b8",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -341,11 +361,12 @@
         "category:drug",
         "rule:compliant:AL-16-D2"
       ],
+      "form": "positive",
       "id": "B2-008",
       "input": "本品为药品片剂，禁忌、不良反应详见说明书。",
       "proof": null,
       "scenario": null,
-      "sha256": "a5a204d788f8991a5d6185e8bb9ee81edf9e6448d8aa8542b12cd3f02302d0d7",
+      "sha256": "7d865dce0fa5c7b24f4f1066786f9b77f7700154134e53067a497d88b526e046",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -357,11 +378,12 @@
         "hit:AL-18-2",
         "hit:AL-18-D1"
       ],
+      "form": "positive",
       "id": "B2-009",
       "input": "本品保健食品可预防疾病、治疗慢性病，抗肿瘤。",
       "proof": null,
       "scenario": null,
-      "sha256": "22a2a98676913cdd754caaad5cc2b3b64aaba948462d5b884151e46c26ecc684",
+      "sha256": "f530ae055e36433f837e27821a710985f5a0ead2db01563cd693430dc46225e9",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -372,11 +394,12 @@
         "category:medical",
         "hit:MAM-7-1"
       ],
+      "form": "positive",
       "id": "B2-010",
       "input": "XX医疗美容门诊部（虚构）专治各类疾病名称所指病症，配合药物治疗。",
       "proof": null,
       "scenario": null,
-      "sha256": "56ed7aa354f212d668f5ec7d824232bc576c535b6743745659e638b5d5c9e092",
+      "sha256": "2093f2f08709def258d8c4a1c72e12c79f0b77376370076d673ca22b7ba9ea67",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -388,11 +411,12 @@
         "hit:AL-16-1",
         "hit:AL-16-3"
       ],
+      "form": "positive",
       "id": "B2-011",
       "input": "本医疗器械保证有效，绝对安全，效果优于其他医疗器械。",
       "proof": null,
       "scenario": null,
-      "sha256": "2942854a4b4c086c0532a168558dc8427d7b20b3aaca20576c4f193bb361314a",
+      "sha256": "b13f9002e99b59c9c94fa953bd54cf5351162607009a473625f74c3575fe8f7e",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -403,11 +427,12 @@
         "category:drug",
         "rule:compliant:AL-16-D3"
       ],
+      "form": "positive",
       "id": "B2-012",
       "input": "本品为处方药，片剂，禁忌、不良反应详见说明书，本广告仅供医学药学专业人士阅读。",
       "proof": null,
       "scenario": null,
-      "sha256": "c307157f085aa28cc7c9f1f51476a7a139bcc5d5a30000c3ba3e38458dd428e3",
+      "sha256": "423e3ac8b2568cd924d5d9d448a71ab2b0339a59e7f264c03f26db224b63483b",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -418,11 +443,12 @@
         "category:device",
         "rule:compliant:AL-16-D5"
       ],
+      "form": "positive",
       "id": "B2-013",
       "input": "本医疗器械推荐给个人自用，请仔细阅读产品说明书或者在医务人员的指导下购买和使用。",
       "proof": null,
       "scenario": null,
-      "sha256": "cee57e41dbdc462699a40dfb3dcdf678eb8559bbb0f2574302ce4bbddba7abad",
+      "sha256": "1251234d3e496d598b290d55884242c88efb7d570e3465adbf1a3536a79601e2",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -437,11 +463,158 @@
         "hit:AL-18-2",
         "hit:AL-18-D1"
       ],
+      "form": "positive",
       "id": "B2-014",
       "input": "本品为保健食品，不能代替药物治疗，每日一粒。",
       "proof": null,
       "scenario": null,
-      "sha256": "f620dc839c9d717fac3dc35fe554dddddf681212a7096ef6ac6bb8451c08d42b",
+      "sha256": "45382e6a0dbbe365ddeaf6873aa8b133064c3ed71ef3155278f46c17c2072210",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:AL-16-1"
+      ],
+      "form": "threshold_exact",
+      "id": "B2-015",
+      "input": "XX市第X医院（虚构）本品100%有效，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "23b6e7e523a8ede75d056c2fb0018a0e10da22694479c123c308a57798ea3c57",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-1",
+        "grade:BLOCK"
+      ],
+      "form": "near_miss",
+      "id": "B2-016",
+      "input": "XX市第X医院（虚构）本品99%有效，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "99533b640327692618be9f6b1191a1d22d46f1311c6fbf93f8df8533529a4f6d",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-1",
+        "grade:BLOCK"
+      ],
+      "form": "near_miss",
+      "id": "B2-017",
+      "input": "XX市第X医院（虚构）本品百分百有效，欢迎咨询。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "d482edc4379fb45453f84e5adc4807de6255abbe050e30134ed65c37f58fe416",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-2",
+        "hit:AL-16-1"
+      ],
+      "form": "threshold_exact",
+      "id": "B2-018",
+      "input": "XX医疗美容门诊部（虚构）保证治愈，欢迎预约面诊。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "c87344c244c33c8a948ac88baa4dffa6fc59ec5fbb448a87b1f4f89783995cfd",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:MAM-7-2",
+        "hit:AL-16-1",
+        "grade:BLOCK"
+      ],
+      "form": "near_miss",
+      "id": "B2-019",
+      "input": "XX医疗美容门诊部（虚构）开展根治性手术，欢迎预约面诊。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "0ded001ef1a3f77b3ecc4a4e9230ede9590bf82ec3687c8597280aaf4735a851",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:AL-16-1",
+        "grade:BLOCK"
+      ],
+      "form": "near_miss",
+      "id": "B2-020",
+      "input": "XX医疗美容门诊部（虚构）治愈系装修风格，欢迎预约面诊。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "c8f525723758a5b4e59348a71483bf3d43257dff271b074488981e0fa6f1dd5e",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:BLOCK",
+        "category:medical",
+        "hit:MAM-7-2"
+      ],
+      "form": "threshold_exact",
+      "id": "B2-021",
+      "input": "XX中医诊所（虚构）可根治，欢迎预约面诊。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "a82bcbf9f47270fe4850c0e6dfe2e0bb3e8fc88c00183efabbe7657c8775f43b",
+      "subject": null,
+      "suite": "b2_prohibited"
+    },
+    {
+      "channel": null,
+      "expect_keys": [
+        "grade:WARN",
+        "category:medical"
+      ],
+      "forbid_keys": [
+        "hit:MAM-7-2",
+        "hit:AL-16-1",
+        "grade:BLOCK"
+      ],
+      "form": "near_miss",
+      "id": "B2-022",
+      "input": "XX中医诊所（虚构）不能保证治愈，请遵医嘱。",
+      "proof": null,
+      "scenario": null,
+      "sha256": "3076ffd4d0100caef9de8cc37dcda9d86668795dac5dcbe8e05f65f183a700c9",
       "subject": null,
       "suite": "b2_prohibited"
     },
@@ -462,11 +635,12 @@
         "hit:AL-16-3",
         "hit:AL-16-4"
       ],
+      "form": "reverse",
       "id": "B3-001",
       "input": "本品保健食品保证有效，绝对安全，无副作用。",
       "proof": null,
       "scenario": null,
-      "sha256": "941141636ab1e3e75ec3b5933032f462197f0e317416b5bf992387912fdca459",
+      "sha256": "4db6dd45fb25bfb33ef58406a5b6cda8013f03062dda68191c94b901f937e54d",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -489,11 +663,12 @@
         "hit:AL-18-4",
         "hit:AL-18-5"
       ],
+      "form": "reverse",
       "id": "B3-002",
       "input": "XX医疗美容门诊部（虚构）宣传治愈率与有效率。",
       "proof": null,
       "scenario": null,
-      "sha256": "bdbe986bc517a1872e9932f985328d54493b5693f14569ff80c703f5e59ce6aa",
+      "sha256": "fdf2e12ac3a32c93b89b5894f851f6f3d606377aacbdcfc8b527728c8071fe26",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -510,11 +685,12 @@
         "hit:AL-18-1",
         "hit:IAM-8-1"
       ],
+      "form": "reverse",
       "id": "B3-003",
       "input": "这家餐厅的招牌菜味道很好。",
       "proof": null,
       "scenario": null,
-      "sha256": "db1cb0b46252f4b7f64fa89a11c5cfa9799d19786c63860f4d9de775a387b26a",
+      "sha256": "9788bd212b44b704a75a45411531a1f9bcbf51207cbc2625719fbdba7ab93cd6",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -526,11 +702,12 @@
         "rule:skipped:IAM-7-2",
         "input_required:IAM-7-1"
       ],
+      "form": "reverse",
       "id": "B3-004",
       "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
       "proof": null,
       "scenario": null,
-      "sha256": "4f061086b55ed36a29a90631930b84c1501d73c106006a1dd443595440bd3e36",
+      "sha256": "e15ab9dcc8efcb23160f323ab39c41a53ef777284f03849bf475dfd193b669f3",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -545,11 +722,12 @@
       "forbid_keys": [
         "hit:AL-16-D3"
       ],
+      "form": "reverse",
       "id": "B3-005",
       "input": "本品为非处方药，片剂，禁忌、不良反应详见说明书，请按药品说明书或者在药师指导下购买和使用。",
       "proof": null,
       "scenario": null,
-      "sha256": "6490cd3368015d07cc2ed93df8682cbcdef2c7bfe911fb620095ef65706b15e9",
+      "sha256": "667a905992ce8f7e068a96e4f066c7c785ef1a8483298a427e68618d658556eb",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -564,11 +742,12 @@
       "forbid_keys": [
         "hit:AL-16-D5"
       ],
+      "form": "reverse",
       "id": "B3-006",
       "input": "XX市第X医院（虚构）引进新型理疗仪，医疗器械注册证齐全，欢迎体验。",
       "proof": null,
       "scenario": null,
-      "sha256": "02905f9c9c9c74acd8bd9b1c1ea23de9f661ae99c48371289944494538bde138",
+      "sha256": "028554b057eab15e8381135a1c13438dd6158dc48508c70bc9062404c11032e3",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -582,11 +761,12 @@
         "hit:MAM-7-2",
         "hit:AL-16-1"
       ],
+      "form": "reverse",
       "id": "B3-007",
       "input": "XX中医诊所（虚构）不能保证治愈，也不承诺根治，请遵医嘱。",
       "proof": null,
       "scenario": null,
-      "sha256": "ec0e39a4b46e5cc4124a61fae5f95ced3b1ae650b10fcb1e50b89a7deab88942",
+      "sha256": "d35a3c8f0d1262f55ee4a0cebcc03f3587826d2d38846d672e7be635d320db90",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -599,11 +779,12 @@
       "forbid_keys": [
         "hit:AL-16-3"
       ],
+      "form": "reverse",
       "id": "B3-008",
       "input": "XX医疗美容门诊部（虚构）第一时间响应需求，医疗机构第一名称公示。",
       "proof": null,
       "scenario": null,
-      "sha256": "90a459b339b1bef7f69bf8b23b374eeb6fcaee1b449553e85d6780c981f7b7fc",
+      "sha256": "026c1f025849fb01b9840b3da7a29bc4197c4a1a5646f2d03fb03979b8f8c4e3",
       "subject": null,
       "suite": "b3_applies_reverse"
     },
@@ -614,11 +795,12 @@
         "category:medical",
         "hit:MAM-7-4"
       ],
+      "form": "positive",
       "id": "B4-001",
       "input": "XX医疗美容门诊部（虚构）内容淫秽、迷信、荒诞。",
       "proof": null,
       "scenario": null,
-      "sha256": "3bbb3b3c6a4a3db2feccb2d7cb8ad90ed3bf0f88094713da7205e74d43d9a0cf",
+      "sha256": "e3dfe281493bbd5adcaf78958b6050e6b48237091a6c0485ed0672347e0fe175",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -629,11 +811,12 @@
         "category:medical",
         "hit:MAM-7-5"
       ],
+      "form": "positive",
       "id": "B4-002",
       "input": "XX医疗美容门诊部（虚构）贬低他人的技术水平。",
       "proof": null,
       "scenario": null,
-      "sha256": "0fda2f000813051efb05527b7eedc4ffb87128731588ffc3e2576e69ade8c41c",
+      "sha256": "2d3d6f0cecc649c4ca10314421b64aca95ceadcefec29f0296d1efb056ae55f1",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -644,11 +827,12 @@
         "category:medical",
         "hit:MAM-7-6"
       ],
+      "form": "positive",
       "id": "B4-003",
       "input": "XX医疗美容门诊部（虚构）由患者现身说法，卫生技术人员作证明。",
       "proof": null,
       "scenario": null,
-      "sha256": "b5550864e2e74aff3eb18ae421004fe825ae624102241289a57cf4dc1e634efa",
+      "sha256": "4b326801365e108853a81e35af04b4f7ce32c436f3976dd60133dbd2764c38ea",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -660,11 +844,12 @@
         "hit:AL-18-3",
         "hit:AL-18-4"
       ],
+      "form": "positive",
       "id": "B4-004",
       "input": "本品保健食品优于其他保健食品，人人必备，为保障健康所必需。",
       "proof": null,
       "scenario": null,
-      "sha256": "9d8e638b5c35545e8386376592bb653e8cd4b0c786e275cd9a3ae1b048be4334",
+      "sha256": "e4d9057b5d9e051ab557673dc4940c9dbe054af392cd378dbf97705a0ba8edfd",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -675,11 +860,12 @@
         "category:health_food",
         "hit:AL-18-5"
       ],
+      "form": "positive",
       "id": "B4-005",
       "input": "本品保健食品由形象大使推荐，明星推荐值得信赖。",
       "proof": null,
       "scenario": null,
-      "sha256": "b1761f99273e022f781bb56d2846de25047ff6898660f22f3a7e2c52399dcd20",
+      "sha256": "b2b904f4478ed0a193473b086afeb4e100aa436e9daa3f907c534d74aa0a0330",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -691,11 +877,12 @@
         "hit:AL-16-D2",
         "input_required:AL-16-D1"
       ],
+      "form": "positive",
       "id": "B4-006",
       "input": "药品片剂，请按说明书服用，适应症详见说明。",
       "proof": null,
       "scenario": null,
-      "sha256": "d2eb0aa418a92980a82fce719a34236e563ac38a3d1e6e5f53646e4030e578c4",
+      "sha256": "bfc35eacb5ff63d5cdfa816f0e8522460048ab1196d960d17d5624a621fc89e8",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -706,11 +893,12 @@
         "category:medical",
         "input_required:MAM-6-LIC"
       ],
+      "form": "positive",
       "id": "B4-007",
       "input": "XX医疗美容门诊部（虚构）执业许可证齐全，诊疗科目详见许可证。",
       "proof": null,
       "scenario": null,
-      "sha256": "c344f06604a35a3b56ea713dcce2ff6fc68f726d05facda0adaf8d62e78f5e05",
+      "sha256": "6156082ba0e145f05b5ee48e973eef8747d3878ded0aaba0d24f854c03c800b1",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -722,11 +910,12 @@
         "hit:IAM-8-1",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B4-008",
       "input": "XX医疗美容门诊部（虚构）养生知识科普：双眼皮术后如何保养，欢迎预约面诊。",
       "proof": null,
       "scenario": null,
-      "sha256": "25ca7f61607073e0b83452304423f0bc014ca50c74d5b4a971e4bdc2e16f5bad",
+      "sha256": "001829b9f962772c33d587975d29f856668a7d8c27e64c830d7ad8b95ee727eb",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -738,11 +927,12 @@
         "hit:IAM-8-2",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B4-009",
       "input": "XX中医诊所（虚构）健康知识科普，加微信咨询，或扫码了解详情。",
       "proof": null,
       "scenario": null,
-      "sha256": "6d4aa83714ce0517fc12d9a281e12ddc95ca647678c204133e70933b50b1bde0",
+      "sha256": "74be3341d36d1e6d8e16ed01d715c723a2357f0c13ea4fe6e5e2030cc852ccf8",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -754,11 +944,12 @@
         "input_required:IAM-7-1",
         "input_required:IAM-7-2"
       ],
+      "form": "positive",
       "id": "B4-010",
       "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
       "proof": null,
       "scenario": "published",
-      "sha256": "4852fa07cb723d9ffc97cc932f52b5ce47c67f14b20106898b4f1ee88333cff3",
+      "sha256": "58482148663bf2054c99d5823b61781f06bb81ad42a19798a5dc6948233d4228",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -769,11 +960,12 @@
         "category:medical",
         "hit:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B4-011",
       "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
       "proof": "no",
       "scenario": null,
-      "sha256": "275c9661dc1458a23cf76a67862b7709633956a82a94729dce59aed4b6e7f76a",
+      "sha256": "e551f804ef72de687ea3056ebfdc578c39942b6b82c858ad75ff927b2c312d9a",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -784,11 +976,12 @@
         "category:medical",
         "rule:compliant:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B4-012",
       "input": "XX医疗美容门诊部（虚构）双眼皮手术，欢迎预约。",
       "proof": "yes",
       "scenario": null,
-      "sha256": "5ec0af143b041f398da13dfbe05e67f64b639caf4a58e8cd3b199e9cdd108e1b",
+      "sha256": "fe24ecf4310fcd2fd03aa211484472e72fce0c2ecf1b6e87f24002007938cb1d",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -799,11 +992,12 @@
         "category:device",
         "hit:AL-16-2"
       ],
+      "form": "positive",
       "id": "B4-013",
       "input": "本医疗器械有效率达到95%，注册证齐全。",
       "proof": null,
       "scenario": null,
-      "sha256": "5a1a2399831025606c6c35f76ab39f5380f7dcb4091ac9138ce00bd706d5fece",
+      "sha256": "ee7b95c98a1be84ce2f9e71d7d4331cd8eb1dd05c9515f8d10585422c5229c71",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -814,11 +1008,12 @@
         "category:drug",
         "hit:AL-16-1"
       ],
+      "form": "positive",
       "id": "B4-014",
       "input": "本品药品片剂，保证有效，绝对安全。",
       "proof": null,
       "scenario": null,
-      "sha256": "30b571a57f087d6274bb4e8abecc5fde1c4349d4d8f24ff14baf361d638a73f0",
+      "sha256": "f402908548495be6764e77a22cee5f20da511e60c7eff745df6760810c859da8",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -829,11 +1024,12 @@
         "category:health_food",
         "hit:AL-18-3"
       ],
+      "form": "positive",
       "id": "B4-015",
       "input": "本品保健食品是人人必备的保健品，本品不能代替药物。",
       "proof": null,
       "scenario": null,
-      "sha256": "a6ac50f105b7a2f5ba2f9a841cc93db37df54a4a5716c3f0321632e9f3d58c6c",
+      "sha256": "5e078dde869162da0cd5fb00e1c091500edff9c3997fa42af6d143dbb013bc83",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -844,11 +1040,12 @@
         "category:health_food",
         "hit:AL-18-1"
       ],
+      "form": "positive",
       "id": "B4-016",
       "input": "本品保健食品保证有效，绝对安全，无副作用，本品不能代替药物。",
       "proof": null,
       "scenario": null,
-      "sha256": "74b2f978b91ad643234292390e54821b981eb0c10f4c803af5b24cda0cd81218",
+      "sha256": "562480b05d03cdb696dfb7952bf323e255cf932889517506addde46a078c63b9",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -860,11 +1057,12 @@
         "hit:IAM-8-2",
         "input_required:IAM-7-1"
       ],
+      "form": "positive",
       "id": "B4-017",
       "input": "XX中医诊所（虚构）分享养生知识，欢迎致电预约，联系电话见文末。",
       "proof": null,
       "scenario": null,
-      "sha256": "ac5a4a6f0c5815061b7265e7919df7a84b4908dc471879ec562c98e1205c9d7d",
+      "sha256": "f11433a7a6ccb001b3b6140d54716d595a61aa7b9a4c28d9a7ece2677ce94053",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -875,11 +1073,12 @@
         "category:drug",
         "hit:AL-16-D3"
       ],
+      "form": "positive",
       "id": "B4-018",
       "input": "本品为处方药，片剂，禁忌、不良反应详见说明书。",
       "proof": null,
       "scenario": null,
-      "sha256": "05a847c176c98cf9c9a8656a7099ca32eb29abdd34db78fb72a54a36dc52fff6",
+      "sha256": "748f423900c4a5f20851c567dacdc2ab60aead04fa6223c986306ef7f1cc50f9",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -890,11 +1089,12 @@
         "category:drug",
         "hit:AL-16-D4"
       ],
+      "form": "positive",
       "id": "B4-019",
       "input": "本品为非处方药，片剂，禁忌、不良反应详见说明书。",
       "proof": null,
       "scenario": null,
-      "sha256": "e1a4b6af0de650a4c04a18402c0cfddfab79957bca864d7a30e900c02751ae5e",
+      "sha256": "7ff1643e4b1b0e00f54c4735d3869cabdb19bd68a77bfc72be01fe23fe81eff9",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -905,11 +1105,12 @@
         "category:device",
         "hit:AL-16-D5"
       ],
+      "form": "positive",
       "id": "B4-020",
       "input": "本医疗器械推荐给个人自用，家用理疗仪，操作简单。",
       "proof": null,
       "scenario": null,
-      "sha256": "47b186e3212be4185388c11a1d8aa75a0ac02aadfdf5894c69d0756c5b3ce570",
+      "sha256": "5ef426c94ef397cbdd0265cb2302813df7ae3eb8b3f123abe931cb8bfd4a92bc",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -920,11 +1121,12 @@
         "category:device",
         "input_required:AL-16-D6"
       ],
+      "form": "positive",
       "id": "B4-021",
       "input": "本医疗器械注册证明文件齐全，欢迎体验。",
       "proof": null,
       "scenario": null,
-      "sha256": "72cfef62433c784fc0ce83761ab1b480bbe7288088e21730a3a4fdbc813f3815",
+      "sha256": "77b0482eb6e51b98a07ac27ddac50c11c02d9573d865e85480e0f1e74216d121",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -935,11 +1137,12 @@
         "category:medical",
         "hit:MAM-7-6"
       ],
+      "form": "positive",
       "id": "B4-022",
       "input": "XX医疗美容门诊部（虚构）由患者现身说法，卫生技术人员作证明。",
       "proof": null,
       "scenario": null,
-      "sha256": "c7bf3a5abd6b714563ceb3a7206ed7813b6beb1af885376f7384acba4b1933cd",
+      "sha256": "344a80a50b2ae78732a7a96de20db7bc9951ff738d8912d4421af9ded0f5281e",
       "subject": null,
       "suite": "b4_rule_coverage"
     },
@@ -950,15 +1153,115 @@
         "category:medical",
         "hit:MAM-7-1B"
       ],
+      "form": "positive",
       "id": "B4-023",
       "input": "XX中医诊所（虚构）专治糖尿病与高血压，欢迎咨询。",
       "proof": null,
       "scenario": null,
-      "sha256": "437bc005e6740be2f8de5d06a0db3292f31953a1c5e19afceb8fc54680f0d832",
+      "sha256": "3dc2450ed6cd6ce86503c0c24f9c0433de117f6f93c411c68460187a49d69b02",
       "subject": null,
       "suite": "b4_rule_coverage"
     }
   ],
+  "coverage": {
+    "by_form": {
+      "near_miss": {
+        "case_ids": [
+          "B2-016",
+          "B2-017",
+          "B2-019",
+          "B2-020",
+          "B2-022"
+        ],
+        "count": 5
+      },
+      "positive": {
+        "case_ids": [
+          "B1-001",
+          "B1-002",
+          "B1-003",
+          "B1-004",
+          "B1-005",
+          "B1-006",
+          "B1-007",
+          "B1-008",
+          "B1-009",
+          "B1-010",
+          "B1-011",
+          "B1-012",
+          "B1-013",
+          "B2-001",
+          "B2-002",
+          "B2-003",
+          "B2-004",
+          "B2-005",
+          "B2-006",
+          "B2-007",
+          "B2-008",
+          "B2-009",
+          "B2-010",
+          "B2-011",
+          "B2-012",
+          "B2-013",
+          "B2-014",
+          "B4-001",
+          "B4-002",
+          "B4-003",
+          "B4-004",
+          "B4-005",
+          "B4-006",
+          "B4-007",
+          "B4-008",
+          "B4-009",
+          "B4-010",
+          "B4-011",
+          "B4-012",
+          "B4-013",
+          "B4-014",
+          "B4-015",
+          "B4-016",
+          "B4-017",
+          "B4-018",
+          "B4-019",
+          "B4-020",
+          "B4-021",
+          "B4-022",
+          "B4-023"
+        ],
+        "count": 50
+      },
+      "reverse": {
+        "case_ids": [
+          "B3-001",
+          "B3-002",
+          "B3-003",
+          "B3-004",
+          "B3-005",
+          "B3-006",
+          "B3-007",
+          "B3-008"
+        ],
+        "count": 8
+      },
+      "threshold_exact": {
+        "case_ids": [
+          "B2-015",
+          "B2-018",
+          "B2-021"
+        ],
+        "count": 3
+      }
+    },
+    "by_suite": {
+      "b1_category": 13,
+      "b2_prohibited": 22,
+      "b3_applies_reverse": 8,
+      "b4_rule_coverage": 23
+    },
+    "non_exhaustive": true,
+    "note": "抽样覆盖、非穷举：下列采样数 << 规则包条目总数，逐形态登记",
+    "sampled_case_count": 66
+  },
   "coverage_note": "抽样覆盖、非穷举：按规则形态采样，非逐条穷举",
   "fake_org_whitelist": [
     "XX医疗美容门诊部（虚构）",
@@ -967,239 +1270,271 @@
   ],
   "generated_by": "tools/gen_cases.py",
   "ledger": {
-    "count": 58,
+    "count": 66,
     "entries": [
       {
         "id": "B1-001",
-        "sha256": "42e2e86f4d23b89d1596f09d821e7bcf1160aa5295b50987d19f7b2f959a78a4"
+        "sha256": "728a19bfc5cb05caf8db177f5ce562b45b7c261c78fcbbb8a12c27eeae82f12e"
       },
       {
         "id": "B1-002",
-        "sha256": "5fc4fe494c9c797f6db4ab5e3dc1d771f1093750a7469e3aadf10b2717b7c5ec"
+        "sha256": "61b982fda2432d4bc9a919cfc687d7b02c6b84f110f035d8e71ad93dc508cb14"
       },
       {
         "id": "B1-003",
-        "sha256": "cf1fbdf2a753dfa470e90cd84c053dc596a69f5394edbb80a5a0b0daf55c79be"
+        "sha256": "da826f7c739ca079ff554dcc99125ba9a15a9a6720ccfcf6a3d0bb1b584e6fc9"
       },
       {
         "id": "B1-004",
-        "sha256": "d9bc881de4aa9ad051d700c76150409d666fec6e239f862c7f684d1e321c182c"
+        "sha256": "2cfbc433f81da79076ce1e8039f2f456b89982e273b31577f2495e60988b20d9"
       },
       {
         "id": "B1-005",
-        "sha256": "cc3acfc4b2c7bf735ccfcc560c8a21870161239441c43b0434d6e8f9ae1de349"
+        "sha256": "998c495d3353234498c8063d4c9452c4f5e4d1cfb11845b7a15bc60268f443f9"
       },
       {
         "id": "B1-006",
-        "sha256": "a5505291c647ddb5edfea6ad73ecd62e4933088b26a42fd45d71216dddf5540c"
+        "sha256": "f5f7497a455531219cdb500235aa7b8ec73772dc654591c0dddcf6d721cf9c02"
       },
       {
         "id": "B1-007",
-        "sha256": "720ff7c4bc34e43a577a42fd13c1a9526cf5bb1b13daafb0b776c477e0c40879"
+        "sha256": "aa8ea359ca492678911367e0baddc65fbdafe40d76fcae4c60ee3b4784a3a97e"
       },
       {
         "id": "B1-008",
-        "sha256": "06dc025d2fb64b19d6412c1303046a7fe5e7cd8d9d802d5d50825070cf29ab3e"
+        "sha256": "221e6a148ffc32ecf8e694af58d15cd1354d03777bbf0e3bc1bd9785c3facf6b"
       },
       {
         "id": "B1-009",
-        "sha256": "91f184a518cb45ab5c7012a6d494e6f784ad4011c30405fd6aa2e98aa7990f7b"
+        "sha256": "6e16608bb170f5d091f38f391bb1b8051031aa7066fa9b1a84640357bd0b746b"
       },
       {
         "id": "B1-010",
-        "sha256": "2494c43c5287d59049daa08a7ca0f15116607e046d07411745c4d24a5cf29f89"
+        "sha256": "2100f9d503ac8a6a436c7cf0af8442b0346a10957407bbab55fdce952642a968"
       },
       {
         "id": "B1-011",
-        "sha256": "bdfb3b838578690fd46015a05e895c5fac60035dd665fe78cf3573665a2a999d"
+        "sha256": "3574294405d37cae3cadf1d9809ba253566f898983e3ef758798790cd5854697"
       },
       {
         "id": "B1-012",
-        "sha256": "49502f628e869f337a47b5d71382eb6484443f1861b6809a765468f3c253ebf9"
+        "sha256": "f2ca9b767c983f71cb2eca242cb4f63ad84b43b2daa05adfaf18c81c498e7c35"
       },
       {
         "id": "B1-013",
-        "sha256": "21bd9905248738c82f0fc0c2f3809af27e406ad850e335289ce2f904dcbea727"
+        "sha256": "59d5d0edb015177585c91dfaf8484c14a3b944d43a699184732be578ab6f3461"
       },
       {
         "id": "B2-001",
-        "sha256": "b0864bf9fffa51597c49fdd7c887212fb6bc48d79803b202bab32db94eb027cf"
+        "sha256": "ab18d1a3ebc3acea3adcd36c8e6e268db2514d9bab154b3eb0b16f4407371183"
       },
       {
         "id": "B2-002",
-        "sha256": "5c987b1934e52d72a77b7aee14f76dd7cf2003f800223310139d8ff9934da4c7"
+        "sha256": "33ec4834119493fb3353cd625f8d1d46b41a201e383d525deff050cdfce6e7ae"
       },
       {
         "id": "B2-003",
-        "sha256": "ff2182f621cb7b3b9ef5c9f46306d8a7abfdeef47d77a3cb824f3d552079b45e"
+        "sha256": "3200d14c323abf9fbad967ce030958ce6532a0b220e82fb8a825bdd18caaf5be"
       },
       {
         "id": "B2-004",
-        "sha256": "923b07c48f9910f997ad48d688d89442883f8e6602b71d83695fce6409a970ba"
+        "sha256": "ec47b857c6eebd75f22298734f22cc7313018a26df475cd905c69cc6a0bba832"
       },
       {
         "id": "B2-005",
-        "sha256": "2ce69e5fae291fa7efd8380d7724cdc32b4224b2914668039f533d5127b54f2b"
+        "sha256": "befbfea94813bb40497326cd90d0f42fa18abc03dd918e5804ef5ccb8db621cf"
       },
       {
         "id": "B2-006",
-        "sha256": "4ea645f096f081b7501b5ef22f64f4bb5942bb3728ef2a8693e78a7e1980b7ad"
+        "sha256": "91e3f8a3a3931dc6dd25b184a3418937dff27ea086c194c01e2ad523b6a020df"
       },
       {
         "id": "B2-007",
-        "sha256": "10b5bf813805990e50dcc109f8ff5477f1f8298788436509acd82b98249cc369"
+        "sha256": "e349b60db10f861d91b547eb4e79172eb07e81c53ef6a43b8dab3095027f72b8"
       },
       {
         "id": "B2-008",
-        "sha256": "a5a204d788f8991a5d6185e8bb9ee81edf9e6448d8aa8542b12cd3f02302d0d7"
+        "sha256": "7d865dce0fa5c7b24f4f1066786f9b77f7700154134e53067a497d88b526e046"
       },
       {
         "id": "B2-009",
-        "sha256": "22a2a98676913cdd754caaad5cc2b3b64aaba948462d5b884151e46c26ecc684"
+        "sha256": "f530ae055e36433f837e27821a710985f5a0ead2db01563cd693430dc46225e9"
       },
       {
         "id": "B2-010",
-        "sha256": "56ed7aa354f212d668f5ec7d824232bc576c535b6743745659e638b5d5c9e092"
+        "sha256": "2093f2f08709def258d8c4a1c72e12c79f0b77376370076d673ca22b7ba9ea67"
       },
       {
         "id": "B2-011",
-        "sha256": "2942854a4b4c086c0532a168558dc8427d7b20b3aaca20576c4f193bb361314a"
+        "sha256": "b13f9002e99b59c9c94fa953bd54cf5351162607009a473625f74c3575fe8f7e"
       },
       {
         "id": "B2-012",
-        "sha256": "c307157f085aa28cc7c9f1f51476a7a139bcc5d5a30000c3ba3e38458dd428e3"
+        "sha256": "423e3ac8b2568cd924d5d9d448a71ab2b0339a59e7f264c03f26db224b63483b"
       },
       {
         "id": "B2-013",
-        "sha256": "cee57e41dbdc462699a40dfb3dcdf678eb8559bbb0f2574302ce4bbddba7abad"
+        "sha256": "1251234d3e496d598b290d55884242c88efb7d570e3465adbf1a3536a79601e2"
       },
       {
         "id": "B2-014",
-        "sha256": "f620dc839c9d717fac3dc35fe554dddddf681212a7096ef6ac6bb8451c08d42b"
+        "sha256": "45382e6a0dbbe365ddeaf6873aa8b133064c3ed71ef3155278f46c17c2072210"
+      },
+      {
+        "id": "B2-015",
+        "sha256": "23b6e7e523a8ede75d056c2fb0018a0e10da22694479c123c308a57798ea3c57"
+      },
+      {
+        "id": "B2-016",
+        "sha256": "99533b640327692618be9f6b1191a1d22d46f1311c6fbf93f8df8533529a4f6d"
+      },
+      {
+        "id": "B2-017",
+        "sha256": "d482edc4379fb45453f84e5adc4807de6255abbe050e30134ed65c37f58fe416"
+      },
+      {
+        "id": "B2-018",
+        "sha256": "c87344c244c33c8a948ac88baa4dffa6fc59ec5fbb448a87b1f4f89783995cfd"
+      },
+      {
+        "id": "B2-019",
+        "sha256": "0ded001ef1a3f77b3ecc4a4e9230ede9590bf82ec3687c8597280aaf4735a851"
+      },
+      {
+        "id": "B2-020",
+        "sha256": "c8f525723758a5b4e59348a71483bf3d43257dff271b074488981e0fa6f1dd5e"
+      },
+      {
+        "id": "B2-021",
+        "sha256": "a82bcbf9f47270fe4850c0e6dfe2e0bb3e8fc88c00183efabbe7657c8775f43b"
+      },
+      {
+        "id": "B2-022",
+        "sha256": "3076ffd4d0100caef9de8cc37dcda9d86668795dac5dcbe8e05f65f183a700c9"
       },
       {
         "id": "B3-001",
-        "sha256": "941141636ab1e3e75ec3b5933032f462197f0e317416b5bf992387912fdca459"
+        "sha256": "4db6dd45fb25bfb33ef58406a5b6cda8013f03062dda68191c94b901f937e54d"
       },
       {
         "id": "B3-002",
-        "sha256": "bdbe986bc517a1872e9932f985328d54493b5693f14569ff80c703f5e59ce6aa"
+        "sha256": "fdf2e12ac3a32c93b89b5894f851f6f3d606377aacbdcfc8b527728c8071fe26"
       },
       {
         "id": "B3-003",
-        "sha256": "db1cb0b46252f4b7f64fa89a11c5cfa9799d19786c63860f4d9de775a387b26a"
+        "sha256": "9788bd212b44b704a75a45411531a1f9bcbf51207cbc2625719fbdba7ab93cd6"
       },
       {
         "id": "B3-004",
-        "sha256": "4f061086b55ed36a29a90631930b84c1501d73c106006a1dd443595440bd3e36"
+        "sha256": "e15ab9dcc8efcb23160f323ab39c41a53ef777284f03849bf475dfd193b669f3"
       },
       {
         "id": "B3-005",
-        "sha256": "6490cd3368015d07cc2ed93df8682cbcdef2c7bfe911fb620095ef65706b15e9"
+        "sha256": "667a905992ce8f7e068a96e4f066c7c785ef1a8483298a427e68618d658556eb"
       },
       {
         "id": "B3-006",
-        "sha256": "02905f9c9c9c74acd8bd9b1c1ea23de9f661ae99c48371289944494538bde138"
+        "sha256": "028554b057eab15e8381135a1c13438dd6158dc48508c70bc9062404c11032e3"
       },
       {
         "id": "B3-007",
-        "sha256": "ec0e39a4b46e5cc4124a61fae5f95ced3b1ae650b10fcb1e50b89a7deab88942"
+        "sha256": "d35a3c8f0d1262f55ee4a0cebcc03f3587826d2d38846d672e7be635d320db90"
       },
       {
         "id": "B3-008",
-        "sha256": "90a459b339b1bef7f69bf8b23b374eeb6fcaee1b449553e85d6780c981f7b7fc"
+        "sha256": "026c1f025849fb01b9840b3da7a29bc4197c4a1a5646f2d03fb03979b8f8c4e3"
       },
       {
         "id": "B4-001",
-        "sha256": "3bbb3b3c6a4a3db2feccb2d7cb8ad90ed3bf0f88094713da7205e74d43d9a0cf"
+        "sha256": "e3dfe281493bbd5adcaf78958b6050e6b48237091a6c0485ed0672347e0fe175"
       },
       {
         "id": "B4-002",
-        "sha256": "0fda2f000813051efb05527b7eedc4ffb87128731588ffc3e2576e69ade8c41c"
+        "sha256": "2d3d6f0cecc649c4ca10314421b64aca95ceadcefec29f0296d1efb056ae55f1"
       },
       {
         "id": "B4-003",
-        "sha256": "b5550864e2e74aff3eb18ae421004fe825ae624102241289a57cf4dc1e634efa"
+        "sha256": "4b326801365e108853a81e35af04b4f7ce32c436f3976dd60133dbd2764c38ea"
       },
       {
         "id": "B4-004",
-        "sha256": "9d8e638b5c35545e8386376592bb653e8cd4b0c786e275cd9a3ae1b048be4334"
+        "sha256": "e4d9057b5d9e051ab557673dc4940c9dbe054af392cd378dbf97705a0ba8edfd"
       },
       {
         "id": "B4-005",
-        "sha256": "b1761f99273e022f781bb56d2846de25047ff6898660f22f3a7e2c52399dcd20"
+        "sha256": "b2b904f4478ed0a193473b086afeb4e100aa436e9daa3f907c534d74aa0a0330"
       },
       {
         "id": "B4-006",
-        "sha256": "d2eb0aa418a92980a82fce719a34236e563ac38a3d1e6e5f53646e4030e578c4"
+        "sha256": "bfc35eacb5ff63d5cdfa816f0e8522460048ab1196d960d17d5624a621fc89e8"
       },
       {
         "id": "B4-007",
-        "sha256": "c344f06604a35a3b56ea713dcce2ff6fc68f726d05facda0adaf8d62e78f5e05"
+        "sha256": "6156082ba0e145f05b5ee48e973eef8747d3878ded0aaba0d24f854c03c800b1"
       },
       {
         "id": "B4-008",
-        "sha256": "25ca7f61607073e0b83452304423f0bc014ca50c74d5b4a971e4bdc2e16f5bad"
+        "sha256": "001829b9f962772c33d587975d29f856668a7d8c27e64c830d7ad8b95ee727eb"
       },
       {
         "id": "B4-009",
-        "sha256": "6d4aa83714ce0517fc12d9a281e12ddc95ca647678c204133e70933b50b1bde0"
+        "sha256": "74be3341d36d1e6d8e16ed01d715c723a2357f0c13ea4fe6e5e2030cc852ccf8"
       },
       {
         "id": "B4-010",
-        "sha256": "4852fa07cb723d9ffc97cc932f52b5ce47c67f14b20106898b4f1ee88333cff3"
+        "sha256": "58482148663bf2054c99d5823b61781f06bb81ad42a19798a5dc6948233d4228"
       },
       {
         "id": "B4-011",
-        "sha256": "275c9661dc1458a23cf76a67862b7709633956a82a94729dce59aed4b6e7f76a"
+        "sha256": "e551f804ef72de687ea3056ebfdc578c39942b6b82c858ad75ff927b2c312d9a"
       },
       {
         "id": "B4-012",
-        "sha256": "5ec0af143b041f398da13dfbe05e67f64b639caf4a58e8cd3b199e9cdd108e1b"
+        "sha256": "fe24ecf4310fcd2fd03aa211484472e72fce0c2ecf1b6e87f24002007938cb1d"
       },
       {
         "id": "B4-013",
-        "sha256": "5a1a2399831025606c6c35f76ab39f5380f7dcb4091ac9138ce00bd706d5fece"
+        "sha256": "ee7b95c98a1be84ce2f9e71d7d4331cd8eb1dd05c9515f8d10585422c5229c71"
       },
       {
         "id": "B4-014",
-        "sha256": "30b571a57f087d6274bb4e8abecc5fde1c4349d4d8f24ff14baf361d638a73f0"
+        "sha256": "f402908548495be6764e77a22cee5f20da511e60c7eff745df6760810c859da8"
       },
       {
         "id": "B4-015",
-        "sha256": "a6ac50f105b7a2f5ba2f9a841cc93db37df54a4a5716c3f0321632e9f3d58c6c"
+        "sha256": "5e078dde869162da0cd5fb00e1c091500edff9c3997fa42af6d143dbb013bc83"
       },
       {
         "id": "B4-016",
-        "sha256": "74b2f978b91ad643234292390e54821b981eb0c10f4c803af5b24cda0cd81218"
+        "sha256": "562480b05d03cdb696dfb7952bf323e255cf932889517506addde46a078c63b9"
       },
       {
         "id": "B4-017",
-        "sha256": "ac5a4a6f0c5815061b7265e7919df7a84b4908dc471879ec562c98e1205c9d7d"
+        "sha256": "f11433a7a6ccb001b3b6140d54716d595a61aa7b9a4c28d9a7ece2677ce94053"
       },
       {
         "id": "B4-018",
-        "sha256": "05a847c176c98cf9c9a8656a7099ca32eb29abdd34db78fb72a54a36dc52fff6"
+        "sha256": "748f423900c4a5f20851c567dacdc2ab60aead04fa6223c986306ef7f1cc50f9"
       },
       {
         "id": "B4-019",
-        "sha256": "e1a4b6af0de650a4c04a18402c0cfddfab79957bca864d7a30e900c02751ae5e"
+        "sha256": "7ff1643e4b1b0e00f54c4735d3869cabdb19bd68a77bfc72be01fe23fe81eff9"
       },
       {
         "id": "B4-020",
-        "sha256": "47b186e3212be4185388c11a1d8aa75a0ac02aadfdf5894c69d0756c5b3ce570"
+        "sha256": "5ef426c94ef397cbdd0265cb2302813df7ae3eb8b3f123abe931cb8bfd4a92bc"
       },
       {
         "id": "B4-021",
-        "sha256": "72cfef62433c784fc0ce83761ab1b480bbe7288088e21730a3a4fdbc813f3815"
+        "sha256": "77b0482eb6e51b98a07ac27ddac50c11c02d9573d865e85480e0f1e74216d121"
       },
       {
         "id": "B4-022",
-        "sha256": "c7bf3a5abd6b714563ceb3a7206ed7813b6beb1af885376f7384acba4b1933cd"
+        "sha256": "344a80a50b2ae78732a7a96de20db7bc9951ff738d8912d4421af9ded0f5281e"
       },
       {
         "id": "B4-023",
-        "sha256": "437bc005e6740be2f8de5d06a0db3292f31953a1c5e19afceb8fc54680f0d832"
+        "sha256": "3dc2450ed6cd6ce86503c0c24f9c0433de117f6f93c411c68460187a49d69b02"
       }
     ]
   }

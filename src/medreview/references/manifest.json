@@ -1,5 +1,18 @@
 {
   "basis_date": "2026-10-15",
+  "benchmark_coverage": {
+    "enabled_rule_count": 30,
+    "form_axes": [
+      "positive",
+      "reverse",
+      "threshold_exact",
+      "near_miss"
+    ],
+    "non_exhaustive": true,
+    "note": "抽样覆盖、非穷举：规则包条目总数按形态抽样，非逐条穷举；逐形态采样数与采样清单登记在真值库 coverage 块",
+    "rule_pack_total_items": 33,
+    "sampling_registered_at": "fixtures/cases.json#coverage"
+  },
   "benchmark_thresholds": {
     "b1_min_accuracy": 1.0,
     "b2_false_block_max": 0,

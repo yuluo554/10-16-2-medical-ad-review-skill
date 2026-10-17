@@ -35,6 +35,17 @@ CASES_PATH = os.path.join(FIX_DIR, "cases.json")
 # 假机构名白名单（题面 §四.1：一律虚构名；基准断言校验样例机构名在白名单内）
 FAKE_ORGS = ["XX医疗美容门诊部（虚构）", "XX市第X医院（虚构）", "XX中医诊所（虚构）"]
 
+# 样本形态（plan/03 §6.2）：真值库必须含**卡阈值边界**类——
+# ``threshold_exact`` 验"恰在判定线上即命中"，``near_miss`` 验"不到判定线不命中"。
+# 形态是**登记轴**：覆盖声明按形态登记采样数/采样清单（plan/03 §6.3）。
+FORM_VALUES = ("positive", "reverse", "threshold_exact", "near_miss")
+SUITE_DEFAULT_FORM = {
+    "b1_category": "positive",
+    "b2_prohibited": "positive",
+    "b3_applies_reverse": "reverse",
+    "b4_rule_coverage": "positive",
+}
+
 # ---------------------------------------------------------------------------
 # 用例表：``expect`` = 必须出现的键；``forbid`` = 必须不出现的键。
 # 期望值一律按**法条语义**推导（不按引擎现状回填）——引擎不符即缺陷。
@@ -164,6 +175,43 @@ CASES = [
          expect=["grade:WARN", "category:health_food",
                  "rule:compliant:AL-18-D1"],
          forbid=["hit:AL-18-2", "hit:AL-18-D1"]),
+
+    # ---- B2 卡阈值边界（plan/03 §6.2）：threshold_exact 恰命中 / near_miss 不到不命中 ----
+    # **本引擎的"阈值"是词面判定线，不是数值比较器**（规则是词面/模式匹配，
+    # 无 ≥ 语义）：故边界成对构造在**三类判定线**上——literal 词形、排除语境、否定辖域。
+    # ① literal 词形判定线：恰为「100%有效」时命中；「99%有效」「百分百有效」不到线不命中
+    dict(id="B2-015", suite="b2_prohibited", form="threshold_exact",
+         input="XX市第X医院（虚构）本品100%有效，欢迎咨询。",
+         expect=["grade:BLOCK", "category:medical", "hit:AL-16-1"]),
+    dict(id="B2-016", suite="b2_prohibited", form="near_miss",
+         input="XX市第X医院（虚构）本品99%有效，欢迎咨询。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:AL-16-1", "grade:BLOCK"]),
+    dict(id="B2-017", suite="b2_prohibited", form="near_miss",
+         input="XX市第X医院（虚构）本品百分百有效，欢迎咨询。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:AL-16-1", "grade:BLOCK"]),
+    # ② 排除语境判定线：裸词命中，但落在中性/临床词形内部则不命中
+    dict(id="B2-018", suite="b2_prohibited", form="threshold_exact",
+         input="XX医疗美容门诊部（虚构）保证治愈，欢迎预约面诊。",
+         expect=["grade:BLOCK", "category:medical",
+                 "hit:MAM-7-2", "hit:AL-16-1"]),
+    dict(id="B2-019", suite="b2_prohibited", form="near_miss",
+         input="XX医疗美容门诊部（虚构）开展根治性手术，欢迎预约面诊。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:MAM-7-2", "hit:AL-16-1", "grade:BLOCK"]),
+    dict(id="B2-020", suite="b2_prohibited", form="near_miss",
+         input="XX医疗美容门诊部（虚构）治愈系装修风格，欢迎预约面诊。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:AL-16-1", "grade:BLOCK"]),
+    # ③ 否定辖域判定线：肯定形态命中；同极性否定形态（法条强制免责语）不命中
+    dict(id="B2-021", suite="b2_prohibited", form="threshold_exact",
+         input="XX中医诊所（虚构）可根治，欢迎预约面诊。",
+         expect=["grade:BLOCK", "category:medical", "hit:MAM-7-2"]),
+    dict(id="B2-022", suite="b2_prohibited", form="near_miss",
+         input="XX中医诊所（虚构）不能保证治愈，请遵医嘱。",
+         expect=["grade:WARN", "category:medical"],
+         forbid=["hit:MAM-7-2", "hit:AL-16-1", "grade:BLOCK"]),
 
     # ---- B3 适用域反向（"这条规则不该命中"） ----
     # 保健食品内容不得被《广告法》§16（只管医疗/药品/器械）判命中
@@ -337,6 +385,21 @@ def naive_oracle(case):
         return False, "expect 必须且只能含一个 grade:*（实得 %s）" % grades
     grade = grades[0]
 
+    form = case.get("form") or SUITE_DEFAULT_FORM.get(case["suite"], "positive")
+    if form not in FORM_VALUES:
+        return False, "form 取值非法：%s（合法值 %s）" % (form, list(FORM_VALUES))
+    # 卡阈值边界类的语义自证（plan/03 §6.2）：
+    #   threshold_exact —— 恰在判定线上 → **必须命中**（至少一条 hit:*），且判 BLOCK/WARN；
+    #   near_miss       —— 不到判定线 → **必须不命中**（显式 forbid hit:/grade:BLOCK）。
+    # 只有"成对"才构成边界：缺任一侧，边界类用例就退化成普通正/反例（假覆盖）。
+    if form == "threshold_exact" and not any(k.startswith("hit:") for k in expects):
+        return False, "threshold_exact 用例未断言任何 hit:*（未验'恰命中'）"
+    if form == "near_miss":
+        if not any(k.startswith("hit:") for k in forbids):
+            return False, "near_miss 用例未 forbid 任何 hit:*（未验'不到不命中'）"
+        if "grade:BLOCK" not in forbids:
+            return False, "near_miss 用例未 forbid grade:BLOCK（未验'不到不判禁止'）"
+
     has_category = any(k.startswith("category:") for k in expects)
     has_hit = any(k.startswith("hit:") for k in expects)
 
@@ -360,13 +423,17 @@ def naive_oracle(case):
 
 def build():
     cases = []
+    form_counts = {}
+    form_case_ids = {}
     for case in CASES:
         ok, why = naive_oracle(case)
         if not ok:
             raise SystemExit("生成守卫失败（用例 %s）：%s" % (case["id"], why))
+        form = case.get("form") or SUITE_DEFAULT_FORM.get(case["suite"], "positive")
         entry = {
             "id": case["id"],
             "suite": case["suite"],
+            "form": form,
             "input": case["input"],
             "channel": case.get("channel"),
             "subject": case.get("subject"),
@@ -378,6 +445,8 @@ def build():
             entry["forbid_keys"] = list(case["forbid"])
         entry["sha256"] = case_digest(entry)
         cases.append(entry)
+        form_counts[form] = form_counts.get(form, 0) + 1
+        form_case_ids.setdefault(form, []).append(case["id"])
 
     entries = [{"id": c["id"], "sha256": c["sha256"]} for c in cases]
     payload = {
@@ -386,6 +455,17 @@ def build():
         "fake_org_whitelist": FAKE_ORGS,
         "ledger": {"count": len(cases), "entries": entries},
         "coverage_note": "抽样覆盖、非穷举：按规则形态采样，非逐条穷举",
+        # **覆盖声明双登记**（plan/03 §6.3）：逐形态登记"真值库采样数 + 采样清单"，
+        # 与 manifest 的"规则包条目总数"配对——防"各有件"被读成"全穷举"。
+        "coverage": {
+            "sampled_case_count": len(cases),
+            "non_exhaustive": True,
+            "note": "抽样覆盖、非穷举：下列采样数 << 规则包条目总数，逐形态登记",
+            "by_form": {f: {"count": form_counts[f], "case_ids": form_case_ids[f]}
+                        for f in sorted(form_counts)},
+            "by_suite": {s: sum(1 for c in cases if c["suite"] == s)
+                         for s in sorted(set(c["suite"] for c in cases))},
+        },
         "cases": cases,
     }
     return _dumps(payload)

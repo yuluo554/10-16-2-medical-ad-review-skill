@@ -24,7 +24,7 @@
 
 **纪律**：M1 冻结法条规则包时，每条规则须挂上述一手原文（条款号 + 原文文本 + URL + 基准日），**未挂原文核对不得落库/生效**。法条更新须重新核对并更新基准日。
 
-## 一之二、冻结规则包计数（M3 当轮实测，非抄上一棒）
+## 一之二、冻结规则包计数（M4 当轮实测，非抄上一棒）
 
 | 计数项 | 实测值 | 出处（单一实现源） |
 |---|---|---|
@@ -38,7 +38,14 @@
 | 品类信号词数 | medical 18 / drug 13 / device 11 / health_food 6 / fsmp 3 | `manifest.category_signal_counts` == 逐条实算 |
 | 品类反例结构数 | medical 5 / drug 4 / device 6 / health_food 2 / fsmp 1 | `manifest.category_exclude_counts` == 逐条实算 |
 | 变相发布信号条数 | **2**（§8 两款各一条） | `manifest.variant_rule_count` == `ruleset.variant_rules` 长度 |
-| 真值用例数 | **58**（B1×13 / B2×14 / B3×8 / B4×23） | `fixtures/cases.json` 内置台账 `ledger.count` |
+| 真值用例数 | **66**（B1×13 / B2×22 / B3×8 / B4×23） | `fixtures/cases.json` 内置台账 `ledger.count` |
+| 真值形态分布 | positive **50** / reverse **8** / threshold_exact **3** / near_miss **5** | `fixtures/cases.json` `coverage.by_form` == 逐条实算 |
+
+> **M4 新增计数行**：真值用例数随边界类用例补齐由 58 → **66**（B2 由 14 → 22，
+> 新增 3 组"卡阈值边界"成对用例）；真值形态分布是 M4 引入的**形态轴**登记
+> （plan/03 §6.2 的 `threshold_exact` / `near_miss` 边界类落地）。
+> 两行均纳入漂移门禁：`test_m2_semantics.py::test_data_readme_counts_match_manifest`
+> 守用例数，`test_m4_benchmark.py::test_data_readme_form_counts_match` 守形态分布。
 
 > 计数**当轮实测**（`medreview rules --format json` + 逐条实算），并已锁门：
 > `tests/test_m1_semantics.py::test_manifest_counts_match_actual_rules` 断言规则类计数、

@@ -837,6 +837,23 @@ def build():
             "b3_reverse_pass_min": 1.0,
             "b4_min_coverage": 1.0,
         },
+        # **覆盖声明双登记**（plan/03 §6.3）——manifest 侧登记"规则包条目总数 +
+        # 形态轴 + 非穷举声明"；真值库侧登记"逐形态采样数 + 采样清单"
+        # （``fixtures/cases.json`` 的 ``coverage`` 块）。两侧由门禁测试绑定，
+        # 并用**数值**坐实"非穷举"（采样数 << 条目总数），不只是一句口号。
+        #
+        # 为何 manifest 不直接嵌采样数：那会让 manifest 随用例增删而变 →
+        # ``gen_ruleset --check`` 与 ``gen_cases --check`` 互相牵制（生成环）。
+        # 故数值留在各自的**单一实现源**，跨件一致性交给门禁。
+        "benchmark_coverage": {
+            "rule_pack_total_items": len(rules) + len(excluded),
+            "enabled_rule_count": len(rules),
+            "form_axes": ["positive", "reverse", "threshold_exact", "near_miss"],
+            "non_exhaustive": True,
+            "sampling_registered_at": "fixtures/cases.json#coverage",
+            "note": "抽样覆盖、非穷举：规则包条目总数按形态抽样，非逐条穷举；"
+                    "逐形态采样数与采样清单登记在真值库 coverage 块",
+        },
         "coverage_note": "抽样覆盖、非穷举：真值库按规则形态采样，见 benchmark/manifest 登记",
     }
 
