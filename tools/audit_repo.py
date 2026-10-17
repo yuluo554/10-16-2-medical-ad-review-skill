@@ -422,9 +422,11 @@ def selftest():
             "阳性对照未命中 %s → 扫描器坏了" % pname
     # 系列名检查：非自家系列名必须判为命中
     assert _series_hits_in(fake_family), "阳性对照未命中系列名形态 → 扫描器坏了"
-    # 阴性对照：自家名（含带前缀变体）不得误报
-    _own_local, own_clean = _own_names()
-    own_variants = [own_clean, "10" + "-16" + "-2-" + own_clean]
+    # 阴性对照：自家名（README 自指形态 / 本地目录名形态 / 各自去前缀变体）不得误报
+    own_local, own_clean = _own_names()
+    own_variants = [own_clean, own_local,
+                    _SERIES_PREFIX_RE.sub("", own_clean),
+                    _SERIES_PREFIX_RE.sub("", own_local)]
     for value in own_variants:
         assert not _series_hits_in(value), "自家名被误报：%s" % value
     # 阴性对照：noreply / 传输地址不得判为个人邮箱
