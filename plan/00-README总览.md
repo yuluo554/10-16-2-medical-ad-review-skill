@@ -2,11 +2,16 @@
 
 - **项目**：医疗/医美广告合规审查 Skill（Agent Skill：SKILL.md + 确定性 CLI 引擎 + 冻结规则包）
 - **性质**：不参赛项目题（模拟项目），发布 GitHub 公开仓库，署名 yuluo554
-- **版本**：v0.1.0（已发布）
-- **当前里程碑**：**M6 发布（已完成，项目收官）**
+- **版本**：v0.1.1（已发布）
+- **当前里程碑**：**M6 发布（已完成，项目收官）** → **v0.1.1 二次迭代发布（已完成）**
 - **发布坐标**：<https://github.com/yuluo554/10-16-2-medical-ad-review-skill> ·
-  Release `v0.1.0`（tag `c7c4bc2`，源码 zip 76 文件，sha256 见 `plan/DIST-sha256-M6.txt`）·
-  CI 首推 run `38993895184` 4 job 全绿（win 3.8/3.12 + ubuntu 3.12 + workflow-lint）
+  Release `v0.1.1`（tag 指向现取 `git rev-list -n1 v0.1.1`，源码 zip 78 文件，
+  sha256 见 `plan/DIST-sha256-v0.1.1.txt`；留档 [`RELEASE-v0.1.1.md`](./RELEASE-v0.1.1.md)）·
+  上一版 `v0.1.0`（源码 zip 77 文件，`plan/DIST-sha256-M6.txt`）保留在册
+- **CI 现状**：`490fbb3` 的 main push 与 tag push 两次 run 共 8 个 check-run 全绿；
+  actions 已升 `checkout@v5` / `setup-python@v6`，Node20 弃用注解已消失
+- **已知未修**：**D3** license 弃用（`SetuptoolsDeprecationWarning`，硬期限 2027-02-18）
+  —— PEP 639 需 setuptools ≥77（要求 Py ≥3.9），与本仓 floor `>=3.8` 冲突，须作为独立批次抬 floor
 - **诚实口径**：M0–M5 的"本地等价校验（未接远端）"已由 M6 据实补记真实 run id
   （见 `plan/RELEASE-M6.md` §十；历史文档保留原措辞，补记是追加事实）。
 

@@ -3,9 +3,14 @@
 # 复算：py -X utf8 tools/make_release.py --verify <zip> --rev v0.1.1
 #
 # 自指规避（既定口径，同 plan/DIST-sha256-M6.txt）：本文件被打进附件 zip，
-# 故**zip 自身的 sha256 不写入本文件**（写入即自指、永不成立）。
-# 权威终值两处：① Release notes（在 zip 之外）；② main 分支的同名文件（发布后回填提交）。
+# 故 zip 内的版本**只有复算规则、不写结果值**；本文件（main 分支版）由发布后
+# 回填提交补终值——两版内容不同是**有意为之**（tag 树内是规则版）。
 # tag 指向用现取：git rev-list -n1 v0.1.1
 zip_name: 10-16-2-medical-ad-review-skill-0.1.1-src.zip
-sha256: （见 Release notes — 本文件在附件内，不自指）
+sha256: bc9acb9aaa1586e5a16e7dc9fbceb7c5098097a8f03c9c0f330a72ceab3b6702
+bytes: 1009977
+files: 78
 rev: v0.1.1
+tree: 45253301223ac9dbe63f0e983ceff006209d6c6e
+built_date: 2026-10-20
+# 核验记录（2026-10-20）：构建输出 / `gh release download` 落盘件 / GitHub asset digest 三方一致。
