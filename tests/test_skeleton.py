@@ -280,6 +280,25 @@ def test_bench_unknown_suite_is_usage_error():
     assert "未知套件名" in summary["error"]
 
 
+def test_bench_missing_truth_library_is_data_unavailable_3():
+    """真值库缺失 = **数据不可用 → 3**（不是 1「跑了没过」，也不是 2「用法错误」）。
+
+    端到端打到 ``run_benchmarks``：把它指向一个空目录（模拟安装态被删/未随包）。
+    断言退出码与 summary 两处，并断言 notes 写明"不是跑了没过"——
+    否则本分支会与"检出命中"同码不同义（这正是迭代前的缺陷 D2）。
+    """
+    import tempfile
+    with tempfile.TemporaryDirectory() as empty_dir:
+        code, summary = runner.run_benchmarks(fixtures_dir=empty_dir)
+    assert code == runner.EXIT_RULESET == 3, \
+        "真值库缺失应归数据不可用（3），实得 %s" % code
+    assert summary.get("truth_source") == "missing"
+    assert summary.get("not_enabled") is True
+    assert "真值库" in summary.get("notes", ""), summary
+    assert "不是'跑了没过'" in summary["notes"] or "非'跑了没过'" in summary["notes"], \
+        "notes 未写明与'跑了没过'的区别：%s" % summary.get("notes")
+
+
 def test_frozen_ledger_detects_tampering():
     """**变异验证**：手改一条用例 → 冻结台账必须报红（不是假门）。"""
     payload, _ = runner.load_fixture_payload()
@@ -320,6 +339,30 @@ def test_fake_org_whitelist_empty_is_an_error():
     """白名单为空 = 纪律未落地，必须报错（不是静默放行）。"""
     payload, _ = runner.load_fixture_payload()
     assert ledger_mod.check_fake_org_whitelist(payload, whitelist=[])
+
+
+def test_fake_org_whitelist_embedded_is_authoritative_when_empty():
+    """内嵌名单为空时**不得**回落仓库文件把口径放宽（安装态与源码态同源）。"""
+    payload = {"fake_org_whitelist": [], "cases": [{"id": "x", "input": "XX门诊部"}]}
+    problems = ledger_mod.check_fake_org_whitelist(payload)
+    assert problems and "为空" in problems[0], \
+        "内嵌名单为空却回落了仓库文件——两条通路口径不一致"
+
+
+def test_fake_org_whitelist_file_matches_embedded_copy():
+    """仓库手编主本 ``data/fake_org_whitelist.txt`` 与真值库内嵌名单**逐条一致**。
+
+    两处各存一份（手编资产 + 生成物内嵌）是必要的：运行时要随包装箱走得通，
+    又要有一份人工可编辑的主本。**唯一风险是漂移**——故在这里锁死；
+    只改一侧即红（两条通路会各按不同名单判合规 = 静默放宽）。
+    """
+    from_file = ledger_mod.load_fake_org_whitelist()
+    assert from_file, "仓库白名单文件为空或未找到——漂移守门无观测面（假门）"
+    payload, _ = runner.load_fixture_payload()
+    embedded = payload.get("fake_org_whitelist")
+    assert embedded is not None, "真值库缺内嵌 fake_org_whitelist（安装态将无法校验）"
+    assert from_file == list(embedded), \
+        "白名单漂移：文件 %s vs 内嵌 %s" % (from_file, list(embedded))
 
 
 def test_truth_library_has_no_observed_fields():

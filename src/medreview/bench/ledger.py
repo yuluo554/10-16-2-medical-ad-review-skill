@@ -30,10 +30,14 @@ def case_digest(case):
 
 
 def load_fake_org_whitelist(path=None):
-    """读取假机构名白名单（每行一个，``#`` 注释与空行忽略）。
+    """读取**仓库内**的假机构名白名单文件（每行一个，``#`` 注释与空行忽略）。
 
-    白名单文件是**手编**资产（人工判断类）；样例机构名必须在名单内，
+    白名单是**手编**资产（人工判断类）；样例机构名必须在名单内，
     出现名单外的机构名形态即红（题面 §四.1 的硬要求）。
+
+    **注意**：本函数定位的是仓库开发态的 ``data/``，安装态取不到（该目录不随包）。
+    运行时的白名单取真值库内嵌字段（见 ``check_fake_org_whitelist``）；
+    本文件是手编主本，与内嵌名单的一致性由测试守门（漂移即红）。
     """
     if path is None:
         path = os.path.join(ROOT, "data", "fake_org_whitelist.txt")
@@ -69,8 +73,22 @@ def check_fake_org_whitelist(payload, whitelist=None):
 
     返回问题列表（空 = 合规）。这是"合成数据纪律"的机器可验形态：
     只测"该命中的用例"，白名单纪律写错永远不会红——故必须做成断言。
+
+    白名单来源优先级（**安装态与源码态必须同源**）：
+      1. 显式入参 ``whitelist``（测试注入用）；
+      2. 真值库内嵌的 ``fake_org_whitelist``——随 ``cases.json`` 进 wheel，
+         这是安装态唯一可取到的来源；
+      3. 仓库开发态文件 ``data/fake_org_whitelist.txt``（仅当 payload 无内嵌字段，
+         如 ``samples/`` 的临时 payload）。
+    空名单一律报错（不是静默放行）。
     """
-    names = list(whitelist) if whitelist is not None else load_fake_org_whitelist()
+    if whitelist is not None:
+        names = list(whitelist)
+    elif payload.get("fake_org_whitelist") is not None:
+        # 内嵌字段**存在即为准**：空列表也必须报错（不得回落仓库文件把口径放宽）
+        names = list(payload["fake_org_whitelist"])
+    else:
+        names = load_fake_org_whitelist()
     if not names:
         return ["假机构名白名单为空（纪律未落地：无法校验）"]
     problems = []

@@ -28,6 +28,8 @@ SUITES = ("b1_category", "b2_prohibited", "b3_applies_reverse", "b4_rule_coverag
 EXIT_OK = 0
 EXIT_NOT_MET = 1
 EXIT_USAGE = 2
+# 3 = 数据不可用（真值库缺失/残缺）——与 CLI 的"规则包不可用"同档，见 README 退出码表
+EXIT_RULESET = 3
 
 
 def load_fixture_payload(explicit_dir=None):
@@ -95,9 +97,11 @@ def run_benchmarks(only=None, fixtures_dir=None):
         return EXIT_NOT_MET, {"error": "冻结台账校验失败", "problems": exc.problems,
                               "truth_source": "frozen"}
     except FileNotFoundError as exc:
-        return EXIT_NOT_MET, {"error": str(exc), "not_enabled": True,
+        # 真值库缺失 = **数据不可用**，归 3（与报告"规则包不可用"同一档）：
+        # 它不是"跑了没过"（那是 1），也不是用法错误（那是 2）。
+        return EXIT_RULESET, {"error": str(exc), "not_enabled": True,
                               "truth_source": "missing",
-                              "notes": "真值库文件缺失：整套件未启用（与'跑了没过'同码不同义）"}
+                              "notes": "真值库缺失：基准不可用（数据不可用，非'跑了没过'）"}
 
     selected = [only] if only else list(SUITES)
     summary = {

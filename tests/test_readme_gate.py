@@ -264,6 +264,82 @@ def test_face5_bench_is_in_package():
         "顶层 benchmark/ 会被漏装（安装面第四面缺陷家族）"
 
 
+def _declared_package_data():
+    """解析 ``[tool.setuptools.package-data]`` 的 ``medreview`` 声明（**结构位置**）。
+
+    只认该段内 ``medreview = [...]`` 的 glob 列表——"文件里出现过 fixtures/*.json"
+    不能证明它进了 package-data（注释、README 都会含这串字）。
+    """
+    text = read(os.path.join(ROOT, "pyproject.toml"))
+    match = re.search(r"^\[tool\.setuptools\.package-data\](.*?)(?=^\[|\Z)",
+                      text, re.M | re.S)
+    assert match, "pyproject 未声明 [tool.setuptools.package-data]"
+    section = match.group(1)
+    line = re.search(r"^\s*medreview\s*=\s*\[(.*?)\]", section, re.M | re.S)
+    assert line, "package-data 未声明本包（medreview = [...]）"
+    patterns = re.findall(r'"([^"]+)"', line.group(1))
+    assert patterns, "package-data 的 medreview 列表为空——扫描面为空（假门）"
+    return patterns
+
+
+def _glob_match(rel_path, pattern):
+    """目录感知的 glob 匹配：``*`` **不跨目录分隔符**。
+
+    ``fnmatch`` 会让 ``references/*.json`` 匹配到 ``references/a/b.json``
+    （宽松到失去判据），故按段翻译成正则。
+    """
+    translated = "".join("[^/]*" if ch == "*" else re.escape(ch) for ch in pattern)
+    return re.match("^" + translated + "$", rel_path) is not None
+
+
+def test_face5_package_data_covers_every_bundled_data_file():
+    """包内**每个非 .py 随包数据文件**都必须被 package-data 的某个 glob 覆盖。
+
+    双侧判据（缺任一侧都会漏掉真实缺陷）：
+      ① 声明的 glob 必须能匹配到真文件（防"声明了但文件不在/目录搬了"）；
+      ② 包内实际存在的数据文件必须被某个 glob 覆盖（防"文件在仓里但没随包"——
+         这正是 ``fixtures/cases.json`` 曾经的形态：源码态能跑，安装态 ``bench`` 不可用）。
+    """
+    patterns = _declared_package_data()
+    pkg_root = os.path.join(SRC, "medreview")
+
+    # ① 每个声明 glob 都能匹配到至少一个真文件
+    empty = []
+    for pattern in patterns:
+        hits = []
+        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+            if "__pycache__" in dirpath:
+                continue
+            for name in filenames:
+                rel = os.path.relpath(os.path.join(dirpath, name), pkg_root)
+                if _glob_match(rel.replace(os.sep, "/"), pattern):
+                    hits.append(rel)
+        if not hits:
+            empty.append(pattern)
+    assert not empty, "package-data 声明了匹配不到任何文件的 glob：%s" % empty
+
+    # ② 包内每个数据文件都被某个 glob 覆盖
+    bundled, uncovered = [], []
+    for dirpath, _dirnames, filenames in os.walk(pkg_root):
+        if "__pycache__" in dirpath:
+            continue
+        for name in filenames:
+            if name.endswith((".py", ".pyc")):
+                continue
+            rel = os.path.relpath(os.path.join(dirpath, name), pkg_root).replace(os.sep, "/")
+            if any(_glob_match(rel, p) for p in patterns):
+                bundled.append(rel)
+            else:
+                uncovered.append(rel)
+    assert bundled, "包内未发现任何随包数据文件——扫描面为空（假门）"
+    assert not uncovered, \
+        "包内数据文件未随包（安装态该通路不可用）：%s" % sorted(uncovered)
+
+    # 具名断言（本迭代的缺陷本体）：真值库必须随包
+    assert "fixtures/cases.json" in bundled, \
+        "基准真值库未随包——安装态 medreview bench 不可用：%s" % sorted(bundled)
+
+
 # --------------------------------------------------------------------------
 # README 引用的仓库路径必须真存在（具名路径门禁）
 # --------------------------------------------------------------------------

@@ -36,4 +36,6 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-medreview = ["references/*.json"]
+# 规则包与基准真值库**都随包**：任一缺失都会让安装态少一条可用通路
+# （规则包缺 → rules/check 不可用；真值库缺 → bench 不可用）。
+medreview = ["references/*.json", "fixtures/*.json"]

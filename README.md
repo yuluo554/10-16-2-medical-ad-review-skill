@@ -68,7 +68,7 @@ medreview scan --dir ./samples --format json     --out report.json # 机读
 # 列出规则包全部条目与锚点（含未启用清单）
 medreview rules
 
-# 跑内置基准套件（四套件；退出码 0 达标 / 1 未达标 / 2 用法错误）
+# 跑内置基准套件（四套件；退出码 0 达标 / 1 未达标 / 2 用法错误 / 3 真值库不可用）
 medreview bench
 
 # 内建自检（门禁阳性对照 + 装配完整性）
@@ -82,7 +82,7 @@ medreview selftest
 | `0` | 完成且未命中（`OK` / `NOT_ASSESSED`） |
 | `1` | **检出命中**（`BLOCK` / `WARN`）——"查出了问题"的既定语义，**不是故障** |
 | `2` | 输入/用法错误 |
-| `3` | 规则包不可用 |
+| `3` | 规则包或**基准真值库**不可用（数据不可用——不是"跑了没过"，后者是 `1`） |
 
 ## 分级口径
 
@@ -154,8 +154,9 @@ python tools/make_release.py --rev v0.1.0 --out dist.zip   # 确定性发布打�
 - **底线 Python 3.8**：全部源码按 3.8 语法写（`typing.List` 而非 `list[str]`）；
 - **Windows 用 `python -m pip`**：`py` 启动器会绕过 venv 装进系统 Python；
 - **规则包是生成物**：请勿手改 `src/medreview/references/*.json`，改需求走 `tools/gen_ruleset.py` 整目录重生成；
-- **发布物为源码包 + editable 安装**：`[tool.setuptools.package-data]` 随包携带冻结规则包，
-  但未做 wheel 安装面验证（源码 zip 的打包面 = git 跟踪面，见 [`plan/RELEASE-M6.md`](plan/RELEASE-M6.md)）。
+- **规则包与基准真值库均随包**：`[tool.setuptools.package-data]` 同时携带冻结规则包
+  （`references/*.json`）与基准真值库（`fixtures/*.json`）；wheel 安装态下 `rules` / `check` / `bench`
+  三条通路均在**全新 venv** 实测可用。发布物本身仍是源码 zip（打包面 = git 跟踪面，见 [`plan/RELEASE-M6.md`](plan/RELEASE-M6.md)）。
 
 ## 许可
 
