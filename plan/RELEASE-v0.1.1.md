@@ -119,8 +119,30 @@ git log --format="%ae %ce" --all | sort -u
 
 ## 八、R8 发布后匿名复核
 
-见 §九「复核记录」——本轮在本地做了无 git 解压树复核；**匿名（无凭据）通道未单独跑**，
-标为未验证项（见 §十 R8 行）。
+无凭据路径（裸 https + 无 `credential.helper`）实测，2026-10-20：
+
+```bash
+# ① 匿名 clone（--depth 1，禁用凭据助手）
+git -c credential.helper= clone --depth 1 https://github.com/yuluo554/10-16-2-medical-ad-review-skill.git
+→ 成功；HEAD = 8fc8ac9
+
+# ② 匿名读 tag
+git ls-remote --tags https://… v0.1.1
+→ 8914499bbb8e542fe12ea991f9523e5ff0fb23f9  refs/tags/v0.1.1
+
+# ③ 匿名下载附件并复算
+curl -sL -o anon.zip https://github.com/…/releases/download/v0.1.1/10-16-2-medical-ad-review-skill-0.1.1-src.zip
+→ 1,009,977 B；sha256 bc9acb9aaa1586e5a16e7dc9fbceb7c5098097a8f03c9c0f330a72ceab3b6702（与台账/Release 一致）
+
+# ④ 匿名 clone 树跑通（全新 venv + `pip install -e ".[dev]"`）
+medreview bench    → exit 0，全部套件达标
+medreview selftest → exit 0，SELFTEST_OK
+medreview --version→ medreview ruleset-c7c2a6d1fd
+```
+
+> **环境注记**：本机裸 443 直连不通（`curl 28 / Failed to connect … 443`），上述命令经
+> `HTTPS_PROXY=http://127.0.0.1:7897` 走通。这是**本机网络**的限制，与发布物无关；
+> 但如实记录——"匿名复核通过"的前提是本机有可用出口。
 
 ## 九、复核记录（本机实测，2026-10-20）
 
@@ -142,7 +164,7 @@ git log --format="%ae %ce" --all | sort -u
 | 2 | 元数据仍有 `SetuptoolsDeprecationWarning` | 已知未修 | 即第 1 项的表征，**不是回归** |
 | 3 | 3.8 通道本地完整跑 | **未验证** | 本机无 3.8 venv；仅 CI `test (windows-latest, 3.8)` 绿（CI 侧证据） |
 | 4 | `ubuntu-latest` 迁移 Ubuntu 26 后是否仍可跑 | **未验证** | 迁移未落地；注解仍在 |
-| 5 | 匿名（无凭据）clone/下载复核 | **未验证** | 本轮只做本地解压树复核；仓库已 public 且 v0.1.0 时该通道已验过一次，本轮未重跑 |
+| 5 | 匿名（无凭据）clone/下载复核 | **已验** | §八：匿名 clone + `ls-remote` 读 tag + `curl` 下载复算 sha256 一致 + clone 树 `bench`/`selftest`/`--version` 全通（经本机代理出口） |
 | 6 | 两个生成器共用 `FROZEN_TRUTH_OK` | **显式不处理** | 有意共用（同族"冻结产物位级一致"结论），文档各处已如实写 |
 
 ## 十一、R10 README 收尾
