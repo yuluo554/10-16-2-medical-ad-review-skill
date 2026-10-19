@@ -41,7 +41,7 @@ if SRC_DIR not in sys.path:
 from medreview.cli import _ensure_utf8_stdio  # noqa: E402 （与 CLI 入口同一编码护栏实现源）
 
 # 固定为发布基准日（改版发布时随版本更新；固定值 = 可复现打包的第一要件）
-FIXED_DATE_TIME = (2026, 10, 17, 0, 0, 0)
+FIXED_DATE_TIME = (2026, 10, 20, 0, 0, 0)
 
 _MODE_EXEC = 0o100755
 _MODE_FILE = 0o100644

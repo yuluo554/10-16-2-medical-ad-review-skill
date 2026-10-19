@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/actions/workflows/ci.yml)
 
-**状态**：✅ **v0.1.0 已发布**（[Release](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.0) · 脱敏审计 + 干净环境验证 + CI 三矩阵全绿后发布）
+**状态**：✅ **v0.1.1 已发布**（[Release](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.1) · 安装态 `bench` 可用 + 退出码语义对齐 + CI actions 升级 · 脱敏审计 + 干净环境验证 + CI 三矩阵全绿后发布）
 
 ---
 
@@ -31,11 +31,11 @@
 
 ## 下载即用（不装环境，先看发布物）
 
-[Releases 页](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.0) 提供**确定性源码 zip**（`ZIP_STORED` + 条目排序 + 固定时间戳，同 tag 两次重建逐字节一致；sha256 台账见 [`plan/DIST-sha256-M6.txt`](plan/DIST-sha256-M6.txt)，复算命令在台账头部）。
+[Releases 页](https://github.com/yuluo554/10-16-2-medical-ad-review-skill/releases/tag/v0.1.1) 提供**确定性源码 zip**（`ZIP_STORED` + 条目排序 + 固定时间戳，同 tag 两次重建逐字节一致；sha256 台账见 [`plan/DIST-sha256-v0.1.1.txt`](plan/DIST-sha256-v0.1.1.txt)，复算命令在台账头部）。
 
 ```bash
 # 下载附件后校验（可选，发布链路已做过"真下载 → sha256 对账 → 中立目录自检"）
-python tools/make_release.py --verify <下载的.zip> --rev v0.1.0
+python tools/make_release.py --verify <下载的.zip> --rev v0.1.1
 ```
 
 ## 安装
