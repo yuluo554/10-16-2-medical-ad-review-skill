@@ -14,7 +14,7 @@
 
 | 跑法 | 结果 |
 |---|---|
-| 仓库态（`D:\ProgramData\zcode\10-16-2-medical-ad-review-skill`） | **1 failed / 219 passed**（`test_audit_full_run_zero_hard_hits`） |
+| 仓库态（工作区里的本仓目录，父目录含姊妹仓） | **1 failed / 219 passed**（`test_audit_full_run_zero_hard_hits`） |
 | 同一份 `v0.1.1` 附件解压到中立目录 | **220 passed** |
 | 干净 clone（父目录无姊妹仓） | **220 passed** |
 | CI | 全绿 |
