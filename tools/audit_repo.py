@@ -181,21 +181,47 @@ def _own_names():
     return own_local, own_clean
 
 
-def _sibling_tokens():
-    """工作区姊妹目录名（运行时从父目录推导；CI 检出目录下通常为空）。
+def _own_owner():
+    """**仓库主人名**（GitHub owner login，运行时从 README 自指 URL 推导）。
+
+    为什么它与"姊妹目录名"不是一类：owner 是**发布坐标的组成部分**——它出现在
+    README 每一行 badge URL、`LICENSE` 的版权行、`pyproject.toml` 的 authors 里，
+    是"这份东西属于谁"的公开事实，不是别人的项目名。
+
+    而它是**从工作区目录名推出来的**：工作区里那个 profile 仓库叫
+    `<系列前缀>-<owner>`（如 `10-18-<owner>`），去前缀后正好等于 owner 登录名，
+    于是 `_sibling_tokens()` 会把它收进姊妹 token 集，接着把本仓每一处 owner
+    出现都报成「姊妹目录名」。这条只在**开发机工作区**成立（CI / 干净 clone
+    的父目录里没有姊妹目录，token 集为空），所以 CI 全绿也发现不了 —— 实测
+    本仓仓库态 10 处硬门命中，解压到中立目录 0 处。
+
+    返回空串表示推导不出（无 README / 无自指 URL），此时不做任何豁免。
+    """
+    for probe in ("README.md", "SKILL.md", "pyproject.toml"):
+        raw = _read_bytes(probe)
+        if raw is None:
+            continue
+        text = _decode_text(raw) or raw.decode("utf-8", "replace")
+        match = re.search(r"github\.com/([A-Za-z0-9-]+)/[A-Za-z0-9._-]+", text)
+        if match:
+            return match.group(1)
+    return ""
+
+
+def _sibling_tokens_from(entries):
+    """从父目录条目名推导姊妹 token（**纯函数**，便于正/负对照单测）。
 
     两种形态都扫：带系列前缀的原名 + 去前缀的 kebab 名。
-    自家名（目录名 / README 自指仓库名 / 各自去前缀变体）一律排除。
+    自家名（目录名 / README 自指仓库名 / 各自去前缀变体）与** owner 登录名**
+    一律排除（后者的理由见 :func:`_own_owner`）。
     """
-    parent = os.path.dirname(REPO)
     own_local, own_clean = _own_names()
+    owner = _own_owner()
     allowed = {own_local, own_clean, _SERIES_PREFIX_RE.sub("", own_local),
                _SERIES_PREFIX_RE.sub("", own_clean)}
+    if owner:
+        allowed.add(owner)
     tokens = set()
-    try:
-        entries = sorted(os.listdir(parent))
-    except OSError:
-        return []
     for entry in entries:
         if entry.startswith(".") or entry in allowed:
             continue
@@ -206,8 +232,21 @@ def _sibling_tokens():
             tokens.add(entry)
             tokens.add(stripped)
         else:
+            # 去前缀形态落在 allowed 里（自家名 / owner）时，只收带前缀的原名——
+            # 原名的前缀部分仍是"工作区布局"事实，但**不能**因为同名而把整条丢掉：
+            # 真正需要拦的是"别人的项目名"，而 allowed 命中说明它就是自家坐标。
             tokens.add(entry)
     return sorted(tokens)
+
+
+def _sibling_tokens():
+    """工作区姊妹目录名（运行时从父目录推导；CI 检出目录下通常为空）。"""
+    parent = os.path.dirname(REPO)
+    try:
+        entries = sorted(os.listdir(parent))
+    except OSError:
+        return []
+    return _sibling_tokens_from(entries)
 
 
 def _is_skip_dir(name):

@@ -96,6 +96,54 @@ def test_audit_sibling_tokens_excluded_own_name():
 
 
 # --------------------------------------------------------------------------
+# 门 2.5：**仓库主人名**不是姊妹目录名（2026-10-23 实测缺陷的防回退）
+#
+# 缺陷形态：工作区里 profile 仓的目录叫 `<系列前缀>-<owner>`，`_sibling_tokens()` 去前缀后
+# 得到的就是 owner 登录名，于是本仓每一处 owner 出现（README badge / LICENSE 版权行 /
+# pyproject authors）都被判成「姊妹目录名」。它只在开发机工作区成立——CI 与干净 clone
+# 的父目录没有姊妹目录，token 集为空，所以 CI 全绿发现不了。
+# 修复前实测：本仓仓库态 10 处硬门命中，同一份 zip 解压到中立目录 0 处。
+# --------------------------------------------------------------------------
+def test_audit_owner_login_is_not_a_sibling_token():
+    """owner 登录名必须从姊妹 token 集里排除（它出现在每一行 badge 与 LICENSE 里）。"""
+    owner = audit_repo._own_owner()
+    assert owner, "owner 推导为空（README 自指 URL 缺失？）"
+    tokens = audit_repo._sibling_tokens()
+    assert owner not in tokens, "owner 登录名被当成姊妹目录名：%r" % tokens[:5]
+    # 阴性对照：owner 与仓库名拼接（badge URL 形态）不得判命中
+    own_local, own_clean = audit_repo._own_names()
+    assert not audit_repo._sibling_hits_in(
+        "https://github.com/%s/%s/releases" % (owner, own_clean), tokens)
+
+
+def test_audit_foreign_sibling_still_caught():
+    """**阳性对照**：排除 owner 不能把真姊妹名一起放过。
+
+    只喂三个条目——自家目录 + owner profile 目录 + 一个别人的项目名：
+    前两个必须被排除，第三个必须仍进 token 集并能命中。
+
+    ⚠️ 那个"别人的项目名"一律在**运行期**拼出：写成字面量会让本文件自己命中
+    step1（审计器把"测试里为验证门禁而写的样例"当成真姊妹表述）。
+    """
+    _own_local, own_clean = audit_repo._own_names()
+    owner = audit_repo._own_owner()
+    foreign = "10" + "-04-" + "food-label" + "-compliance-checker"
+    entries = [own_clean, "10-18-" + owner, foreign]
+    tokens = audit_repo._sibling_tokens_from(entries)
+    assert owner not in tokens
+    assert own_clean not in tokens
+    assert foreign in tokens
+    assert "food-label" + "-compliance-checker" in tokens
+    assert audit_repo._sibling_hits_in("see " + foreign, tokens)
+
+
+def test_audit_sibling_tokens_can_be_empty_on_a_neutral_parent():
+    """纯函数在"父目录里没有姊妹"时必须返回空集（CI / 干净 clone 形态）。"""
+    assert audit_repo._sibling_tokens_from([]) == []
+    assert audit_repo._sibling_tokens_from([".git", "README.md"]) == []
+
+
+# --------------------------------------------------------------------------
 # 门 3：无 git 兜底（源码 zip 解压树形态）
 # --------------------------------------------------------------------------
 def test_audit_metadata_status_explicit_without_git(monkeypatch, tmp_path):

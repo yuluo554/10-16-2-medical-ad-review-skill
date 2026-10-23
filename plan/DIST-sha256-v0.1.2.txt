@@ -1,0 +1,15 @@
+# plan/DIST-sha256-v0.1.2.txt — v0.1.2 发布物 sha256 台账
+# 打包面 = git 跟踪面；配方 = ZIP_STORED + 路径排序 + 固定 date_time + 固定外部属性
+# 复算：py -X utf8 tools/make_release.py --verify <zip> --rev v0.1.2
+#
+# 自指规避（既定口径，同 plan/DIST-sha256-M6.txt / DIST-sha256-v0.1.1.txt）：
+# 本文件被打进附件 zip，故 zip 内的版本**只有复算规则、不写结果值**；
+# 本文件（main 分支版）由发布后回填提交补终值——两版内容不同是**有意为之**
+# （tag 树内是规则版）。
+zip_name: 10-16-2-medical-ad-review-skill-0.1.2-src.zip
+sha256: （由发布后回填提交补终值；tag 树内不写，见上）
+bytes: （同上）
+files: （同上）
+rev: v0.1.2
+tree: 用现取 —— git rev-list -n1 v0.1.2
+built_date: 2026-10-23
