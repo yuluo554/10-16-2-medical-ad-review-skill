@@ -7,9 +7,10 @@
 # 本文件（main 分支版）由发布后回填提交补终值——两版内容不同是**有意为之**
 # （tag 树内是规则版）。
 zip_name: 10-16-2-medical-ad-review-skill-0.1.2-src.zip
-sha256: （由发布后回填提交补终值；tag 树内不写，见上）
-bytes: （同上）
-files: （同上）
+sha256: 8e07c27d48ede8e1c0ea92e7328f14d6d240a8be274691035b478605c2fa4e79
+bytes: 1032135
+files: 81
 rev: v0.1.2
-tree: 用现取 —— git rev-list -n1 v0.1.2
+tree: 04d0183e49d93c95019f18cda7dccf2cbdcc00f2
 built_date: 2026-10-23
+# 核验记录（2026-10-23）：本地构建 / `gh release download` 落盘件 / GitHub asset digest / Release 正文 四方一致。
